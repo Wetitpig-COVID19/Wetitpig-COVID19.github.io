@@ -1,0 +1,21 @@
+.mdc-linear-progress__primary-bar .mdc-linear-progress__bar-inner, #searchName .mdc-text-field, #locHint, .dataBackground {
+	--mdc-theme-primary: #A7FFEB;
+}
+
+#details, #LKlabel {
+	background-color: #4a4a4a;
+	color: #A7FFEB;
+}
+
+.dataBackground {
+	--mdc-theme-secondary: #A7FFEB;
+	color: #A7FFEB;
+}
+
+#details tbody:not(#vaccine-details) {
+	display: none;
+}
+
+#leaderboard tr *, #leaderboard-title {
+	color: #A7FFEB;
+}

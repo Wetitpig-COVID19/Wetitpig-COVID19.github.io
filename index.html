@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>COVID-19 Dashboard for 🇨🇭 🇩🇪 🇫🇷 🇮🇹 🇦🇹</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes" />
+
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap"/>
+		<link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css"/>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+		integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+		crossorigin=""/>
+
+		<link rel="stylesheet" href="assets/css/tables.css"/>
+		<link rel="stylesheet" href="assets/css/map.css"/>
+		<link rel="stylesheet" href="assets/css/cases.css"/>
+
+		<script type="text/javascript" src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+		<script type="text/javascript" src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+		integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+		crossorigin=""></script>
+
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/fuse.js@6.5.3"></script>
+		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+		<script type="text/javascript" src="assets/js/FRA.js"></script>
+		<script type="text/javascript" src="assets/js/CHE.js"></script>
+		<script type="text/javascript" src="assets/js/AUT.js"></script>
+		<script type="text/javascript" src="assets/js/DEU.js"></script>
+		<script type="text/javascript" src="assets/js/ITA.js"></script>
+		<script type="text/javascript" src="assets/js/tables.js"></script>
+		<script type="text/javascript" src="assets/js/map.js"></script>
+		<script type="text/javascript" src="assets/js/search.js"></script>
+
+		<script type="text/javascript" src="assets/maps/DEU.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="assets/maps/FRA.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="assets/maps/ITA.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="assets/maps/CHE.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="assets/maps/AUT.js" charset="UTF-8"></script>
+
+		<script type="text/javascript">var rxG = {};</script>
+		<script type="text/javascript" src='https://innosol.at/covid/rxdata.js'></script>
+	</head>
+	<body>
+		<aside class="mdc-drawer mdc-drawer--modal">
+			<div class="mdc-drawer__header">
+				<h3 class="mdc-drawer__title">COVID-19 Dashboard</h3>
+				<h6 class="mdc-drawer__subtitle">🇨🇭 🇩🇪 🇫🇷 🇮🇹 🇦🇹</h6>
+			</div>
+			<div class="mdc-drawer__content">
+				<nav class="mdc-list">
+					<a class="mdc-deprecated-list-item mdc-deprecated-list-item--activated" href="#" aria-selected="true">
+						<span class="mdc-list-item__ripple"></span>
+						<span class="mdc-list-item__text">Incidence / Mortality</span>
+					</a>
+					<a class="mdc-deprecated-list-item" href="#">
+						<span class="mdc-list-item__ripple"></span>
+						<span class="mdc-list-item__text">Vaccination</span>
+					</a>
+					</a>
+				</nav>
+			</div>
+		</aside>
+
+		<aside class="mdc-snackbar" id="nonexact-match">
+			<div class="mdc-snackbar__surface" role="status" aria-relevant="additions">
+				<div class="mdc-snackbar__label" aria-atomic="false"></div>
+			</div>
+		</aside>
+
+		<div class="mdc-drawer-scrim"></div>
+		<div class="mdc-drawer-app-content">
+			<header class="mdc-top-app-bar mdc-top-app-bar--fixed">
+				<div class="mdc-top-app-bar__row">
+					<section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+						<button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button">
+							<div class="mdc-icon-button__ripple" aria-hidden="true"></div>
+							menu
+							<div class="mdc-icon-button__touch"></div>
+						</button>
+						<span class="mdc-top-app-bar__title">COVID-19 Dashboard</span>
+					</section>
+				</div>
+				<div class="mdc-linear-progress" role="progressbar" aria-label="Loading..." aria-valuemin="0" aria-valuemax="1">
+					<div class="mdc-linear-progress__buffer-dots"></div>
+					<div class="mdc-linear-progress__buffer"></div>
+					<div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
+						<span class="mdc-linear-progress__bar-inner"></span>
+					</div>
+					<div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
+						<span class="mdc-linear-progress__bar-inner"></span>
+					</div>
+				</div>
+			</header>
+
+			<main class="mdc-top-app-bar--fixed-adjust" id="currentData">
+				<div class="flex-container-row">
+					<div id="map-container" class="mdc-card">
+						<div id="map"></div>
+					</div>
+
+					<div id="table-container">
+						<div id="details-container" class="mdc-data-table dataBackground"> <div class="mdc-data-table__table-container">
+							<div class="mdc-tab-bar" id="regionChooser" role="tablist">
+								<div class="mdc-tab-scroller"> <div class="mdc-tab-scroller__scroll-area"> <div class="mdc-tab-scroller__scroll-content">
+									<button class="mdc-tab mdc-tab--active" role="tab" aria-selected="true">
+										<span class="mdc-tab__content">
+											<span class="mdc-tab__text-label" id="regionL3">County</span>
+										</span>
+										<span class="mdc-tab-indicator mdc-tab-indicator--active">
+											<span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+										</span>
+										<span class="mdc-tab__ripple"></span>
+									</button>
+									<button class="mdc-tab" role="tab">
+										<span class="mdc-tab__content">
+											<span class="mdc-tab__text-label" id="regionL2">Region</span>
+										</span>
+										<span class="mdc-tab-indicator">
+											<span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+										</span>
+										<span class="mdc-tab__ripple"></span>
+									</button>
+									<button class="mdc-tab" role="tab">
+										<span class="mdc-tab__content">
+											<span class="mdc-tab__text-label" id="regionL1">Country</span>
+										</span>
+										<span class="mdc-tab-indicator">
+											<span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+										</span>
+										<span class="mdc-tab__ripple"></span>
+									</button>
+								</div> </div> </div>
+							</div>
+							<table class="mdc-data-table__table" id="details">
+								<thead>
+									<tr class="mdc-data-table__header-row">
+										<th id="LKlabel" class="mdc-data-table__header-cell roundCorners" colspan="3"></th>
+									</tr>
+									<tr class="mdc-data-table__row">
+										<td class="mdc-data-table__cell">Population</td>
+										<td id="pop" class="mdc-data-table__cell mdc-data-table__cell--numeric" colspan="2"></td>
+									</tr>
+									<tr class="mdc-data-table__header-row">
+										<th class="mdc-data-table__header-cell" role="columnheader" scope="col"></th>
+										<th class="mdc-data-table__header-cell" role="columnheader" scope="col">Count</th>
+										<th class="mdc-data-table__header-cell" role="columnheader" scope="col"></th>
+									</tr>
+								</thead>
+								<tbody class="mdc-data-table__content details" id="cases-details">
+									<tr class="mdc-data-table__row">
+										<td class="mdc-data-table__cell">7-day Cases</td>
+										<td id="cases7" class="mdc-data-table__cell mdc-data-table__cell--numeric"></td>
+										<td id="incidence7" class="mdc-data-table__cell mdc-data-table__cell--numeric"></td>
+									</tr>
+									<tr class="mdc-data-table__row">
+										<td class="mdc-data-table__cell">14-day Cases</td>
+										<td id="cases14" class="mdc-data-table__cell mdc-data-table__cell--numeric"></td>
+										<td id="incidence14" class="mdc-data-table__cell mdc-data-table__cell--numeric"></td>
+									</tr>
+									<tr class="mdc-data-table__row">
+										<td class="mdc-data-table__cell">28-day Cases</td>
+										<td id="cases28" class="mdc-data-table__cell mdc-data-table__cell--numeric"></td>
+										<td id="incidence28" class="mdc-data-table__cell mdc-data-table__cell--numeric"></td>
+									</tr>
+
+									<tr class="mdc-data-table__row">
+										<td class="mdc-data-table__cell">7-day Deaths</td>
+										<td id="deaths7" class="mdc-data-table__cell mdc-data-table__cell--numeric"></td>
+										<td id="mortality7" class="mdc-data-table__cell mdc-data-table__cell--numeric"></td>
+									</tr>
+									<tr class="mdc-data-table__row">
+										<td class="mdc-data-table__cell">14-day Deaths</td>
+										<td id="deaths14" class="mdc-data-table__cell mdc-data-table__cell--numeric"></td>
+										<td id="mortality14" class="mdc-data-table__cell mdc-data-table__cell--numeric"></td>
+									</tr>
+									<tr class="mdc-data-table__row">
+										<td class="mdc-data-table__cell">28-day Deaths</td>
+										<td id="deaths28" class="mdc-data-table__cell mdc-data-table__cell--numeric"></td>
+										<td id="mortality28" class="mdc-data-table__cell mdc-data-table__cell--numeric"></td>
+									</tr>
+
+									<tr class="mdc-data-table__row">
+										<td class="mdc-data-table__cell">Last Updated</td>
+										<td class="mdc-data-table__cell lastUpdated" colspan="2"></td>
+									</tr>
+								</tbody>
+								<tbody class="mdc-data-table__content" id="vaccine-details">
+									<tr class="mdc-data-table__row">
+										<td class="mdc-data-table__cell">90-day Full</td>
+										<td id="dose2_90" class="mdc-data-table__cell mdc-data-table__cell--numeric"></td>
+										<td id="coverage2_90" class="mdc-data-table__cell mdc-data-table__cell--numeric"></td>
+									</tr>
+									<tr class="mdc-data-table__row">
+										<td class="mdc-data-table__cell">180-day Full</td>
+										<td id="dose2_180" class="mdc-data-table__cell mdc-data-table__cell--numeric"></td>
+										<td id="coverage2_180" class="mdc-data-table__cell mdc-data-table__cell--numeric"></td>
+									</tr>
+									<tr class="mdc-data-table__row">
+										<td class="mdc-data-table__cell">Cumulative Full</td>
+										<td id="dose2" class="mdc-data-table__cell mdc-data-table__cell--numeric"></td>
+										<td id="coverage2" class="mdc-data-table__cell mdc-data-table__cell--numeric"></td>
+									</tr>
+
+									<tr class="mdc-data-table__row">
+										<td class="mdc-data-table__cell">90-day Boosted</td>
+										<td id="dose3_90" class="mdc-data-table__cell mdc-data-table__cell--numeric"></td>
+										<td id="coverage3_90" class="mdc-data-table__cell mdc-data-table__cell--numeric"></td>
+									</tr>
+									<tr class="mdc-data-table__row">
+										<td class="mdc-data-table__cell">180-day Boosted</td>
+										<td id="dose3_180" class="mdc-data-table__cell mdc-data-table__cell--numeric"></td>
+										<td id="coverage3_180" class="mdc-data-table__cell mdc-data-table__cell--numeric"></td>
+									</tr>
+									<tr class="mdc-data-table__row">
+										<td class="mdc-data-table__cell">Cumulative Boosted</td>
+										<td id="dose3" class="mdc-data-table__cell mdc-data-table__cell--numeric"></td>
+										<td id="coverage3" class="mdc-data-table__cell mdc-data-table__cell--numeric"></td>
+									</tr>
+
+									<tr class="mdc-data-table__row">
+										<td class="mdc-data-table__cell">Last Updated</td>
+										<td class="mdc-data-table__cell lastUpdated" colspan="2"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div> </div>
+
+						<div class="flex-container-column-reverse" id="sortParam">
+							<div id="sortBy" class="mdc-card dataBackground">
+								<span class="mdc-typography--subtitle2">Sort by</span>
+								<ul class="mdc-list" role="radiogroup">
+									<li class="mdc-list-item" role="radio" aria-checked="true">
+										<span class="mdc-list-item__ripple"></span>
+										<span class="mdc-list-item__graphic"> <div class="mdc-radio">
+											<input class="mdc-radio__native-control" type="radio" id="sortByData" name="sortTableBy" value="data">
+											<div class="mdc-radio__background">
+												<div class="mdc-radio__outer-circle"></div>
+												<div class="mdc-radio__inner-circle"></div>
+											</div>
+										</div> </span>
+										<label class="mdc-list-item__text" for="sortByData">Data Type</label>
+									</li>
+									<li class="mdc-list-item" role="radio" aria-checked="false">
+										<span class="mdc-list-item__ripple"></span>
+										<span class="mdc-list-item__graphic"> <div class="mdc-radio">
+											<input class="mdc-radio__native-control" type="radio" id="sortByTime" name="sortTableBy" value="time">
+											<div class="mdc-radio__background">
+												<div class="mdc-radio__outer-circle"></div>
+												<div class="mdc-radio__inner-circle"></div>
+											</div>
+										</div> </span>
+										<label class="mdc-list-item__text" for="sortByTime">Time frame</label>
+									</li>
+								</ul>
+							</div>
+
+							<div id="searchName" class="mdc-card dataBackground">
+								<div class="mdc-card__primary-action mdc-card__ripple mdc-menu-surface--anchor">
+									<span class="mdc-typography--subtitle2">Search by Name</span>
+									<label class="mdc-text-field mdc-text-field--filled">
+										<span class="mdc-text-field__ripple"></span>
+										<span class="mdc-floating-label mdc-typography--body2" id="locHint">Hit Enter to Search</span>
+										<input class="mdc-text-field__input mdc-typography--body2" type="text" aria-labelledby="locHint">
+										<span class="mdc-line-ripple"></span>
+									</label>
+									<div class="mdc-menu mdc-menu-surface mdc-menu-surface--fullwidth" id="searchNameHint">
+										<ul class="mdc-list" role="menu" aria-orientation="vertical">
+											<li class="mdc-list-item" role="menuitem"><span class="mdc-list-item__ripple"></span><span class="mdc-list-item__text"></span></li>
+											<li class="mdc-list-item" role="menuitem"><span class="mdc-list-item__ripple"></span><span class="mdc-list-item__text"></span></li>
+											<li class="mdc-list-item" role="menuitem"><span class="mdc-list-item__ripple"></span><span class="mdc-list-item__text"></span></li>
+											<li class="mdc-list-item" role="menuitem"><span class="mdc-list-item__ripple"></span><span class="mdc-list-item__text"></span></li>
+											<li class="mdc-list-item" role="menuitem"><span class="mdc-list-item__ripple"></span><span class="mdc-list-item__text"></span></li>
+											<li class="mdc-list-item" role="menuitem"><span class="mdc-list-item__ripple"></span><span class="mdc-list-item__text"></span></li>
+											<li class="mdc-list-item" role="menuitem"><span class="mdc-list-item__ripple"></span><span class="mdc-list-item__text"></span></li>
+											<li class="mdc-list-item" role="menuitem"><span class="mdc-list-item__ripple"></span><span class="mdc-list-item__text"></span></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div id="leaderboard-container" class="mdc-card">
+						<span id="leaderboard-title" class="mdc-typography--headline6">Leaderboard</span>
+						<div id="leaderboard"></div>
+					</div>
+				</div>
+			</main>
+		</div>
+	</body>
+</html>

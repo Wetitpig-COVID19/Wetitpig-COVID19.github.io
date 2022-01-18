@@ -1,0 +1,21 @@
+.mdc-linear-progress__primary-bar .mdc-linear-progress__bar-inner, #searchName .mdc-text-field, #locHint, .dataBackground {
+	--mdc-theme-primary: #B388FF;
+}
+
+#details, th.mdc-data-table__header-cell {
+	background-color: #4a4a4a;
+	color: #B388FF;
+}
+
+.dataBackground {
+	--mdc-theme-secondary: #B388FF;
+	color: #B388FF;
+}
+
+#details tbody:not(#cases-details) {
+	display: none;
+}
+
+#leaderboard tr *, #leaderboard-title {
+	color: #B388FF;
+}
