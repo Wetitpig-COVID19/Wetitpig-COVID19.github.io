@@ -38,3 +38,7 @@ The user interface is designed with [Material Design for Web](https://material.i
 | Italy   						| [Covid-19 Opendata Vaccini](https://github.com/italia/covid19-opendata-vaccini)															|
 | Austria 						| [news @ ORF.at](https://orf.at/corona/daten/impfung/)																						|
 | Switzerland and Liechtenstein	| [COVID-19 Schweiz](https://www.covid19.admin.ch/de/vaccination/persons)																	|
+
+## Known Issues
+* Slow loading times due to bulk import of data (may be alleviated by browser cache)
+* Content not displayed on Safari (although buttons are working)
