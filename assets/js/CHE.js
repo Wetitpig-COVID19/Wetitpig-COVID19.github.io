@@ -46,7 +46,12 @@ const casesCHE = {
 
 				fxKanton();
 				resetTableColours(bgColor);
-				displayTable('Canton', 'Region', 0);
+				if (feature.properties.KTCODE == 'FL') {
+					displayTable('Country', 'Country', 2);
+					$('#regionChooser #mdc-tab-1, #regionChooser #mdc-tab-2').prop('disabled', true);
+				}
+				else
+					displayTable('Canton', 'Region', 0);
 			}
 		});
 	},
@@ -196,7 +201,12 @@ const vacCHE = {
 
 				fxKanton();
 				resetTableColours(bgColor);
-				displayTable('Canton', 'Region', 0);
+				if (feature.properties.KTCODE == 'FL') {
+					displayTable('Country', 'Country', 2);
+					$('#regionChooser #mdc-tab-1, #regionChooser #mdc-tab-2').prop('disabled', true);
+				}
+				else
+					displayTable('Canton', 'Region', 0);
 			}
 		});
 	},

@@ -31,11 +31,7 @@ const textColor = colorCode => {
 
 const resetTableColours = bgColor => {
 	var fgColor = textColor(bgColor);
-	$('#details .mdc-data-table__header-cell').css({
-		'background-color': bgColor,
-		'color': fgColor
-	});
-	$('#details .mdc-data-table__cell').css({
+	$('#details .mdc-data-table__header-cell, #details .mdc-data-table__cell').css({
 		'background-color': bgColor,
 		'color': fgColor
 	});
@@ -62,10 +58,12 @@ const vacTableFill = toPrint => {
 const displayTable = (L3, L2, tabNumber) => {
 	$('#regionL3').html(L3);
 	$('#regionL2').html(L2);
-	$('#regionChooser .mdc-tab').css('display', 'flex');
+	$('#regionChooser #mdc-tab-1, #regionChooser #mdc-tab-2').prop('disabled', false);
+
 	regionChooser.activateTab(tabNumber);
+
+	$('#regionChooser .mdc-tab').css('display', 'flex');
 	$('#details tr, #regionChooser').css('visibility', 'visible');
-	$('#startLabel').css('visibility', 'hidden');
 };
 
 const convertDate = {
@@ -123,8 +121,7 @@ const drawLeaderboard = (tableData, factor) => {
 			sortAscending: false
 		});
 
-		$('#leaderboard table td:nth-child(2)').removeClass('mdc-data-table__cell--numeric');
-		$('#leaderboard table td:nth-child(2)').addClass('mdc-data-table__cell');
+		$('#leaderboard table td:nth-child(2)').removeClass('mdc-data-table__cell--numeric').addClass('mdc-data-table__cell');
 
 		document.querySelector('.mdc-linear-progress').removeEventListener('COVID19:Loaded', draw);
 	};

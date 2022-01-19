@@ -70,8 +70,8 @@ const mapStyle = {
 };
 
 const layerLoaded = () => {
-	progressBar.progress = progressBar.foundation.getProgress() + 0.2;
-	if (progressBar.foundation.getProgress() == 1) {
+	progressBar.progress = progressBar.foundation.getProgress() + 1/6;
+	if (progressBar.foundation.getProgress() > 0.999) {
 		setTimeout(() => progressBar.close(), 500);
 		document.querySelector('.mdc-linear-progress').dispatchEvent(new Event('COVID19:Loaded'));
 	}
@@ -153,7 +153,7 @@ $(() => {
 			deaths28: '28-day Mortality'
 		}, 100000);
 		setStyleonData('cases', 'per ' + (100000).toLocaleString());
-		[casesFRA, casesCHE, casesDEU, casesITA, casesAUT].forEach(x => x.init());
+		[casesFRA, casesCHE, casesDEU, casesITA, casesLUX, casesAUT].forEach(x => x.init());
 	});
 	navButtons[1].addEventListener('click', function() {
 		setStyleonData('vaccine', '(%)');
@@ -165,11 +165,11 @@ $(() => {
 			dose3_180: '180-day Boosted',
 			dose3: 'Cumulative Boosted'
 		}, 100);
-		[vacDEU, vacITA, vacCHE, vacFRA, vacAUT].forEach(x => x.init());
+		[vacDEU, vacITA, vacCHE, vacFRA, vacAUT, vacLUX].forEach(x => x.init());
 	});
 
 	regionChooser = mdc.tabBar.MDCTabBar.attachTo(document.querySelector('#regionChooser'));
 	setStyleonData('cases', 'per ' + (100000).toLocaleString(), false);
-	[casesFRA, casesCHE, casesDEU, casesITA, casesAUT].forEach(x => x.init());
+	[casesFRA, casesCHE, casesDEU, casesITA, casesAUT, casesLUX].forEach(x => x.init());
 	addOSM();
 });

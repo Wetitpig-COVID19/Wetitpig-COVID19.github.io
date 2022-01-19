@@ -180,9 +180,9 @@ const vacAUT = {
 		vacAUT.bundData.EWZ = bundeslaenderDataAUT.reduce((a,b) => a + b.EWZ, 0);
 
 		var query = $.getJSON({
-			url: 'https://jsonp.afeld.me/',
+			url: 'https://corsproxy.winsto003.workers.dev/corsproxy/',
 			data: {
-				url: 'https://pipe.orf.at/corona-dashboard/data/COVID19_vaccination_doses_timeline--states.json'
+				apiurl: 'https://pipe.orf.at/corona-dashboard/data/COVID19_vaccination_doses_timeline--states.json'
 			}
 		}).done(data => {
 			vacAUT.lastUpdate = convertDate.fx(data.slice(-1)[0].dateISO);

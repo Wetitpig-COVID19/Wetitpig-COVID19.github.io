@@ -20,7 +20,7 @@ var hintMenu;
 
 $(() => document.querySelector('.mdc-linear-progress').addEventListener('COVID19:Loaded', () => {
 	const hintListL1 = new Fuse(
-		['Deutschland', 'Germany', 'Osterreich', 'Austria', 'Italia', 'Italy', 'France', 'Die Schweiz', 'La Suisse', 'La Svizzera', 'La Svizra', 'Switzerland'], {
+		['Deutschland', 'Germany', 'Osterreich', 'Austria', 'Italia', 'Italy', 'France', 'Die Schweiz', 'La Suisse', 'La Svizzera', 'La Svizra', 'Switzerland', 'Letzebuerg', 'Luxembourg', 'Luxemburg'], {
 		includeScore: true
 	});
 
@@ -97,6 +97,8 @@ $(() => document.querySelector('.mdc-linear-progress').addEventListener('COVID19
 					labelString = pooledSearch[searchIndex].result.item;
 					if (labelString == 'Osterreich')
 						labelString = 'Österreich';
+					else if (labelString == 'Letzebuerg')
+						labelString = 'Lëtzebuerg';
 				}
 				else {
 					switch(pooledSearch[searchIndex].country)
@@ -163,6 +165,7 @@ $(() => document.querySelector('.mdc-linear-progress').addEventListener('COVID19
 					case 'Osterreich': case 'Austria': toFire = BezirkJSON; break;
 					case 'Italia': case 'Italy': toFire = ProvinceJSON; break;
 					case 'France': toFire = DepartementJSON; break;
+					case 'Letzebuerg': case 'Luxembourg': case 'Luxemburg': toFire = LuxembourgJSON; break;
 					default: toFire = KantonJSON; break;
 				}
 				toFire._layers[Object.keys(toFire._layers)[0]].fireEvent('click');
@@ -170,7 +173,7 @@ $(() => document.querySelector('.mdc-linear-progress').addEventListener('COVID19
 			if (bestMatch.level != 3)
 				regionChooser.activateTab(3 - bestMatch.level);
 
-			if (replaceNonAscii($('#LKlabel').html()) != replaceNonAscii(document.querySelector('#searchName input').value)) {
+			if (replaceNonAscii($('#LKlabel').html()) != replaceNonAscii(document.querySelector('#searchName input').value) && typeof(value) == 'string') {
 				nonExactBar.labelText = `No exact match of "${value}" found. Showing results for "${$('#LKlabel').html()}"`;
 				nonExactBar.open();
 			}
