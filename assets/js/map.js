@@ -123,21 +123,6 @@ $(() => {
 		}).addTo(map);
 	};
 
-	const addSubNational = () => {
-		origStyle = {
-			style: {
-				fillOpacity: 0,
-				opacity: 0
-			}
-		};
-		LandkreisJSON = L.geoJson(Landkreise, origStyle);
-		KantonJSON = L.geoJson(Kantone, origStyle);
-		DepartementJSON = L.geoJson(Departements, origStyle);
-		ProvinceJSON = L.geoJson(Province, origStyle);
-		BezirkJSON = L.geoJson(Bezirke, origStyle);
-		[LandkreisJSON, KantonJSON, DepartementJSON, ProvinceJSON, BezirkJSON].forEach(s => s.addTo(map));
-	}
-
 	appDrawer = mdc.drawer.MDCDrawer.attachTo(document.querySelector('aside.mdc-drawer'));
 	document.querySelector('aside.mdc-drawer').addEventListener('MDCDrawer:opened', _event => document.activeElement.blur());
 	document.querySelector('aside.mdc-drawer .mdc-list').addEventListener('click', event => {
@@ -185,7 +170,6 @@ $(() => {
 
 	regionChooser = mdc.tabBar.MDCTabBar.attachTo(document.querySelector('#regionChooser'));
 	setStyleonData('cases', 'per ' + (100000).toLocaleString(), false);
-	addSubNational();
 	[casesFRA, casesCHE, casesDEU, casesITA, casesAUT].forEach(x => x.init());
 	addOSM();
 });

@@ -84,8 +84,10 @@ const casesAUT = {
             casesAUT.lastUpdate = new Date(Date.UTC(parseInt(casesAUT.lastUpdate[2], 10), parseInt(casesAUT.lastUpdate[1], 10) - 1, parseInt(casesAUT.lastUpdate[0], 10)));
         }
 
-        BezirkJSON.removeEventListener('add', layerLoaded);
-        map.removeLayer(BezirkJSON);
+        if (BezirkJSON !== undefined) {
+            BezirkJSON.removeEventListener('add', layerLoaded);
+            map.removeLayer(BezirkJSON)
+        }
         BezirkJSON = L.geoJSON(Bezirke, {
             style: feature => mapStyle.style(feature.properties.cases7 / feature.properties.EWZ * 100000, 'incidence'),
             onEachFeature: casesAUT.handleClick
@@ -158,8 +160,10 @@ const vacAUT = {
 	},
 
 	showOnMap: () => {
-		BezirkJSON.removeEventListener('add', layerLoaded);
-		map.removeLayer(BezirkJSON);
+		if (BezirkJSON !== undefined) {
+    		BezirkJSON.removeEventListener('add', layerLoaded);
+    		map.removeLayer(BezirkJSON)
+		}
 		BezirkJSON = L.geoJSON(Bezirke, {
 			style: feature => mapStyle.style(feature.properties.dose2 / feature.properties.EWZ * 100, 'coverage'),
 			onEachFeature: vacAUT.handleClick

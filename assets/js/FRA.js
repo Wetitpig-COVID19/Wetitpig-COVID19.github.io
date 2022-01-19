@@ -60,8 +60,10 @@ const casesFRA = {
 	},
 
 	showOnMap: () => {
-		DepartementJSON.removeEventListener('add', layerLoaded);
-		map.removeLayer(DepartementJSON);
+		if (DepartementJSON !== undefined) {
+    		DepartementJSON.removeEventListener('add', layerLoaded);
+    		map.removeLayer(DepartementJSON)
+		}
 		DepartementJSON = L.geoJSON(Departements, {
 			style: feature => mapStyle.style(feature.properties.cases7 / feature.properties.EWZ * 100000, 'incidence'),
 			onEachFeature: casesFRA.handleClick
@@ -188,8 +190,10 @@ const vacFRA = {
 	},
 
 	showOnMap: () => {
-		DepartementJSON.removeEventListener('add', layerLoaded);
-		map.removeLayer(DepartementJSON);
+		if (DepartementJSON !== undefined) {
+    		DepartementJSON.removeEventListener('add', layerLoaded);
+    		map.removeLayer(DepartementJSON)
+		}
 		DepartementJSON = L.geoJSON(Departements, {
 			style: feature => mapStyle.style(feature.properties.dose2 / feature.properties.EWZ * 100, 'coverage'),
 			onEachFeature: vacFRA.handleClick

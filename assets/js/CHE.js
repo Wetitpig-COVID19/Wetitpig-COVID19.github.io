@@ -52,8 +52,10 @@ const casesCHE = {
     },
 
     showOnMap: () => {
-        KantonJSON.removeEventListener('add', layerLoaded);
-        map.removeLayer(KantonJSON);
+        if (KantonJSON !== undefined) {
+            KantonJSON.removeEventListener('add', layerLoaded);
+            map.removeLayer(KantonJSON)
+        }
         KantonJSON = L.geoJSON(Kantone, {
             style: feature => mapStyle.style(feature.properties.cases7 / feature.properties.EWZ * 100000, 'incidence'),
             onEachFeature: casesCHE.handleClick
@@ -200,8 +202,10 @@ const vacCHE = {
 	},
 
 	showOnMap: () => {
-		KantonJSON.removeEventListener('add', layerLoaded);
-		map.removeLayer(KantonJSON);
+		if (KantonJSON !== undefined) {
+    		KantonJSON.removeEventListener('add', layerLoaded);
+    		map.removeLayer(KantonJSON)
+		}
 		KantonJSON = L.geoJSON(Kantone, {
 			style: feature => mapStyle.style(feature.properties.dose2 / feature.properties.EWZ * 100, 'coverage'),
 			onEachFeature: vacCHE.handleClick

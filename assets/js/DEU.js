@@ -61,8 +61,10 @@ const casesDEU = {
 	},
 
 	showOnMap: () => {
-		LandkreisJSON.removeEventListener('add', layerLoaded);
-		map.removeLayer(LandkreisJSON);
+		if (LandkreisJSON !== undefined) {
+    		LandkreisJSON.removeEventListener('add', layerLoaded);
+    		map.removeLayer(LandkreisJSON)
+		}
 		LandkreisJSON = L.geoJSON({
 			type: Landkreise.type,
 			crs: Landkreise.crs,
@@ -158,7 +160,6 @@ const casesDEU = {
 					bundeslaenderDataDEU[parseInt(L_v.properties['BL_ID'], 10) - 1].EWZ += L_v.properties.EWZ;
 				});
 
-				LandkreisJSON.addEventListener('add', layerLoaded);
 				casesDEU.showOnMap();
 			});
 		});
@@ -232,8 +233,10 @@ const vacDEU = {
 	},
 
 	showOnMap: () => {
-		LandkreisJSON.removeEventListener('add', layerLoaded);
-		map.removeLayer(LandkreisJSON);
+		if (LandkreisJSON !== undefined) {
+    		LandkreisJSON.removeEventListener('add', layerLoaded);
+    		map.removeLayer(LandkreisJSON)
+		}
 		LandkreisJSON = L.geoJSON({
 			type: Landkreise.type,
 			crs: Landkreise.crs,
