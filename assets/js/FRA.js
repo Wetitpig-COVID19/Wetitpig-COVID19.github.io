@@ -61,8 +61,8 @@ const casesFRA = {
 
 	showOnMap: () => {
 		if (DepartementJSON !== undefined) {
-    		DepartementJSON.removeEventListener('add', layerLoaded);
-    		map.removeLayer(DepartementJSON)
+			DepartementJSON.removeEventListener('add', layerLoaded);
+			map.removeLayer(DepartementJSON)
 		}
 		DepartementJSON = L.geoJSON(Departements, {
 			style: feature => mapStyle.style(feature.properties.cases7 / feature.properties.EWZ * 100000, 'incidence'),
@@ -77,7 +77,7 @@ const casesFRA = {
 		regionsData = listOfRegions.reduce((a, code) => {
 			a[code] = {
 				cases7: 0, cases14: 0, cases28: 0,
-                deaths7: 0, deaths14: 0, deaths28: 0,
+				deaths7: 0, deaths14: 0, deaths28: 0,
 				EWZ: 0
 			};
 			return a;
@@ -173,13 +173,13 @@ const vacFRA = {
 				};
 
 				regionChooser.listen('MDCTabBar:activated', detail => {
-                    switch(detail.detail.index)
+					switch(detail.detail.index)
 					{
 						case 0: fxDepartement(); break;
 						case 1: fxRegion(); break;
 						case 2: fxRepublique(); break;
 					}
-                    resetTableColours(bgColor);
+					resetTableColours(bgColor);
 				});
 
 				fxDepartement();
@@ -191,8 +191,8 @@ const vacFRA = {
 
 	showOnMap: () => {
 		if (DepartementJSON !== undefined) {
-    		DepartementJSON.removeEventListener('add', layerLoaded);
-    		map.removeLayer(DepartementJSON)
+			DepartementJSON.removeEventListener('add', layerLoaded);
+			map.removeLayer(DepartementJSON)
 		}
 		DepartementJSON = L.geoJSON(Departements, {
 			style: feature => mapStyle.style(feature.properties.dose2 / feature.properties.EWZ * 100, 'coverage'),

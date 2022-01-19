@@ -62,8 +62,8 @@ const casesDEU = {
 
 	showOnMap: () => {
 		if (LandkreisJSON !== undefined) {
-    		LandkreisJSON.removeEventListener('add', layerLoaded);
-    		map.removeLayer(LandkreisJSON)
+			LandkreisJSON.removeEventListener('add', layerLoaded);
+			map.removeLayer(LandkreisJSON)
 		}
 		LandkreisJSON = L.geoJSON({
 			type: Landkreise.type,
@@ -97,7 +97,7 @@ const casesDEU = {
 				$.extend(true, casesDEU.landkreisFiltered[i].properties, data.features[i].attributes);
 				Object.assign(casesDEU.landkreisFiltered[i].properties, {
 					cases7: 0, cases14: 0, cases28: 0,
-                	deaths7: 0, deaths14: 0, deaths28: 0
+					deaths7: 0, deaths14: 0, deaths28: 0
 				});
 			}
 			Landkreise.features.filter(value => value.properties.RS == '11000')[0].properties.EWZ = casesDEU.landkreisFiltered.filter(value => value.properties.RS.substring(0,2) == '11').reduce((a,b) => a + b.properties.EWZ, 0);
@@ -152,7 +152,7 @@ const casesDEU = {
 			$.when(...queries).done(() => {
 				bundeslaenderDataDEU = new Array(16).fill(null).map(() => ({
 					cases7: 0, cases14: 0, cases28: 0,
-                	deaths7: 0, deaths14: 0, deaths28: 0,
+					deaths7: 0, deaths14: 0, deaths28: 0,
 					EWZ: 0
 				}));
 				casesDEU.landkreisFiltered.forEach(L_v => {
@@ -234,8 +234,8 @@ const vacDEU = {
 
 	showOnMap: () => {
 		if (LandkreisJSON !== undefined) {
-    		LandkreisJSON.removeEventListener('add', layerLoaded);
-    		map.removeLayer(LandkreisJSON)
+			LandkreisJSON.removeEventListener('add', layerLoaded);
+			map.removeLayer(LandkreisJSON)
 		}
 		LandkreisJSON = L.geoJSON({
 			type: Landkreise.type,
