@@ -58,7 +58,7 @@ const vacTableFill = toPrint => {
 const displayTable = (L3, L2, tabNumber) => {
 	$('#regionL3').html(L3);
 	$('#regionL2').html(L2);
-	$('#regionChooser #mdc-tab-1, #regionChooser #mdc-tab-2').prop('disabled', false);
+	$('#regionChooser #mdc-tab-2, #regionChooser #mdc-tab-3').prop('disabled', false);
 
 	regionChooser.activateTab(tabNumber);
 

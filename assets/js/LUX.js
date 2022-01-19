@@ -18,8 +18,8 @@ const casesLUX = {
 
 				bgColor = mapStyle.incidence(toPrint.cases7 / toPrint.EWZ * 100000);
 				resetTableColours(bgColor);
-				displayTable('Country', 'Country', 2);
-				$('#regionChooser #mdc-tab-1, #regionChooser #mdc-tab-2').prop('disabled', true);
+				displayTable('Country', 'Country', 0);
+				$('#regionChooser #mdc-tab-2, #regionChooser #mdc-tab-3').prop('disabled', true);
 			}
 		});
 	},
@@ -90,8 +90,8 @@ const vacLUX = {
 
 				bgColor = mapStyle.coverage(toPrint.dose2 / toPrint.EWZ * 100);
 				resetTableColours(bgColor);
-				displayTable('Country', 'Country', 2);
-				$('#regionChooser #mdc-tab-1, #regionChooser #mdc-tab-2').prop('disabled', true);
+				displayTable('Country', 'Country', 0);
+				$('#regionChooser #mdc-tab-2, #regionChooser #mdc-tab-3').prop('disabled', true);
 			}
 		});
 	},

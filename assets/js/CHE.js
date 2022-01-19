@@ -47,8 +47,8 @@ const casesCHE = {
 				fxKanton();
 				resetTableColours(bgColor);
 				if (feature.properties.KTCODE == 'FL') {
-					displayTable('Country', 'Country', 2);
-					$('#regionChooser #mdc-tab-1, #regionChooser #mdc-tab-2').prop('disabled', true);
+					displayTable('Country', 'Country', 0);
+					$('#regionChooser #mdc-tab-2, #regionChooser #mdc-tab-3').prop('disabled', true);
 				}
 				else
 					displayTable('Canton', 'Region', 0);
@@ -202,8 +202,8 @@ const vacCHE = {
 				fxKanton();
 				resetTableColours(bgColor);
 				if (feature.properties.KTCODE == 'FL') {
-					displayTable('Country', 'Country', 2);
-					$('#regionChooser #mdc-tab-1, #regionChooser #mdc-tab-2').prop('disabled', true);
+					displayTable('Country', 'Country', 0);
+					$('#regionChooser #mdc-tab-2, #regionChooser #mdc-tab-3').prop('disabled', true);
 				}
 				else
 					displayTable('Canton', 'Region', 0);
