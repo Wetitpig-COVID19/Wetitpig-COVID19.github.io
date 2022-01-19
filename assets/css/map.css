@@ -29,6 +29,9 @@ aside.mdc-drawer .mdc-deprecated-list-item--activated {
 aside.mdc-drawer .mdc-drawer__title, aside.mdc-drawer .mdc-drawer__subtitle {
 	color: #fff;
 }
+aside.mdc-drawer .mdc-list-item__graphic {
+	padding-right: 1ch;
+}
 
 .mdc-drawer-app-content {
 	flex: auto;

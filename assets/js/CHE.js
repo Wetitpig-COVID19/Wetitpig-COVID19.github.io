@@ -167,7 +167,7 @@ const vacCHE = {
 
 				var fxBund = () => {
 					totalPop = grossRegionenData.reduce((a,b) => a + b.EWZ, 0);
-					$('#LKlabel').html('Die Schweiz / La Suisse / La Svizzera / La Svizra');
+					$('#LKlabel').html('Die Schweiz/La Suisse/La Svizzera/La Svizra');
 					$('#pop').html(totalPop.toLocaleString());
 
 					['', '_90', '_180'].forEach(t => ['2', '3'].forEach(s => {
