@@ -105,7 +105,7 @@ $(() => document.querySelector('.mdc-linear-progress').addEventListener('COVID19
 						case 'FRA': label = ['France', 'reg', 'nom']; break;
 						case 'ITA': label = ['Italia', 'reg_name', 'prov_name']; break;
 						case 'AUT': label = ['Österreich', 'BL', 'name']; break;
-						default: label = ['Schweiz / Suisse / Svizzera / Svizra', 'GRNR', 'KTNAME']; break;
+						default: label = ['Schweiz/Suisse/Svizzera/Svizra', 'GRNR', 'KTNAME']; break;
 					}
 					labelString = (pooledSearch[searchIndex].level == 3) ? pooledSearch[searchIndex].result.item.feature.properties[label[2]] + ', ' : '';
 					if (labelString != 'Liechtenstein, ') {
