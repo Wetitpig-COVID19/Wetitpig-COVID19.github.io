@@ -1,6 +1,6 @@
 # COVID-19 Dashboard
 
-This repository may not be actively worked upon as the owner is now busy.
+This repository may not be actively maintained as the owner is now busy.
 
 ## Data offered in Dashboard
 * Cases
