@@ -153,8 +153,8 @@ $(() => {
 
 	gChartLoad = google.charts.load('current', {
 		packages: ['table']
-	})
-	.then(drawLeaderboard(
+	});
+	google.charts.setOnLoadCallback(drawLeaderboard(
 		{
 			cases7: '7-day Incidence',
 			cases14: '14-day Incidence',
