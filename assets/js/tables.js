@@ -80,7 +80,7 @@ var dataFieldSelect;
 var leaderboard;
 var leaderboardData;
 
-const drawLeaderboard = (tableData, factor) => {
+const drawLeaderboard = (tableData, factor, sortColumn) => {
 	if (leaderboard !== undefined)
 		leaderboard.clearChart();
 	const draw = () => {
@@ -117,7 +117,7 @@ const drawLeaderboard = (tableData, factor) => {
 			showRowNumber: true,
 			page: 'enable',
 			pageSize: 20,
-			sortColumn: 1,
+			sortColumn: sortColumn,
 			sortAscending: false
 		});
 
@@ -163,6 +163,6 @@ $(() => {
 			deaths14: '14-day Mortality',
 			deaths28: '28-day Mortality'
 		}
-		, 100000)
+		, 100000, 1)
 	);
 });

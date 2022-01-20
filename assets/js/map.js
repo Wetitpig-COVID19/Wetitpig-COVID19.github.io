@@ -151,7 +151,7 @@ $(() => {
 			deaths7: '7-day Mortality',
 			deaths14: '14-day Mortality',
 			deaths28: '28-day Mortality'
-		}, 100000);
+		}, 100000, 1);
 		setStyleonData('cases', 'per ' + (100000).toLocaleString());
 		[casesFRA, casesCHE, casesDEU, casesITA, casesLUX, casesAUT].forEach(x => x.init());
 	});
@@ -164,7 +164,7 @@ $(() => {
 			dose3_90: '90-day Boosted',
 			dose3_180: '180-day Boosted',
 			dose3: 'Cumulative Boosted'
-		}, 100);
+		}, 100, 3);
 		[vacDEU, vacITA, vacCHE, vacFRA, vacAUT, vacLUX].forEach(x => x.init());
 	});
 
