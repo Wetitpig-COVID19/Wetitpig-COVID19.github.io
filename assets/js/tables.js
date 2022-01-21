@@ -81,8 +81,13 @@ var leaderboard;
 var leaderboardData;
 
 const drawLeaderboard = (tableData, factor, sortColumn) => {
-	if (leaderboard !== undefined)
+	var leaderboardListener;
+
+	if (leaderboard !== undefined) {
 		leaderboard.clearChart();
+		google.visualization.events.removeListener(leaderboardListener);
+	}
+
 	const draw = () => {
 		leaderboardData = new google.visualization.DataTable();
 		leaderboardData.addColumn('string', 'Location');
@@ -103,7 +108,9 @@ const drawLeaderboard = (tableData, factor, sortColumn) => {
 		}, [])));
 
 		leaderboard = new google.visualization.Table(document.getElementById('leaderboard'));
-		leaderboard.draw(leaderboardData, {
+		var leaderboardView = new google.visualization.DataView(leaderboardData);
+
+		var options = {
 			allowHtml: true,
 			alternatingRowStyle: false,
 			cssClassNames: {
@@ -119,7 +126,45 @@ const drawLeaderboard = (tableData, factor, sortColumn) => {
 			pageSize: 20,
 			sortColumn: sortColumn,
 			sortAscending: false
+		};
+
+		leaderboardListener = google.visualization.events.addListener(leaderboard, 'sort', props => {
+			var sortValues = [];
+			var sortRows = [];
+			var sortDirection = (props.ascending) ? 1 : -1;
+
+			if (props.column) {
+				for (var i = 0; i < leaderboardData.getNumberOfRows(); i++)
+					sortValues.push({
+						index: leaderboardData.getValue(i, props.column),
+						location: leaderboardData.getValue(i, 0)
+					});
+				sortValues.sort((row1, row2) => isNaN(row1.index) ? 1 : isNaN(row2.index) ? -1 : (row1.index - row2.index) * sortDirection);
+				sortValues.forEach(sortValue => sortRows.push(leaderboardData.getFilteredRows([
+					{column: props.column, value: sortValue.index},
+					{column: 0, value: sortValue.location}
+				])[0]));
+			}
+			else {
+				for (var i = 0; i < leaderboardData.getNumberOfRows(); i++)
+					sortValues.push({
+						index: leaderboardData.getValue(i, props.column)
+					});
+				sortValues.sort((row1, row2) => row1.index < row2.index ? sortDirection : -sortDirection);
+				sortValues.forEach(sortValue => sortRows.push(leaderboardData.getFilteredRows([
+					{column: props.column, value: sortValue.index}
+				])[0]));
+			}
+			console.log('Sorted Row Order: ' + sortRows);
+
+			leaderboardView.setRows(sortRows);
+			options.sortColumn = props.column;
+			options.sortAscending = props.ascending;
+
+			leaderboard.draw(leaderboardView, options);
 		});
+
+		leaderboard.draw(leaderboardView, options);
 
 		$('#leaderboard table td:nth-child(2)').removeClass('mdc-data-table__cell--numeric').addClass('mdc-data-table__cell');
 
