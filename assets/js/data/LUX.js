@@ -47,7 +47,7 @@ const casesLUX = {
 			url: 'https://corsproxy.winsto003.workers.dev/corsproxy/',
 			method: 'GET',
 			data: {
-				apiurl: 'https://data.public.lu/en/datasets/r/32f94473-9a6d-4640-9b92-a5b019d38111'
+				apiurl: 'https://data.public.lu/fr/datasets/r/f8d45130-3438-46d8-ae1c-ea40f6c95bff'
 			},
 			xhr: function() {
 				return xhrOverride;
