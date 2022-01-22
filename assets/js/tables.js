@@ -99,10 +99,10 @@ const drawLeaderboard = (tableData, factor, sortColumn) => {
 			[ProvinceJSON, 'prov_name'],
 			[BezirkJSON, 'name'],
 			[KantonJSON, 'KTNAME']
-		].forEach(pair => leaderboardData.addRows(Object.keys(pair[0]._layers).reduce((total, L_k) => {
+		].forEach(pair => leaderboardData.addRows(Object.values(pair[0]._layers).reduce((total, L_v) => {
 			unit = [];
-			unit.push(pair[0]._layers[L_k].feature.properties[pair[1]]),
-			Object.keys(tableData).forEach(k => unit.push(pair[0]._layers[L_k].feature.properties[k] / pair[0]._layers[L_k].feature.properties.EWZ * factor));
+			unit.push(L_v.feature.properties[pair[1]]),
+			Object.keys(tableData).forEach(k => unit.push(L_v.feature.properties[k] / L_v.feature.properties.EWZ * factor));
 			total.push(unit);
 			return total;
 		}, [])));

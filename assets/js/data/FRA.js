@@ -27,19 +27,19 @@ const casesFRA = {
 				};
 
 				var fxRepublique = () => {
-					totalPop = Object.keys(regionsData).reduce((a,b) => a + regionsData[b].EWZ, 0);
+					totalPop = Object.values(regionsData).reduce((a,b) => a + b.EWZ, 0);
 					$('#LKlabel').html('France');
 					$('#pop').html(totalPop.toLocaleString());
 
 					['7','14','28'].forEach(s => {
 						[['cases', 'incidence'], ['deaths', 'mortality']].forEach(t => {
-							total = Object.keys(regionsData).reduce((a,b) => a + regionsData[b][t[0] + s.toString(10)], 0);
+							total = Object.values(regionsData).reduce((a,b) => a + b[t[0] + s.toString(10)], 0);
 							$('#' + t[0] + s).html(total.toLocaleString());
 							$('#' + t[1] + s).html((total / totalPop * 100000).toLocaleString(undefined, {minimumFractionDigits: 3, maximumFractionDigits: 3}));
 						});
 					});
 					$('.lastUpdated').html(`Cases: ${casesFRA.casesLastUpdate.toISOString().substring(0,10)}<br>Deaths: ${casesFRA.deathsLastUpdate.toISOString().substring(0,10)}`);
-					bgColor = mapStyle.incidence(Object.keys(regionsData).reduce((a,b) => a + regionsData[b].cases7, 0) / totalPop * 100000);
+					bgColor = mapStyle.incidence(Object.values(regionsData).reduce((a,b) => a + b.cases7, 0) / totalPop * 100000);
 				};
 
 				regionChooser.listen('MDCTabBar:activated', detail => {
@@ -158,18 +158,18 @@ const vacFRA = {
 				};
 
 				var fxRepublique = () => {
-					totalPop = Object.keys(regionsData).reduce((a,b) => a + regionsData[b].EWZ, 0);
+					totalPop = Object.values(regionsData).reduce((a,b) => a + b.EWZ, 0);
 					$('#LKlabel').html('France');
 					$('#pop').html(totalPop.toLocaleString());
 
 					['', '_90', '_180'].forEach(t => ['2', '3'].forEach(s => {
-						total = Object.keys(regionsData).reduce((a,b) => a + regionsData[b]['dose' + s + t], 0);
+						total = Object.values(regionsData).reduce((a,b) => a + b['dose' + s + t], 0);
 						$('#dose' + s + t).html(total.toLocaleString());
 						$('#coverage' + s + t).html((total / totalPop * 100).toLocaleString(undefined, {minimumFractionDigits: 3, maximumFractionDigits: 3}));
 					}));
 					$('.lastUpdated').html(vacFRA.lastUpdate.toISOString().substring(0,10));
 
-					bgColor = mapStyle.coverage(Object.keys(regionsData).reduce((a,b) => a + regionsData[b].dose2, 0) / totalPop * 100);
+					bgColor = mapStyle.coverage(Object.values(regionsData).reduce((a,b) => a + b.dose2, 0) / totalPop * 100);
 				};
 
 				regionChooser.listen('MDCTabBar:activated', detail => {
@@ -203,7 +203,7 @@ const vacFRA = {
 	},
 
 	pullVaccineData: () => {
-		Object.keys(regionsData).forEach(L_k => Object.assign(regionsData[L_k], {
+		Object.values(regionsData).forEach(L_v => Object.assign(L_v, {
 			dose2_90: 0, dose2_180: 0, dose2: 0,
 			dose3_90: 0, dose3_180: 0, dose3: 0
 		}));

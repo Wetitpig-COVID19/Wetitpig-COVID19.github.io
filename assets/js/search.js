@@ -2,8 +2,8 @@ const nonAscii = new RegExp(/[^\x00-\x7F]+/g);
 const replaceNonAscii = string => string.normalize('NFD').replace(nonAscii, '');
 
 const FuseGeoJSON = (geoJSON, key) => {
-	var listToSearch = Object.keys(geoJSON._layers).reduce((a,b) => {
-		a.push(geoJSON._layers[b]);
+	var listToSearch = Object.values(geoJSON._layers).reduce((a,b) => {
+		a.push(b);
 		return a;
 	}, []);
 	listToSearch.forEach(item => item.feature.properties[key + '_normalized'] = replaceNonAscii(item.feature.properties[key]));
@@ -168,7 +168,7 @@ $(() => document.querySelector('.mdc-linear-progress').addEventListener('COVID19
 					case 'Letzebuerg': case 'Luxembourg': case 'Luxemburg': toFire = LuxembourgJSON; break;
 					default: toFire = KantonJSON; break;
 				}
-				toFire._layers[Object.keys(toFire._layers)[0]].fireEvent('click');
+				Object.values(toFire._layers)[0].fireEvent('click');
 			}
 			if (bestMatch.level != 3)
 				regionChooser.activateTab(3 - bestMatch.level);
