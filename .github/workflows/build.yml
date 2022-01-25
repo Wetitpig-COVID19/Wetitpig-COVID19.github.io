@@ -1,0 +1,76 @@
+name: Build from Source
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: '0,30 * * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Set Commit Details
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git checkout -b minified
+
+      - name: Auto Minify
+        uses: nizarmah/auto-minify@v2.1
+        with:
+          overwrite: true
+          directory: 'assets'
+          js_engine: uglify-js
+      - name: Commit Minify
+        run: |
+          git add .
+          git commit -m "Github Actions: Minify JS and CSS automatically"
+
+      - name: Setup nodejs
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'npm'
+      - name: Build
+        run: |
+          npm install
+          mkdir -p assets/data
+          npm run build
+          git add .
+          git commit -m "Github Actions: Pull latest data from sources"
+
+      - name: Push to minified
+        run: git push -f origin minified
+
+  crawl:
+    runs-on: ubuntu-latest
+    if: github.event_name != 'push'
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          ref: minified
+      - name: Set Commit Details
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+      - name: Setup nodejs
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'npm'
+      - name: Build
+        run: |
+          npm install
+          mkdir -p assets/data
+          npm run build
+          git add .
+          git commit -m "Github Actions: Pull latest data from sources" --amend
+
+      - name: Push to minified
+        run: git push -f origin minified

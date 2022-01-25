@@ -1,3 +1,10 @@
+var NUTS1Data = {};
+
+const downloadMapJSON = async country => await Promise.all([
+	$.getJSON(baseURL + '/assets/maps/' + country + '.json'),
+	$.getJSON(baseURL + '/assets/data/' + country + '.json')
+]);
+
 const LightenDarkenColor = (colorCode, amount) => {
 	colorCode = colorCode.slice(1);
 	var num = parseInt(colorCode, 16);
@@ -153,7 +160,7 @@ $(() => {
 			deaths28: '28-day Mortality'
 		}, 100000, 1);
 		setStyleonData('cases', 'per ' + (100000).toLocaleString());
-		[casesFRA, casesCHE, casesDEU, casesITA, casesLUX, casesAUT].forEach(x => x.init());
+		[casesFRA, casesCHE, casesDEU, casesITA, casesLUX, casesAUT].forEach(x => x.showOnMap());
 	});
 	navButtons[1].addEventListener('click', function() {
 		setStyleonData('vaccine', '(%)');
@@ -165,11 +172,11 @@ $(() => {
 			dose3_180: '180-day Boosted',
 			dose3: 'Cumulative Boosted'
 		}, 100, 3);
-		[vacDEU, vacITA, vacCHE, vacFRA, vacAUT, vacLUX].forEach(x => x.init());
+		[vacDEU, vacITA, vacCHE, vacFRA, vacAUT, vacLUX].forEach(x => x.showOnMap());
 	});
 
 	regionChooser = mdc.tabBar.MDCTabBar.attachTo(document.querySelector('#regionChooser'));
 	setStyleonData('cases', 'per ' + (100000).toLocaleString(), false);
-	[casesFRA, casesCHE, casesDEU, casesITA, casesAUT, casesLUX].forEach(x => x.init());
+	Promise.all([pullDEU(), pullCHE(), pullFRA(), pullITA(), pullAUT(), pullLUX()]).then(() => [casesFRA, casesCHE, casesDEU, casesITA, casesLUX, casesAUT].forEach(x => x.showOnMap()));
 	addOSM();
 });

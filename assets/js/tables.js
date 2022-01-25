@@ -1,3 +1,5 @@
+const baseURL = window.location.href.split('/').slice(0, -1).join('/');
+
 const preprocessCSVFRA = data => {
 	data = data.split('\n');
 	data[0] = data[0].replaceAll(/\"/g, '');
