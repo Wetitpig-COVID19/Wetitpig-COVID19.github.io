@@ -8,6 +8,7 @@
     "xlsx": "^0.17.5"
   },
   "scripts": {
+    "prebuild": "mkdir -p assets/data",
     "build": "find data-pull -name \"pull*.js\" -maxdepth 1 | xargs -n1 -P2 node"
   }
 }

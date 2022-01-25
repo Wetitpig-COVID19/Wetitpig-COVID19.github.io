@@ -44,7 +44,7 @@ const process = require('process');
 		});
 
 		tools.msg.info('Pulling cases data...');
-		const casesPromises = Promise.all([7, 14, 28].map(async t => {
+		await Promise.all([7, 14, 28].map(async t => {
 			daysFromNow = [
 				new Date(casesLastUpdate.getTime() - (t - 1) * 86400000),
 				new Date(casesLastUpdate.getTime())
@@ -134,8 +134,6 @@ const process = require('process');
 					break;
 			}
 		});
-
-		await casesPromises;
 
 		tools.msg.info('Grouping...');
 		var Bundeslaender = new Array(16).fill(null).map(() => ({

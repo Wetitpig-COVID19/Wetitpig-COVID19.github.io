@@ -144,7 +144,7 @@ const vacDEU = {
 
 const pullDEU = async () => {
 	[Landkreise, result] = await downloadMapJSON('DEU');
-	Landkreise.features.sort((item1, item2) => item1.RS < item2.RS ? -1 : 1);
+	Landkreise.features.sort((item1, item2) => parseInt(item1.properties.RS, 10) - parseInt(item2.properties.RS, 10));
 	Landkreise.features.forEach((Lk, index) => {
 		Object.assign(Lk.properties, result.NUTS3[index]);
 		Lk.properties.BEZ_GEN = Lk.properties.BEZ + ' ' + Lk.properties.GEN;
