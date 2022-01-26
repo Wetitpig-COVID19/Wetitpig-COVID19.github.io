@@ -2,7 +2,7 @@ var Landkreise;
 var LandkreisJSON;
 var bundeslaenderDataDEU;
 
-const casesDEU = {
+casesFx.DEU = {
 	lastUpdate: null,
 
 	handleClick: (feature, layer) => {
@@ -10,28 +10,28 @@ const casesDEU = {
 			mouseover: e => e.target.setStyle(mapStyle.mouseover(feature.properties.cases7 / feature.properties.EWZ * 100000, 'incidence')),
 			mouseout: e => LandkreisJSON.resetStyle(e.target),
 			click: () => {
-				var fxKreis = () => {
+				const fxKreis = () => {
 					toPrint = feature.properties;
 					$('#LKlabel').html(toPrint.BEZ_GEN);
 					casesTableFill(toPrint);
-					$('.lastUpdated').html(casesDEU.lastUpdate);
+					$('.lastUpdated').html(casesFx.DEU.lastUpdate);
 					bgColor = mapStyle.incidence(toPrint.cases7 / toPrint.EWZ * 100000);
 				};
 
-				var fxLand = () => {
+				const fxLand = () => {
 					toPrint = bundeslaenderDataDEU[parseInt(feature.properties['BL_ID'], 10) - 1];
 					$('#LKlabel').html(feature.properties.BL);
 					casesTableFill(toPrint);
-					$('.lastUpdated').html(casesDEU.lastUpdate);
+					$('.lastUpdated').html(casesFx.DEU.lastUpdate);
 					bgColor = mapStyle.incidence(toPrint.cases7 / toPrint.EWZ * 100000);
 				};
 
-				var fxBund = () => {
+				const fxBund = () => {
 					$('#LKlabel').html('Deutschland');
 					$('#pop').html(NUTS1Data.DE.EWZ.toLocaleString());
 					casesTableFill(NUTS1Data.DE);
 
-					$('.lastUpdated').html(casesDEU.lastUpdate);
+					$('.lastUpdated').html(casesFx.DEU.lastUpdate);
 
 					bgColor = mapStyle.incidence((NUTS1Data.DE.cases7 / NUTS1Data.DE.EWZ) * 100000);
 				};
@@ -64,7 +64,7 @@ const casesDEU = {
 			features: Landkreise.features.filter(value => value.properties.RS != '11000')
 		}, {
 			style: feature => mapStyle.style(feature.properties.cases7 / feature.properties.EWZ * 100000, 'incidence'),
-			onEachFeature: casesDEU.handleClick
+			onEachFeature: casesFx.DEU.handleClick
 		});
 		LandkreisJSON.addEventListener('add', layerLoaded);
 		LandkreisJSON.addTo(map);
@@ -72,7 +72,7 @@ const casesDEU = {
 };
 
 
-const vacDEU = {
+ vacFx.DEU = {
 	lastUpdate: null,
 
 	handleClick: (feature, layer) => {
@@ -80,29 +80,29 @@ const vacDEU = {
 			mouseover: e => e.target.setStyle(mapStyle.mouseover(feature.properties.dose2 / feature.properties.EWZ * 100, 'coverage')),
 			mouseout: e => LandkreisJSON.resetStyle(e.target),
 			click: () => {
-				var fxKreis = () => {
+				const fxKreis = () => {
 					toPrint = feature.properties;
 					$('#LKlabel').html(toPrint.BEZ + ' ' + toPrint.GEN);
 					vacTableFill(toPrint);
-					$('.lastUpdated').html(vacDEU.lastUpdate);
+					$('.lastUpdated').html(vacFx.DEU.lastUpdate);
 
 					bgColor = mapStyle.coverage(toPrint.dose2 / toPrint.EWZ * 100);
 				};
 
-				var fxLand = () => {
+				const fxLand = () => {
 					toPrint = bundeslaenderDataDEU[parseInt(feature.properties['BL_ID'], 10) - 1];
 					$('#LKlabel').html(feature.properties.BL);
 					vacTableFill(toPrint);
-					$('.lastUpdated').html(vacDEU.lastUpdate);
+					$('.lastUpdated').html(vacFx.DEU.lastUpdate);
 
 					bgColor = mapStyle.coverage(toPrint.dose2 / toPrint.EWZ * 100);
 				};
 
-				var fxBund = () => {
+				const fxBund = () => {
 					$('#LKlabel').html('Deutschland');
 					vacTableFill(NUTS1Data.DE);
 
-					$('.lastUpdated').html(vacDEU.lastUpdate);
+					$('.lastUpdated').html(vacFx.DEU.lastUpdate);
 
 					bgColor = mapStyle.coverage(NUTS1Data.DE.dose2 / NUTS1Data.DE.EWZ * 100);
 				};
@@ -135,14 +135,14 @@ const vacDEU = {
 			features: Landkreise.features.filter(value => value.properties.RS.substring(0,2) != '11' || value.properties.RS == '11000')
 		}, {
 			style: feature => mapStyle.style(feature.properties.dose2 / feature.properties.EWZ * 100, 'coverage'),
-			onEachFeature: vacDEU.handleClick
+			onEachFeature: vacFx.DEU.handleClick
 		});
 		LandkreisJSON.addEventListener('add', layerLoaded);
 		LandkreisJSON.addTo(map);
 	}
 };
 
-const pullDEU = async () => {
+pullFx.DEU = async () => {
 	[Landkreise, result] = await downloadMapJSON('DEU');
 	Landkreise.features.sort((item1, item2) => parseInt(item1.properties.RS, 10) - parseInt(item2.properties.RS, 10));
 	Landkreise.features.forEach((Lk, index) => {
@@ -151,6 +151,6 @@ const pullDEU = async () => {
 	});
 	bundeslaenderDataDEU = result.NUTS2;
 	NUTS1Data.DE = result.NUTS1;
-	casesDEU.lastUpdate = result.lastUpdate.cases;
-	vacDEU.lastUpdate = result.lastUpdate.vac;
+	casesFx.DEU.lastUpdate = result.lastUpdate.cases;
+	vacFx.DEU.lastUpdate = result.lastUpdate.vac;
 };

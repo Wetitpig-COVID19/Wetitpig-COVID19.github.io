@@ -1,4 +1,7 @@
 var NUTS1Data = {};
+const casesFx = {};
+const vacFx = {};
+const pullFx = {};
 
 const downloadMapJSON = async country => await Promise.all([
 	$.getJSON(baseURL + '/assets/maps/' + country + '.json'),
@@ -160,7 +163,7 @@ $(() => {
 			deaths28: '28-day Mortality'
 		}, 100000, 1);
 		setStyleonData('cases', 'per ' + (100000).toLocaleString());
-		[casesFRA, casesCHE, casesDEU, casesITA, casesLUX, casesAUT].forEach(x => x.showOnMap());
+		Object.values(casesFx).forEach(x => x.showOnMap());
 	});
 	navButtons[1].addEventListener('click', function() {
 		setStyleonData('vaccine', '(%)');
@@ -172,11 +175,11 @@ $(() => {
 			dose3_180: '180-day Boosted',
 			dose3: 'Cumulative Boosted'
 		}, 100, 3);
-		[vacDEU, vacITA, vacCHE, vacFRA, vacAUT, vacLUX].forEach(x => x.showOnMap());
+		Object.values(vacFx).forEach(x => x.showOnMap());
 	});
 
 	regionChooser = mdc.tabBar.MDCTabBar.attachTo(document.querySelector('#regionChooser'));
 	setStyleonData('cases', 'per ' + (100000).toLocaleString(), false);
-	Promise.all([pullDEU(), pullCHE(), pullFRA(), pullITA(), pullAUT(), pullLUX()]).then(() => [casesFRA, casesCHE, casesDEU, casesITA, casesLUX, casesAUT].forEach(x => x.showOnMap()));
+	Promise.all(Object.values(pullFx).map(fx => fx())).then(() => Object.values(casesFx).forEach(x => x.showOnMap()));
 	addOSM();
 });

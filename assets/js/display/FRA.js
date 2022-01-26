@@ -1,13 +1,13 @@
 var DepartementJSON;
 var regionsData;
 
-const casesFRA = {
+casesFx.FRA = {
 	handleClick: (feature, layer) => {
 		layer.on({
 			mouseover: e => e.target.setStyle(mapStyle.mouseover(feature.properties.cases7 / feature.properties.EWZ * 100000, 'incidence')),
 			mouseout: e => DepartementJSON.resetStyle(e.target),
 			click: () => {
-				var fxDepartement = () => {
+				const fxDepartement = () => {
 					toPrint = feature.properties;
 					$('#LKlabel').html(toPrint.nom);
 					casesTableFill(toPrint);
@@ -15,7 +15,7 @@ const casesFRA = {
 					bgColor = mapStyle.incidence(toPrint.cases7 / toPrint.EWZ * 100000);
 				};
 
-				var fxRegion = () => {
+				const fxRegion = () => {
 					toPrint = regionsData[feature.properties.reg_code];
 					$('#LKlabel').html(feature.properties.reg);
 					casesTableFill(toPrint);
@@ -23,7 +23,7 @@ const casesFRA = {
 					bgColor = mapStyle.incidence(toPrint.cases7 / toPrint.EWZ * 100000);
 				};
 
-				var fxRepublique = () => {
+				const fxRepublique = () => {
 					$('#LKlabel').html('France');
 					casesTableFill(NUTS1Data.FR);
 
@@ -55,20 +55,20 @@ const casesFRA = {
 		}
 		DepartementJSON = L.geoJSON(Departements, {
 			style: feature => mapStyle.style(feature.properties.cases7 / feature.properties.EWZ * 100000, 'incidence'),
-			onEachFeature: casesFRA.handleClick
+			onEachFeature: casesFx.FRA.handleClick
 		});
 		DepartementJSON.addEventListener('add', layerLoaded);
 		DepartementJSON.addTo(map);
 	}
 };
 
-const vacFRA = {
+vacFx.FRA = {
 	handleClick: (feature, layer) => {
 		layer.on({
 			mouseover: e => e.target.setStyle(mapStyle.mouseover(feature.properties.dose2 / feature.properties.EWZ * 100, 'coverage')),
 			mouseout: e => DepartementJSON.resetStyle(e.target),
 			click: () => {
-				var fxDepartement = () => {
+				const fxDepartement = () => {
 					toPrint = feature.properties;
 					$('#LKlabel').html(toPrint.nom);
 					vacTableFill(toPrint);
@@ -77,7 +77,7 @@ const vacFRA = {
 					bgColor = mapStyle.coverage(toPrint.dose2 / toPrint.EWZ * 100);
 				};
 
-				var fxRegion = () => {
+				const fxRegion = () => {
 					toPrint = regionsData[feature.properties.reg_code];
 					$('#LKlabel').html(feature.properties.reg);
 					vacTableFill(toPrint);
@@ -86,7 +86,7 @@ const vacFRA = {
 					bgColor = mapStyle.coverage(toPrint.dose2 / toPrint.EWZ * 100);
 				};
 
-				var fxRepublique = () => {
+				const fxRepublique = () => {
 					$('#LKlabel').html('France');
 					vacTableFill(NUTS1Data.FR);
 					$('.lastUpdated').html(NUTS1Data.FR.lastUpdate.vac);
@@ -118,14 +118,14 @@ const vacFRA = {
 		}
 		DepartementJSON = L.geoJSON(Departements, {
 			style: feature => mapStyle.style(feature.properties.dose2 / feature.properties.EWZ * 100, 'coverage'),
-			onEachFeature: vacFRA.handleClick
+			onEachFeature: vacFx.FRA.handleClick
 		});
 		DepartementJSON.addEventListener('add', layerLoaded);
 		DepartementJSON.addTo(map);
 	}
 };
 
-const pullFRA = async () => {
+pullFx.FRA = async () => {
 	[Departements, result] = await downloadMapJSON('FRA');
 	Departements.features.sort((item1, item2) => parseInt((isNaN(item1.dep) ? item1.dep : item1.dep.toString(10)), 16) - parseInt((isNaN(item2.dep) ? item2.dep : item2.dep.toString(10)), 16));
 	Departements.features.forEach((Lk, index) => Object.assign(Lk.properties, result.NUTS3[index]));

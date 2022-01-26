@@ -2,13 +2,13 @@ var Kantone;
 var KantonJSON;
 var grossRegionenData;
 
-const casesCHE = {
+casesFx.CHE = {
 	handleClick: (feature, layer) => {
 		layer.on({
 			mouseover: e => e.target.setStyle(mapStyle.mouseover(feature.properties.cases7 / feature.properties.EWZ * 100000, 'incidence')),
 			mouseout: e => KantonJSON.resetStyle(e.target),
 			click: () => {
-				var fxKanton = () => {
+				const fxKanton = () => {
 					toPrint = feature.properties;
 					$('#LKlabel').html(toPrint.KTNAME);
 					casesTableFill(toPrint);
@@ -16,7 +16,7 @@ const casesCHE = {
 					bgColor = mapStyle.incidence(toPrint.cases7 / toPrint.EWZ * 100000);
 				};
 
-				var fxRegion = () => {
+				const fxRegion = () => {
 					toPrint = grossRegionenData[feature.properties['GRNR'] - 1];
 					$('#LKlabel').html(grossRegionenData[feature.properties['GRNR'] - 1].name);
 					casesTableFill(toPrint);
@@ -24,7 +24,7 @@ const casesCHE = {
 					bgColor = mapStyle.incidence(toPrint.cases7 / toPrint.EWZ * 100000);
 				};
 
-				var fxBund = () => {
+				const fxBund = () => {
 					$('#LKlabel').html('Die Schweiz / La Suisse / La Svizzera / La Svizra');
 					casesTableFill(NUTS1Data.CH);
 					$('.lastUpdated').html(`Cases: ${NUTS1Data.CH.lastUpdate.cases}<br>Deaths: ${NUTS1Data.CH.lastUpdate.deaths}`);
@@ -62,20 +62,20 @@ const casesCHE = {
 		}
 		KantonJSON = L.geoJSON(Kantone, {
 			style: feature => mapStyle.style(feature.properties.cases7 / feature.properties.EWZ * 100000, 'incidence'),
-			onEachFeature: casesCHE.handleClick
+			onEachFeature: casesFx.CHE.handleClick
 		});
 		KantonJSON.addEventListener('add', layerLoaded);
 		KantonJSON.addTo(map);
 	}
 };
 
-const vacCHE = {
+ vacFx.CHE = {
 	handleClick: (feature, layer) => {
 		layer.on({
 			mouseover: e => e.target.setStyle(mapStyle.mouseover(feature.properties.dose2 / feature.properties.EWZ * 100, 'coverage')),
 			mouseout: e => KantonJSON.resetStyle(e.target),
 			click: () => {
-				var fxKanton = () => {
+				const fxKanton = () => {
 					toPrint = feature.properties;
 					$('#LKlabel').html(toPrint.KTNAME);
 					vacTableFill(toPrint);
@@ -84,7 +84,7 @@ const vacCHE = {
 					bgColor = mapStyle.coverage(toPrint.dose2 / toPrint.EWZ * 100);
 				};
 
-				var fxRegion = () => {
+				const fxRegion = () => {
 					toPrint = grossRegionenData[feature.properties['GRNR'] - 1];
 					$('#LKlabel').html(grossRegionenData[feature.properties['GRNR'] - 1].name);
 					vacTableFill(toPrint);
@@ -93,7 +93,7 @@ const vacCHE = {
 					bgColor = mapStyle.coverage(toPrint.dose2 / toPrint.EWZ * 100);
 				};
 
-				var fxBund = () => {
+				const fxBund = () => {
 					$('#LKlabel').html('Die Schweiz/La Suisse/La Svizzera/La Svizra');
 					vacTableFill(NUTS1Data.CH);
 
@@ -133,14 +133,14 @@ const vacCHE = {
 		}
 		KantonJSON = L.geoJSON(Kantone, {
 			style: feature => mapStyle.style(feature.properties.dose2 / feature.properties.EWZ * 100, 'coverage'),
-			onEachFeature: vacCHE.handleClick
+			onEachFeature: vacFx.CHE.handleClick
 		});
 		KantonJSON.addEventListener('add', layerLoaded);
 		KantonJSON.addTo(map);
 	}
 };
 
-const pullCHE = async () => {
+pullFx.CHE = async () => {
 	[Kantone, result] = await downloadMapJSON('CHE');
 	Kantone.features.sort((item1, item2) => item1.KTCODE < item2.KTCODE ? -1 : 1);
 	Kantone.features.forEach((Lk, index) => Object.assign(Lk.properties, result.NUTS3[index]));

@@ -2,13 +2,13 @@ var Bezirke;
 var BezirkJSON;
 var bundeslaenderDataAUT;
 
-const casesAUT = {
+casesFx.AUT = {
 	handleClick: (feature, layer) => {
 		layer.on({
 			mouseover: e => e.target.setStyle(mapStyle.mouseover(feature.properties.cases7 / feature.properties.EWZ * 100000, 'incidence')),
 			mouseout: e => BezirkJSON.resetStyle(e.target),
 			click: e => {
-				var fxBezirk = () => {
+				const fxBezirk = () => {
 					toPrint = feature.properties;
 					$('#LKlabel').html(toPrint.name);
 					casesTableFill(toPrint);
@@ -16,7 +16,7 @@ const casesAUT = {
 					bgColor = mapStyle.incidence(feature.properties.cases7 / toPrint.EWZ * 100000);
 				};
 
-				var fxLand = () => {
+				const fxLand = () => {
 					toPrint = bundeslaenderDataAUT[Math.floor(parseInt(feature.properties.iso, 10) / 100) - 1];
 					$('#LKlabel').html(feature.properties.BL);
 					casesTableFill(toPrint);
@@ -24,7 +24,7 @@ const casesAUT = {
 					bgColor = mapStyle.incidence(toPrint.cases7 / toPrint.EWZ * 100000);
 				};
 
-				var fxBund = () => {
+				const fxBund = () => {
 					$('#LKlabel').html('Österreich');
 					casesTableFill(NUTS1Data.AT);
 					$('.lastUpdated').html(NUTS1Data.AT.lastUpdate.cases);
@@ -55,20 +55,20 @@ const casesAUT = {
 		}
 		BezirkJSON = L.geoJSON(Bezirke, {
 			style: feature => mapStyle.style(feature.properties.cases7 / feature.properties.EWZ * 100000, 'incidence'),
-			onEachFeature: casesAUT.handleClick
+			onEachFeature: casesFx.AUT.handleClick
 		});
 		BezirkJSON.addEventListener('add', layerLoaded);
 		BezirkJSON.addTo(map);
 	}
 };
 
-const vacAUT = {
+ vacFx.AUT = {
 	handleClick: (feature, layer) => {
 		layer.on({
 			mouseover: e => e.target.setStyle(mapStyle.mouseover(feature.properties.dose2 / feature.properties.EWZ * 100, 'coverage')),
 			mouseout: e => BezirkJSON.resetStyle(e.target),
 			click: () => {
-				var fxBezirk = () => {
+				const fxBezirk = () => {
 					toPrint = feature.properties;
 					$('#LKlabel').html(toPrint.name);
 					$('#pop').html(toPrint.EWZ);
@@ -83,7 +83,7 @@ const vacAUT = {
 					bgColor = mapStyle.coverage(toPrint.dose2 / toPrint.EWZ * 100);
 				};
 
-				var fxLand = () => {
+				const fxLand = () => {
 					toPrint = bundeslaenderDataAUT[Math.floor(parseInt(feature.properties.iso, 10) / 100) - 1];
 					$('#LKlabel').html(feature.properties.BL);
 					vacTableFill(toPrint);
@@ -92,7 +92,7 @@ const vacAUT = {
 					bgColor = mapStyle.coverage(toPrint.dose2 / toPrint.EWZ * 100);
 				};
 
-				var fxBund = () => {
+				const fxBund = () => {
 					$('#LKlabel').html('Österreich');
 					vacTableFill(NUTS1Data.AT);
 					$('.lastUpdated').html(NUTS1Data.AT.lastUpdate.vac);
@@ -124,14 +124,14 @@ const vacAUT = {
 		}
 		BezirkJSON = L.geoJSON(Bezirke, {
 			style: feature => mapStyle.style(feature.properties.dose2 / feature.properties.EWZ * 100, 'coverage'),
-			onEachFeature: vacAUT.handleClick
+			onEachFeature: vacFx.AUT.handleClick
 		});
 		BezirkJSON.addEventListener('add', layerLoaded);
 		BezirkJSON.addTo(map);
 	}
 };
 
-const pullAUT = async () => {
+pullFx.AUT = async () => {
 	[Bezirke, result] = await downloadMapJSON('AUT');
 	Bezirke.features.sort((item1, item2) => item1.GKZ < item2.GKZ ? -1 : 1);
 	bundeslaenderDataAUT = result.NUTS2;

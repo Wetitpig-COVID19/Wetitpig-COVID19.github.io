@@ -3,7 +3,7 @@ var LuxembourgJSON;
 var xhrOverride = new XMLHttpRequest();
 xhrOverride.responseType = 'arraybuffer';
 
-const casesLUX = {
+ casesFx.LUX = {
 	handleClick: (feature, layer) => {
 		layer.on({
 			mouseover: e => e.target.setStyle(mapStyle.mouseover(feature.properties.cases7 / feature.properties.EWZ * 100000, 'incidence')),
@@ -29,14 +29,14 @@ const casesLUX = {
 		}
 		LuxembourgJSON = L.geoJSON(Luxembourg, {
 			style: feature => mapStyle.style(feature.properties.cases7 / feature.properties.EWZ * 100000, 'incidence'),
-			onEachFeature: casesLUX.handleClick
+			onEachFeature: casesFx.LUX.handleClick
 		});
 		LuxembourgJSON.addEventListener('add', layerLoaded);
 		LuxembourgJSON.addTo(map);
 	}
 };
 
-const vacLUX = {
+ vacFx.LUX = {
 	handleClick: (feature, layer) => {
 		layer.on({
 			mouseover: e => e.target.setStyle(mapStyle.mouseover(feature.properties.dose2 / feature.properties.EWZ * 100, 'coverage')),
@@ -62,14 +62,14 @@ const vacLUX = {
 		}
 		LuxembourgJSON = L.geoJSON(Luxembourg, {
 			style: feature => mapStyle.style(feature.properties.dose2 / feature.properties.EWZ * 100, 'coverage'),
-			onEachFeature: vacLUX.handleClick
+			onEachFeature: vacFx.LUX.handleClick
 		});
 		LuxembourgJSON.addEventListener('add', layerLoaded);
 		LuxembourgJSON.addTo(map);
 	}
 };
 
-const pullLUX = async () => {
+pullFx.LUX = async () => {
 	[Luxembourg, result] = await downloadMapJSON('LUX');
 	Object.assign(Luxembourg.features[0].properties, result);
 };
