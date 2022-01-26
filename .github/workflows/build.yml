@@ -72,5 +72,5 @@ jobs:
       - name: Push to minified
         run: |
           git add .
-          git commit --amend -m "Github Actions: Pull latest data from sources"
+          git commit -m "Github Actions: Pull latest data from sources"
           git push -f origin minified
