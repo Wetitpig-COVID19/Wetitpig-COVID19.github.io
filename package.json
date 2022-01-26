@@ -1,7 +1,11 @@
 {
-  "homepage": "https://github.com/Wetitpig-COVID19/Wetitpig-COVID19.github.io",
-  "name" : "Wetitpig",
-  "email" : "winsto003@hotmail.com",
+  "homepage": "https://wetitpig-covid19.github.io",
+  "author": "Wetitpig",
+  "email": "winsto003@hotmail.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Wetitpig-COVID19/Wetitpig-COVID19.github.io"
+  },
   "dependencies": {
     "axios": "^0.25.0",
     "papaparse": "^5.3.1",
