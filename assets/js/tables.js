@@ -1,27 +1,5 @@
 const baseURL = window.location.href.split('/').slice(0, -1).join('/');
 
-const preprocessCSVFRA = data => {
-	data = data.split('\n');
-	data[0] = data[0].replaceAll(/\"/g, '');
-	return data.join('\n');
-};
-
-const readCSV = (rawData, delimiter=',') => {
-	rawData = rawData.trim();
-	rows = rawData.split('\n');
-	headers = rows.shift().split(delimiter);
-
-	arr = rows.map(row => {
-		const values = row.split(delimiter);
-		const el = headers.reduce((object, header, index) => {
-			object[header] = isNaN(values[index]) ? values[index] : Number(values[index]);
-			return object;
-		}, {});
-		return el;
-	});
-	return arr;
-};
-
 const textColor = colorCode => {
 	colorR = parseInt(colorCode.substring(1,3), 16);
 	colorG = parseInt(colorCode.substring(3,5), 16);
