@@ -1,0 +1,5 @@
+exclude:
+  - data-pull/
+  - package.json
+  - package-lock.json
+  - README.md
