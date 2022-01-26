@@ -1,5 +1,7 @@
 # COVID-19 Dashboard
 
+[![Build from Source](https://github.com/Wetitpig-COVID19/Wetitpig-COVID19.github.io/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/Wetitpig-COVID19/Wetitpig-COVID19.github.io/actions/workflows/build.yml)
+
 This repository may not be actively maintained as the owner is now busy.
 
 ## Data offered in Dashboard
