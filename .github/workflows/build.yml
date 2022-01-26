@@ -38,13 +38,13 @@ jobs:
       - name: Build
         run: |
           npm install
-
           npm run build
-          git add .
-          git commit -m "Github Actions: Pull latest data from sources"
 
       - name: Push to minified
-        run: git push -f origin minified
+        run: |
+          git add .
+          git commit -m "Github Actions: Pull latest data from sources"
+          git push -f origin minified
 
   crawl:
     runs-on: ubuntu-latest
@@ -68,8 +68,9 @@ jobs:
         run: |
           npm install
           npm run build
-          git add .
-          git commit -m "Github Actions: Pull latest data from sources" --amend
 
       - name: Push to minified
-        run: git push -f origin minified
+        run: |
+          git add .
+          git commit --amend -m "Github Actions: Pull latest data from sources"
+          git push -f origin minified
