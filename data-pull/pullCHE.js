@@ -127,13 +127,12 @@ const tools = require('./tools');
 			}
 		});
 
-		var result = {
+		fs.writeFileSync('assets/data/CHE.json', JSON.stringify({
 			NUTS3: Kantone,
 			NUTS2: GrossRegionen,
 			NUTS1: Bund,
 			lastModified: lastModified.toISOString().slice(0,10)
-		};
-		fs.writeFileSync('assets/data/CHE.json', JSON.stringify(result));
+		}));
 	}
 	else
 		tools.msg.log('Nothing to change!');

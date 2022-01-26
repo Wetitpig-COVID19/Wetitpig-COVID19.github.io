@@ -121,13 +121,12 @@ const tools = require('./tools');
 			}
 		});
 
-		var result = {
+		fs.writeFileSync('assets/data/FRA.json', JSON.stringify({
 			NUTS3: Departements,
 			NUTS2: Regions,
 			NUTS1: Republique,
 			lastModified: lastModified.map(lu => lu.toISOString().slice(0,10))
-		};
-		fs.writeFileSync('assets/data/FRA.json', JSON.stringify(result));
+		}));
 	}
 	else
 		tools.msg.log('Nothing to change!');

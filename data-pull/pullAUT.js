@@ -117,13 +117,12 @@ const tools = require('./tools');
 		Bund.EWZ = bundeslaender.reduce((aggregate, bl) => aggregate += bl.EWZ, 0);
 		Bund.lastUpdate.cases = bundeslaender.reduce((aggregate, bl) => aggregate > bl.lastUpdate.cases ? aggregate : bl.lastUpdate.cases, null);
 
-		var result = {
+		fs.writeFileSync('assets/data/AUT.json', JSON.stringify({
 			NUTS3: Bezirke,
 			NUTS2: bundeslaender,
 			NUTS1: Bund,
 			lastModified: lastModified.map(lu => lu.toISOString().slice(0,10))
-		};
-		fs.writeFileSync('assets/data/AUT.json', JSON.stringify(result));
+		}));
 	}
 	else
 		tools.msg.log('Nothing to change!');

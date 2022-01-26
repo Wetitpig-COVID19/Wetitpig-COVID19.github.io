@@ -157,7 +157,7 @@ const process = require('process');
 		});
 		Object.keys(bundVacData).forEach(k => Bund[k] += bundVacData[k]);
 
-		var result = {
+		fs.writeFileSync('assets/data/DEU.json', JSON.stringify({
 			NUTS3: Landkreise,
 			NUTS2: Bundeslaender,
 			NUTS1: Bund,
@@ -166,8 +166,7 @@ const process = require('process');
 				vac: vacLastUpdate.toISOString().slice(0,10)
 			},
 			etag: etag
-		};
-		fs.writeFileSync('assets/data/DEU.json', JSON.stringify(result));
+		}));
 	}
 	else
 		tools.msg.log('Nothing to change!');
