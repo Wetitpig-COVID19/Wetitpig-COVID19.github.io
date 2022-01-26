@@ -22,7 +22,7 @@ The user interface is designed with [Material Design for Web](https://material.i
 
 ## Data Sources
 
-Data is updated every 30 minutes from the official repositories with scripts from the `data-pull/` directory.
+Data is updated every 30 minutes, at `:00` and `:30` at each hour, from the official repositories below with scripts from the [`data-pull/`](data-pull) directory.
 
 ### Cases and Deaths
 | Country                       | Data Source                                                                                                                                                                                                                                                                                                                             |
