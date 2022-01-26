@@ -1,4 +1,5 @@
 const Papa = require('papaparse');
+const isoCountry = require('iso-3166-1');
 const process = require('process');
 
 const dateRegex = new RegExp(/^(\d{4})-(\d{2})-(\d{2})/);
@@ -18,8 +19,15 @@ const parseCSV = data => new Promise((complete, error) =>
 	})
 );
 
-const msgLog = msg => console.log(`${process.argv[1]}: ${msg}`);
-const msgInfo = msg => console.info(`${process.argv[1]}: ${msg}`);
+const msgFlag = country => {
+	var countryCode2 = isoCountry.whereAlpha3(country).alpha2;
+	var countryFlag = String.fromCodePoint(...[...countryCode2.toUpperCase()].map(c => c.charCodeAt() + 0x1F1A5));
+	return countryFlag;
+};
+
+const msgLog = msg => console.log(`${msgFlag(process.argv[1].slice(-6,-3))} : ${msg}`);
+
+const msgInfo = msg => console.info(`${msgFlag(process.argv[1].slice(-6,-3))} : ${msg}`);
 
 module.exports = {
 	dateRegex: dateRegex,
