@@ -43,7 +43,7 @@ jobs:
       - name: Push to minified
         run: |
           git add .
-          git commit -m "Github Actions: Pull latest data from sources"
+          git commit -m "Github Actions: Pull latest data at $(date --iso-8601=seconds)"
           git push -f origin minified
 
   crawl:
@@ -72,5 +72,5 @@ jobs:
       - name: Push to minified
         run: |
           git add .
-          git commit -m "Github Actions: Pull latest data from sources"
+          git commit -m "Github Actions: Pull latest data at $(date --iso-8601=seconds)" --amend
           git push -f origin minified
