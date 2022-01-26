@@ -27,7 +27,7 @@ const casesCHE = {
 				var fxBund = () => {
 					$('#LKlabel').html('Die Schweiz / La Suisse / La Svizzera / La Svizra');
 					casesTableFill(NUTS1Data.CH);
-					$('.lastUpdated').html(NUTS1Data.CH.lastUpdate.cases);
+					$('.lastUpdated').html(`Cases: ${NUTS1Data.CH.lastUpdate.cases}<br>Deaths: ${NUTS1Data.CH.lastUpdate.deaths}`);
 					bgColor = mapStyle.incidence(NUTS1Data.CH.cases7 / NUTS1Data.CH.EWZ * 100000);
 				};
 
