@@ -4,13 +4,14 @@ var vacFx = {};
 var pullFx = {};
 
 const downloadMapJSON = async country => await Promise.all([
-	async () => {
-		var response = await $.getJSON(baseURL + '/assets/maps/' + country + '.json.br');
-		response = new Buffer.from(response);
-		await window.brotli.decompress(response);
-		return response.toString();
-	},
-	$.getJSON(baseURL + '/assets/data/' + country + '.json')
+	(async code => {
+		var response = await fetch(baseURL + '/assets/maps/' + code + '.json.br');
+		response = await response.arrayBuffer();
+		response = window.brotliDecompress(new Uint8Array(response));
+		response = new TextDecoder().decode(response);
+		return JSON.parse(response);
+	})(country),
+	await (await fetch(baseURL + '/assets/data/' + country + '.json')).json()
 ]);
 
 const LightenDarkenColor = (colorCode, amount) => {
