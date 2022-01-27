@@ -1,10 +1,15 @@
 var NUTS1Data = {};
-const casesFx = {};
-const vacFx = {};
-const pullFx = {};
+var casesFx = {};
+var vacFx = {};
+var pullFx = {};
 
 const downloadMapJSON = async country => await Promise.all([
-	$.getJSON(baseURL + '/assets/maps/' + country + '.json'),
+	async () => {
+		var response = await $.getJSON(baseURL + '/assets/maps/' + country + '.json.br');
+		response = new Buffer.from(response);
+		await window.brotli.decompress(response);
+		return response.toString();
+	},
 	$.getJSON(baseURL + '/assets/data/' + country + '.json')
 ]);
 
