@@ -11,60 +11,61 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
     steps:
-      - name: Checkout Repository
+      - name: Checkout Repository 🛎️
         uses: actions/checkout@v2
-      - name: Set Commit Details
+      - name: Set Commit Details ⚙️
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git checkout -b minified
 
-      - name: Auto Minify
-        uses: nizarmah/auto-minify@v2.1
-        with:
-          overwrite: true
-          directory: 'assets'
-          js_engine: uglify-js
-      - name: Commit Minify
-        run: |
-          git add .
-          git commit -m "Github Actions: Minify JS and CSS automatically"
-
-      - name: Setup nodejs
+      - name: Setup nodejs ➕
         uses: actions/setup-node@v2
         with:
           node-version: '16'
           cache: 'npm'
-      - name: Build
+
+      - name: Install dependencies ➕
         run: |
           npm install
-          npm run build
+          npm install -g html-minifier clean-css-cli uglify-js
 
-      - name: Push to minified
+      - name: Auto Minify 🛠️
+        run: |
+          find assets -name "*.js" -exec uglifyjs {} -cmo {} \;
+          find assets -name "*.css" -exec cleancss -o {} {} \;
+          html-minifier --use-short-doctype -o index.html index.html
+          git add . && git commit -m "Github Actions: Minify JS and CSS automatically"
+
+      - name: Build 🛠️
+        run: npm run build
+
+      - name: Push to minified 🚀
         run: 'git add . && git commit -m "Github Actions: Pull latest data at $(date --iso-8601=seconds)" && git push -f origin minified'
 
   crawl:
     runs-on: ubuntu-latest
     if: github.event_name != 'push'
     steps:
-      - name: Checkout Repository
+      - name: Checkout Repository 🛎️
         uses: actions/checkout@v2
         with:
           ref: minified
-      - name: Set Commit Details
+      - name: Set Commit Details ⚙️
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
 
-      - name: Setup nodejs
+      - name: Setup nodejs ➕
         uses: actions/setup-node@v2
         with:
           node-version: '16'
           cache: 'npm'
-      - name: Build
+
+      - name: Build 🛠️
         run: |
           npm install
           npm run build
 
-      - name: Push to minified
+      - name: Push to minified 🚀
         run: '(git add . && git commit -m "Github Actions: Pull latest data at $(date --iso-8601=seconds)" && git push -f origin minified) || true'
