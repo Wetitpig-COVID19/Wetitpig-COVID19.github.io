@@ -62,7 +62,7 @@ casesFx.AUT = {
 	}
 };
 
- vacFx.AUT = {
+vacFx.AUT = {
 	handleClick: (feature, layer) => {
 		layer.on({
 			mouseover: e => e.target.setStyle(mapStyle.mouseover(feature.properties.dose2 / feature.properties.EWZ * 100, 'coverage')),
@@ -133,7 +133,7 @@ casesFx.AUT = {
 
 pullFx.AUT = async () => {
 	[Bezirke, result] = await downloadMapJSON('AUT');
-	Bezirke.features.sort((item1, item2) => item1.GKZ < item2.GKZ ? -1 : 1);
+	Bezirke.features.sort((item1, item2) => item1.properties.GKZ < item2.properties.GKZ ? -1 : 1);
 	bundeslaenderDataAUT = result.NUTS2;
 	Bezirke.features.forEach((Lk, index) => {
 		Object.assign(Lk.properties, result.NUTS3[index]);

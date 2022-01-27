@@ -71,7 +71,7 @@ casesFx.ITA = {
 	}
 };
 
- vacFx.ITA = {
+vacFx.ITA = {
 	lastUpdate: null,
 
 	handleClick: (feature, layer) => {

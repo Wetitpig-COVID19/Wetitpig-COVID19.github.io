@@ -1,9 +1,6 @@
 var LuxembourgJSON;
 
-var xhrOverride = new XMLHttpRequest();
-xhrOverride.responseType = 'arraybuffer';
-
- casesFx.LUX = {
+casesFx.LUX = {
 	handleClick: (feature, layer) => {
 		layer.on({
 			mouseover: e => e.target.setStyle(mapStyle.mouseover(feature.properties.cases7 / feature.properties.EWZ * 100000, 'incidence')),
@@ -36,7 +33,7 @@ xhrOverride.responseType = 'arraybuffer';
 	}
 };
 
- vacFx.LUX = {
+vacFx.LUX = {
 	handleClick: (feature, layer) => {
 		layer.on({
 			mouseover: e => e.target.setStyle(mapStyle.mouseover(feature.properties.dose2 / feature.properties.EWZ * 100, 'coverage')),

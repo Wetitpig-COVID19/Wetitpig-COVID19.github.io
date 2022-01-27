@@ -72,7 +72,7 @@ casesFx.DEU = {
 };
 
 
- vacFx.DEU = {
+vacFx.DEU = {
 	lastUpdate: null,
 
 	handleClick: (feature, layer) => {

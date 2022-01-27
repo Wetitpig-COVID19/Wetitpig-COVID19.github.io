@@ -127,7 +127,7 @@ vacFx.FRA = {
 
 pullFx.FRA = async () => {
 	[Departements, result] = await downloadMapJSON('FRA');
-	Departements.features.sort((item1, item2) => parseInt((isNaN(item1.dep) ? item1.dep : item1.dep.toString(10)), 16) - parseInt((isNaN(item2.dep) ? item2.dep : item2.dep.toString(10)), 16));
+	Departements.features.sort((item1, item2) => parseInt((isNaN(item1.properties.dep) ? item1.properties.dep : item1.properties.dep.toString(10)), 16) - parseInt((isNaN(item2.properties.dep) ? item2.properties.dep : item2.properties.dep.toString(10)), 16));
 	Departements.features.forEach((Lk, index) => Object.assign(Lk.properties, result.NUTS3[index]));
 	regionsData = result.NUTS2;
 	NUTS1Data.FR = result.NUTS1;

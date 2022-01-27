@@ -69,7 +69,7 @@ casesFx.CHE = {
 	}
 };
 
- vacFx.CHE = {
+vacFx.CHE = {
 	handleClick: (feature, layer) => {
 		layer.on({
 			mouseover: e => e.target.setStyle(mapStyle.mouseover(feature.properties.dose2 / feature.properties.EWZ * 100, 'coverage')),
@@ -142,7 +142,7 @@ casesFx.CHE = {
 
 pullFx.CHE = async () => {
 	[Kantone, result] = await downloadMapJSON('CHE');
-	Kantone.features.sort((item1, item2) => item1.KTCODE < item2.KTCODE ? -1 : 1);
+	Kantone.features.sort((item1, item2) => item1.properties.KTCODE < item2.properties.KTCODE ? -1 : 1);
 	Kantone.features.forEach((Lk, index) => Object.assign(Lk.properties, result.NUTS3[index]));
 	grossRegionenData = result.NUTS2;
 	NUTS1Data.CH = result.NUTS1;
