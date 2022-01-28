@@ -16,12 +16,9 @@
     "xlsx": "^0.17.5"
   },
   "scripts": {
-    "prebuild": "mkdir -p assets/data",
-    "build": "find data-pull -name \"pull*.js\" -maxdepth 1 | xargs -n1 -P2 node",
-    "postbuild": "./compress.sh",
-    "minify-js": "find assets -name \"*.js\" | xargs -P$(nproc || printf '2') -I {} sh -c \"set -x; node_modules/uglify-js/bin/uglifyjs {} -cmo {}\"",
-    "minify-css": "find assets -name \"*.css\" | xargs -P$(nproc || printf '2') -I {} sh -c \"set -x; node_modules/clean-css-cli/bin/cleancss -o {} {}\"",
-    "minify-html": "node_modules/html-minifier/cli.js --collapse-whitespace --use-short-doctype -o index.html index.html",
-    "minify": "npm run minify-html && npm run minify-css && npm run minify-js"
+    "prebuild": "mkdir -p assets/data && (sha256sum assets/data/*.json || echo) > assets/data/checksum.txt",
+    "build": "find data-pull -name \"pull*.js\" -maxdepth 1 | xargs -n1 -P$(nproc || printf '2') node",
+    "postbuild": "build-scripts/compress.sh",
+    "minify": "build-scripts/minify.sh"
   }
 }

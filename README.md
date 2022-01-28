@@ -31,6 +31,8 @@ Data is provided mostly on the [NUTS3](https://en.wikipedia.org/wiki/Nomenclatur
 ### Build Dependencies
 See [`package.json`](package.json) for details.
 
+In addition `zstd` is required for compressing the JSON files.
+
 ## Data Sources
 
 Data is updated every 30 minutes, at `:15` and `:45` at each hour, from the official repositories below with scripts from the [`data-pull/`](data-pull) directory.
