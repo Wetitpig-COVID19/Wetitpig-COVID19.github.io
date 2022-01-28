@@ -51,6 +51,7 @@ const tools = require('./tools');
 			f.lastUpdate.deaths = tools.convertDate(feature.datum).toISOString().slice(0,10);
 			return f;
 		});
+		tools.validate.deaths([...Kantone, Bund]);
 
 		tools.msg.info('Pulling cases data...');
 		const casesPromise = async () => {
@@ -79,6 +80,7 @@ const tools = require('./tools');
 				['7','14','28'].forEach(s => Kantone[index]['cases' + s] = row[`sumTotal_last${s}d`]);
 				Kantone[index].lastUpdate.cases = tools.convertDate(row.datum).toISOString().slice(0,10);
 			});
+			tools.validate.cases([...Kantone, Bund]);
 		};
 
 		tools.msg.info('Pulling vaccine data...');
@@ -106,6 +108,7 @@ const tools = require('./tools');
 				[90,180].forEach(t => Bund[`dose${(2 + i).toString(10)}_${t.toString(10)}`] -= toProcess[t].sumTotal);
 				Bund.lastUpdate.vac = tools.convertDate(toProcess[0].date).toISOString().slice(0,10);
 			});
+			tools.validate.vaccine([...Kantone, Bund]);
 		};
 
 		await Promise.all([casesPromise(),vaccinePromise()]);

@@ -40,7 +40,7 @@ const tools = require('./tools');
 				EWZ: 0
 			};
 			['7','14','28'].forEach(t => {
-				r['cases' + t] = row['totale_casi'];
+				r['cases' + t] = row.totale_casi;
 				r['deaths' + t] = row.deceduti;
 			});
 			return r;
@@ -58,8 +58,8 @@ const tools = require('./tools');
 				deceduti: workbook2[19].deceduti + workbook2[20].deceduti
 			});
 			Regioni.forEach((reg, i) => {
-				reg['cases' + t.toString(10)] -= workbook2[i]['totale_casi'];
-				reg['deaths' + t.toString(10)] -= workbook2[i]['deceduti'];
+				reg['cases' + t.toString(10)] -= workbook2[i].totale_casi;
+				reg['deaths' + t.toString(10)] -= workbook2[i].deceduti;
 			});
 		}));
 
@@ -85,9 +85,12 @@ const tools = require('./tools');
 				workbook2.sort((item1, item2) => item1.codice_provincia - item2.codice_provincia);
 				Province.forEach((pro, i) => pro['cases' + t.toString(10)] -= workbook2[i]['totale_casi']);
 			}));
+			tools.validate.cases(Province);
 		};
 
 		await Promise.all([casesPromises,provincePromise()]);
+		tools.validate.cases(Regioni);
+		tools.validate.deaths(Regioni);
 
 		tools.msg.info('Pulling vaccine data...');
 		const vaccinePromise = async () => {
@@ -129,6 +132,7 @@ const tools = require('./tools');
 					Province[19 + parseInt(row.codice_NUTS2.slice(-1), 10)].dose3 += row.dose_addizionale_booster;
 				}
 			});
+			tools.validate.vaccine(Regioni);
 		};
 
 		await vaccinePromise();

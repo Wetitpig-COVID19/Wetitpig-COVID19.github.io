@@ -1,7 +1,6 @@
 const axios = require('axios');
 const fs = require('fs');
 const tools = require('./tools');
-const process = require('process');
 
 (async () => {
 	var response = (await axios.get('https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/rki_data_status_v/FeatureServer/0/query', {
@@ -74,6 +73,8 @@ const process = require('process');
 				Landkreise[i]['deaths' + t.toString(10)] = response.features[i].attributes.AnzahlTodesfall_S;
 			}
 		}));
+		tools.validate.cases(Landkreise.slice(0,-1));
+		tools.validate.deaths(Landkreise.slice(0,-1));
 
 		tools.msg.info('Pulling vaccine data...');
 		Landkreise.sort((item1, item2) => parseInt(item1.RS, 10) - parseInt(item2.RS, 10));
@@ -134,6 +135,7 @@ const process = require('process');
 					break;
 			}
 		});
+		tools.validate.vaccine(landkreisFiltered);
 
 		tools.msg.info('Grouping...');
 		var Bundeslaender = new Array(16).fill(null).map(() => ({

@@ -47,6 +47,8 @@ const { default: axios } = require('axios');
 				result['deaths' + t.toString(10)] = parseInt(processedXLSX.slice(-1)[0][4], 10) - parseInt(processedXLSX.slice(-(t + 1))[0][4], 10);
 			});
 			result.lastUpdate.cases = tools.convertDate(processedXLSX.slice(-1)[0][0], new RegExp(/^(\d{2})\/(\d{2})\/(\d{4})/), true).toISOString().slice(0,10);
+			tools.validate.cases([result]);
+			tools.validate.deaths([result]);
 		};
 
 		const vaccinePromise = async () => {
@@ -65,6 +67,7 @@ const { default: axios } = require('axios');
 			result.lastUpdate.vac = tools.convertDate(processedXLSX.slice(-1)[0][0]).toISOString().slice(0,10);
 			[90,180].forEach(x => [2, 3].forEach(t => result['dose' + t.toString(10) + '_' + x.toString(10)] = processedXLSX.slice(-x).reduce((a,b) => a + parseInt(b[t], 10), 0)));
 			[2,3].forEach(t => result['dose' + t.toString(10)] = processedXLSX.slice(1).reduce((a,b) => a + parseInt(b[t], 10), 0));
+			tools.validate.vaccine([result]);
 		};
 
 		await Promise.all([casesPromise(),vaccinePromise()]);

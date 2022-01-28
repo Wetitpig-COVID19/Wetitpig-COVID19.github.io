@@ -46,6 +46,7 @@ const tools = require('./tools');
 				[7,14,28].forEach(j => dept['deaths' + j.toString(10)] = workbook.slice(index * numberOfDays, index * numberOfDays + j).reduce((a,b) => a + b.incid_dc, 0));
 				dept.dep = typeof(workbook[index * numberOfDays].dep) === 'number' ? workbook[index * numberOfDays].dep.toString(10).padStart(2,'0') : workbook[index * numberOfDays].dep;
 			});
+			tools.validate.deaths(Departements);
 		};
 
 		const casesPromise = async () => {
@@ -64,6 +65,7 @@ const tools = require('./tools');
 				[7,14,28].forEach(j => dept['cases' + j.toString(10)] = workbook.slice(index * numberOfDays, index * numberOfDays + j).reduce((a,b) => a + b.P, 0));
 				dept.EWZ = workbook[index * numberOfDays].pop;
 			});
+			tools.validate.cases(Departements);
 		};
 
 		const vaccinePromise = async () => {
@@ -86,6 +88,7 @@ const tools = require('./tools');
 					dept['dose3_' + t.toString(10)] = dept.dose3 - workbook[index * numberOfDays + t].n_cum_rappel;
 				});
 			});
+			tools.validate.vaccine(Departements);
 		};
 
 		await Promise.all([deathsPromise(),casesPromise(),vaccinePromise()]);

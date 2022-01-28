@@ -52,6 +52,8 @@ const tools = require('./tools');
 					bez['deaths' + j.toString(10)] = workbook[index * numberOfDays].AnzahlTotSum - workbook[index * numberOfDays + j].AnzahlTotSum;
 				});
 			});
+			tools.validate.cases(Bezirke);
+			tools.validate.deaths(Bezirke);
 		};
 
 		var bundeslaender = ['Burgenland','Kärnten','Niederösterreich','Oberösterreich','Salzburg','Steiermark','Tirol','Voralberg','Wien'].map(name => ({
@@ -89,6 +91,7 @@ const tools = require('./tools');
 
 			bundeslaender.forEach(extractData);
 			extractData(Bund, 9);
+			tools.validate.vaccine([...bundeslaender, Bund]);
 		};
 		const vaccineBezirkPromise = async () => {
 			response = await axios.get(URL[2], {
@@ -102,6 +105,7 @@ const tools = require('./tools');
 				['2','3'].forEach(t => bez['dose' + t] = toProcess.reduce((aggregate, dose) => aggregate + dose['dose_' + t], 0));
 				bez.lastUpdate.vac = toProcess.reduce((aggregate, dose) => new Date(Math.max(aggregate.getTime(), dose.date.getTime())), new Date(0)).toISOString().slice(0,10);
 			});
+			tools.validate.vaccine(Bezirke, false);
 		};
 
 		await casesPromise();
