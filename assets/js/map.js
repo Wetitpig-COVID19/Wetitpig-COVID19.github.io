@@ -6,9 +6,9 @@ var pullFx = {};
 const downloadMapJSON = async country => await Promise.all(
 	['maps','data'].map(dir =>
 		(async code => {
-			var response = await fetch(baseURL + `/assets/${dir}/${code}.json.br`);
+			var response = await fetch(baseURL + `/assets/${dir}/${code}.json.zst`);
 			response = await response.arrayBuffer();
-			response = window.brotliDecompress(new Uint8Array(response));
+			response = fzstd.decompress(new Uint8Array(response));
 			response = new TextDecoder().decode(response);
 			return JSON.parse(response);
 		})(country)
