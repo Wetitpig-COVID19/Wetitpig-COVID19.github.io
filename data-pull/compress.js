@@ -8,7 +8,6 @@ const util = require('util');
 		chunkSize: 32 * 1024,
 		params: {
 			[zlib.constants.BROTLI_PARAM_MODE]: zlib.constants.BROTLI_MODE_TEXT,
-			[zlib.constants.BROTLI_PARAM_QUALITY]: 4,
 			[zlib.constants.BROTLI_PARAM_SIZE_HINT]: (await fsPromises.stat(inputFile)).size
 		}
 	});
@@ -16,6 +15,7 @@ const util = require('util');
 	const brotliCompress = util.promisify(zlib.brotliCompress);
 
 	const compressDir = async directory => {
+		console.log(`Compressing assets/${directory}/...`);
 		const mapDir = await fsPromises.opendir(`assets/${directory}/`);
 		for await (const dirent of mapDir) {
 			var fileData = await fsPromises.readFile(`assets/${directory}/${dirent.name}`);
