@@ -54,10 +54,8 @@ casesFx.DEU = {
 	},
 
 	showOnMap: () => {
-		if (LandkreisJSON !== undefined) {
-			LandkreisJSON.removeEventListener('add', layerLoaded);
+		if (LandkreisJSON !== undefined)
 			map.removeLayer(LandkreisJSON)
-		}
 		LandkreisJSON = L.geoJSON({
 			type: Landkreise.type,
 			crs: Landkreise.crs,
@@ -66,7 +64,6 @@ casesFx.DEU = {
 			style: feature => mapStyle.style(feature.properties.cases7 / feature.properties.EWZ * 100000, 'incidence'),
 			onEachFeature: casesFx.DEU.handleClick
 		});
-		LandkreisJSON.addEventListener('add', layerLoaded);
 		LandkreisJSON.addTo(map);
 	}
 };
@@ -125,10 +122,8 @@ vacFx.DEU = {
 	},
 
 	showOnMap: () => {
-		if (LandkreisJSON !== undefined) {
-			LandkreisJSON.removeEventListener('add', layerLoaded);
+		if (LandkreisJSON !== undefined)
 			map.removeLayer(LandkreisJSON)
-		}
 		LandkreisJSON = L.geoJSON({
 			type: Landkreise.type,
 			crs: Landkreise.crs,
@@ -137,7 +132,6 @@ vacFx.DEU = {
 			style: feature => mapStyle.style(feature.properties.dose2 / feature.properties.EWZ * 100, 'coverage'),
 			onEachFeature: vacFx.DEU.handleClick
 		});
-		LandkreisJSON.addEventListener('add', layerLoaded);
 		LandkreisJSON.addTo(map);
 	}
 };

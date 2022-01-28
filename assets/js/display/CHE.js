@@ -56,15 +56,12 @@ casesFx.CHE = {
 	},
 
 	showOnMap: () => {
-		if (KantonJSON !== undefined) {
-			KantonJSON.removeEventListener('add', layerLoaded);
+		if (KantonJSON !== undefined)
 			map.removeLayer(KantonJSON)
-		}
 		KantonJSON = L.geoJSON(Kantone, {
 			style: feature => mapStyle.style(feature.properties.cases7 / feature.properties.EWZ * 100000, 'incidence'),
 			onEachFeature: casesFx.CHE.handleClick
 		});
-		KantonJSON.addEventListener('add', layerLoaded);
 		KantonJSON.addTo(map);
 	}
 };
@@ -127,15 +124,12 @@ vacFx.CHE = {
 	},
 
 	showOnMap: () => {
-		if (KantonJSON !== undefined) {
-			KantonJSON.removeEventListener('add', layerLoaded);
+		if (KantonJSON !== undefined)
 			map.removeLayer(KantonJSON)
-		}
 		KantonJSON = L.geoJSON(Kantone, {
 			style: feature => mapStyle.style(feature.properties.dose2 / feature.properties.EWZ * 100, 'coverage'),
 			onEachFeature: vacFx.CHE.handleClick
 		});
-		KantonJSON.addEventListener('add', layerLoaded);
 		KantonJSON.addTo(map);
 	}
 };

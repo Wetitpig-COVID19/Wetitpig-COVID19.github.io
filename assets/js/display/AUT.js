@@ -49,15 +49,12 @@ casesFx.AUT = {
 	},
 
 	showOnMap: () => {
-		if (BezirkJSON !== undefined) {
-			BezirkJSON.removeEventListener('add', layerLoaded);
+		if (BezirkJSON !== undefined)
 			map.removeLayer(BezirkJSON)
-		}
 		BezirkJSON = L.geoJSON(Bezirke, {
 			style: feature => mapStyle.style(feature.properties.cases7 / feature.properties.EWZ * 100000, 'incidence'),
 			onEachFeature: casesFx.AUT.handleClick
 		});
-		BezirkJSON.addEventListener('add', layerLoaded);
 		BezirkJSON.addTo(map);
 	}
 };
@@ -118,15 +115,12 @@ vacFx.AUT = {
 	},
 
 	showOnMap: () => {
-		if (BezirkJSON !== undefined) {
-			BezirkJSON.removeEventListener('add', layerLoaded);
+		if (BezirkJSON !== undefined)
 			map.removeLayer(BezirkJSON)
-		}
 		BezirkJSON = L.geoJSON(Bezirke, {
 			style: feature => mapStyle.style(feature.properties.dose2 / feature.properties.EWZ * 100, 'coverage'),
 			onEachFeature: vacFx.AUT.handleClick
 		});
-		BezirkJSON.addEventListener('add', layerLoaded);
 		BezirkJSON.addTo(map);
 	}
 };

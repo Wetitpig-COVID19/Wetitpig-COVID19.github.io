@@ -58,15 +58,12 @@ casesFx.ITA = {
 	},
 
 	showOnMap: () => {
-		if (ProvinceJSON !== undefined) {
-			ProvinceJSON.removeEventListener('add', layerLoaded);
+		if (ProvinceJSON !== undefined)
 			map.removeLayer(ProvinceJSON)
-		}
 		ProvinceJSON = L.geoJSON(Province, {
 			style: feature => mapStyle.style(feature.properties.cases7 / feature.properties.EWZ * 100000, 'incidence'),
 			onEachFeature: casesFx.ITA.handleClick
 		});
-		ProvinceJSON.addEventListener('add', layerLoaded);
 		ProvinceJSON.addTo(map);
 	}
 };
@@ -128,15 +125,12 @@ vacFx.ITA = {
 	},
 
 	showOnMap: () => {
-		if (ProvinceJSON !== undefined) {
-			ProvinceJSON.removeEventListener('add', layerLoaded);
+		if (ProvinceJSON !== undefined)
 			map.removeLayer(ProvinceJSON)
-		}
 		ProvinceJSON = L.geoJSON(Province, {
 			style: feature => mapStyle.style((feature.properties.reg_istat_code_num == 4 ? feature.properties.dose2 / feature.properties.EWZ : regioniData[feature.properties.reg_istat_code_num - 1].dose2 / regioniData[feature.properties.reg_istat_code_num - 1].EWZ) * 100, 'coverage'),
 			onEachFeature: vacFx.ITA.handleClick
 		});
-		ProvinceJSON.addEventListener('add', layerLoaded);
 		ProvinceJSON.addTo(map);
 	}
 };

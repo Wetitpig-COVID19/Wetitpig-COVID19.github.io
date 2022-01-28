@@ -57,100 +57,96 @@ const convertDate = {
 var regionChooser;
 var sortBy;
 var dataFieldSelect;
+
 var leaderboard;
 var leaderboardData;
+var gChartOptions;
 
-const drawLeaderboard = (tableData, factor, sortColumn) => {
+const drawLeaderboard = () => {
+	[tableData, factor, sortColumn] = gChartOptions;
 	var leaderboardListener;
 
-	if (leaderboard !== undefined) {
+	if (leaderboard !== undefined)
 		leaderboard.clearChart();
-		google.visualization.events.removeListener(leaderboardListener);
-	}
 
-	const draw = () => {
-		leaderboardData = new google.visualization.DataTable();
-		leaderboardData.addColumn('string', 'Location');
-		$.each(tableData, (_key, value) => leaderboardData.addColumn('number', value));
+	leaderboardData = new google.visualization.DataTable();
+	leaderboardData.addColumn('string', 'Location');
+	$.each(tableData, (_key, value) => leaderboardData.addColumn('number', value));
 
-		[
-			[LandkreisJSON, 'BEZ_GEN'],
-			[DepartementJSON, 'nom'],
-			[ProvinceJSON, 'prov_name'],
-			[BezirkJSON, 'name'],
-			[KantonJSON, 'KTNAME']
-		].forEach(pair => leaderboardData.addRows(Object.values(pair[0]._layers).reduce((total, L_v) => {
-			unit = [];
-			unit.push(L_v.feature.properties[pair[1]]),
-			Object.keys(tableData).forEach(k => unit.push(L_v.feature.properties[k] / L_v.feature.properties.EWZ * factor));
-			total.push(unit);
-			return total;
-		}, [])));
+	[
+		[LandkreisJSON, 'BEZ_GEN'],
+		[DepartementJSON, 'nom'],
+		[ProvinceJSON, 'prov_name'],
+		[BezirkJSON, 'name'],
+		[KantonJSON, 'KTNAME']
+	].forEach(pair => leaderboardData.addRows(Object.values(pair[0]._layers).reduce((total, L_v) => {
+		unit = [];
+		unit.push(L_v.feature.properties[pair[1]]),
+		Object.keys(tableData).forEach(k => unit.push(L_v.feature.properties[k] / L_v.feature.properties.EWZ * factor));
+		total.push(unit);
+		return total;
+	}, [])));
 
-		leaderboard = new google.visualization.Table(document.getElementById('leaderboard'));
-		var leaderboardView = new google.visualization.DataView(leaderboardData);
+	leaderboard = new google.visualization.Table(document.getElementById('leaderboard'));
+	var leaderboardView = new google.visualization.DataView(leaderboardData);
 
-		var options = {
-			allowHtml: true,
-			alternatingRowStyle: false,
-			cssClassNames: {
-				headerRow: 'mdc-data-table__header-row',
-				headerCell: 'mdc-data-table__header-cell',
-				tableRow: 'mdc-data-table__row',
-				tableCell: 'mdc-data-table__cell--numeric',
-				selectedTableRow: 'mdc-data-table__row--selected',
-				hoverTableRow: 'mdc-data-table__row--hover'
-			},
-			showRowNumber: true,
-			page: 'enable',
-			pageSize: 20,
-			sortColumn: sortColumn,
-			sortAscending: false
-		};
+	var options = {
+		allowHtml: true,
+		alternatingRowStyle: false,
+		cssClassNames: {
+			headerRow: 'mdc-data-table__header-row',
+			headerCell: 'mdc-data-table__header-cell',
+			tableRow: 'mdc-data-table__row',
+			tableCell: 'mdc-data-table__cell--numeric',
+			selectedTableRow: 'mdc-data-table__row--selected',
+			hoverTableRow: 'mdc-data-table__row--hover'
+		},
+		showRowNumber: true,
+		page: 'enable',
+		pageSize: 20,
+		sortColumn: sortColumn,
+		sortAscending: false
+	};
 
-		leaderboardListener = google.visualization.events.addListener(leaderboard, 'sort', props => {
-			var sortValues = [];
-			var sortRows = [];
-			var sortDirection = (props.ascending) ? 1 : -1;
+	leaderboardListener = google.visualization.events.addListener(leaderboard, 'sort', props => {
+		var sortValues = [];
+		var sortRows = [];
+		var sortDirection = (props.ascending) ? 1 : -1;
 
-			if (props.column) {
-				for (var i = 0; i < leaderboardData.getNumberOfRows(); i++)
-					sortValues.push({
-						index: leaderboardData.getValue(i, props.column),
-						location: leaderboardData.getValue(i, 0)
-					});
-				sortValues.sort((row1, row2) => isNaN(row1.index) ? 1 : isNaN(row2.index) ? -1 : (row1.index - row2.index) * sortDirection);
-				sortValues.forEach(sortValue => sortRows.push(leaderboardData.getFilteredRows([
-					{column: props.column, value: sortValue.index},
-					{column: 0, value: sortValue.location}
-				])[0]));
-			}
-			else {
-				for (var i = 0; i < leaderboardData.getNumberOfRows(); i++)
-					sortValues.push({
-						index: leaderboardData.getValue(i, props.column)
-					});
-				sortValues.sort((row1, row2) => row1.index < row2.index ? sortDirection : -sortDirection);
-				sortValues.forEach(sortValue => sortRows.push(leaderboardData.getFilteredRows([
-					{column: props.column, value: sortValue.index}
-				])[0]));
-			}
-			console.log('Sorted Row Order: ' + sortRows);
+		if (props.column) {
+			for (var i = 0; i < leaderboardData.getNumberOfRows(); i++)
+				sortValues.push({
+					index: leaderboardData.getValue(i, props.column),
+					location: leaderboardData.getValue(i, 0)
+				});
+			sortValues.sort((row1, row2) => isNaN(row1.index) ? 1 : isNaN(row2.index) ? -1 : (row1.index - row2.index) * sortDirection);
+			sortValues.forEach(sortValue => sortRows.push(leaderboardData.getFilteredRows([
+				{column: props.column, value: sortValue.index},
+				{column: 0, value: sortValue.location}
+			])[0]));
+		}
+		else {
+			for (var i = 0; i < leaderboardData.getNumberOfRows(); i++)
+				sortValues.push({
+					index: leaderboardData.getValue(i, props.column)
+				});
+			sortValues.sort((row1, row2) => row1.index < row2.index ? sortDirection : -sortDirection);
+			sortValues.forEach(sortValue => sortRows.push(leaderboardData.getFilteredRows([
+				{column: props.column, value: sortValue.index}
+			])[0]));
+		}
+		console.log('Sorted Row Order: ' + sortRows);
 
-			leaderboardView.setRows(sortRows);
-			options.sortColumn = props.column;
-			options.sortAscending = props.ascending;
-
-			leaderboard.draw(leaderboardView, options);
-		});
+		leaderboardView.setRows(sortRows);
+		options.sortColumn = props.column;
+		options.sortAscending = props.ascending;
 
 		leaderboard.draw(leaderboardView, options);
+	});
 
-		$('#leaderboard table td:nth-child(2)').removeClass('mdc-data-table__cell--numeric').addClass('mdc-data-table__cell');
+	leaderboard.draw(leaderboardView, options);
 
-		document.querySelector('.mdc-linear-progress').removeEventListener('COVID19:Loaded', draw);
-	};
-	document.querySelector('.mdc-linear-progress').addEventListener('COVID19:Loaded', draw);
+	$('#leaderboard table td:nth-child(2)').removeClass('mdc-data-table__cell--numeric').addClass('mdc-data-table__cell');
 };
 
 $(() => {
@@ -176,18 +172,12 @@ $(() => {
 		currentSelectedSort = event.detail.index;
 	});
 
-	gChartLoad = google.charts.load('current', {
-		packages: ['table']
-	});
-	google.charts.setOnLoadCallback(drawLeaderboard(
-		{
-			cases7: '7-day Incidence',
-			cases14: '14-day Incidence',
-			cases28: '28-day Incidence',
-			deaths7: '7-day Mortality',
-			deaths14: '14-day Mortality',
-			deaths28: '28-day Mortality'
-		}
-		, 100000, 1)
-	);
+	gChartOptions = [{
+		cases7: '7-day Incidence',
+		cases14: '14-day Incidence',
+		cases28: '28-day Incidence',
+		deaths7: '7-day Mortality',
+		deaths14: '14-day Mortality',
+		deaths28: '28-day Mortality'
+	}, 100000, 1];
 });

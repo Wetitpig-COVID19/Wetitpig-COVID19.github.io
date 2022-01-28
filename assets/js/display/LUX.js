@@ -20,15 +20,12 @@ casesFx.LUX = {
 	},
 
 	showOnMap: () => {
-		if (LuxembourgJSON !== undefined) {
-			LuxembourgJSON.removeEventListener('add', layerLoaded);
+		if (LuxembourgJSON !== undefined)
 			map.removeLayer(LuxembourgJSON)
-		}
 		LuxembourgJSON = L.geoJSON(Luxembourg, {
 			style: feature => mapStyle.style(feature.properties.cases7 / feature.properties.EWZ * 100000, 'incidence'),
 			onEachFeature: casesFx.LUX.handleClick
 		});
-		LuxembourgJSON.addEventListener('add', layerLoaded);
 		LuxembourgJSON.addTo(map);
 	}
 };
@@ -53,15 +50,12 @@ vacFx.LUX = {
 	},
 
 	showOnMap: () => {
-		if (LuxembourgJSON !== undefined) {
-			LuxembourgJSON.removeEventListener('add', layerLoaded);
+		if (LuxembourgJSON !== undefined)
 			map.removeLayer(LuxembourgJSON)
-		}
 		LuxembourgJSON = L.geoJSON(Luxembourg, {
 			style: feature => mapStyle.style(feature.properties.dose2 / feature.properties.EWZ * 100, 'coverage'),
 			onEachFeature: vacFx.LUX.handleClick
 		});
-		LuxembourgJSON.addEventListener('add', layerLoaded);
 		LuxembourgJSON.addTo(map);
 	}
 };

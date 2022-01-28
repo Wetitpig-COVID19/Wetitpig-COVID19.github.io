@@ -49,15 +49,12 @@ casesFx.FRA = {
 	},
 
 	showOnMap: () => {
-		if (DepartementJSON !== undefined) {
-			DepartementJSON.removeEventListener('add', layerLoaded);
+		if (DepartementJSON !== undefined)
 			map.removeLayer(DepartementJSON)
-		}
 		DepartementJSON = L.geoJSON(Departements, {
 			style: feature => mapStyle.style(feature.properties.cases7 / feature.properties.EWZ * 100000, 'incidence'),
 			onEachFeature: casesFx.FRA.handleClick
 		});
-		DepartementJSON.addEventListener('add', layerLoaded);
 		DepartementJSON.addTo(map);
 	}
 };
@@ -112,15 +109,12 @@ vacFx.FRA = {
 	},
 
 	showOnMap: () => {
-		if (DepartementJSON !== undefined) {
-			DepartementJSON.removeEventListener('add', layerLoaded);
+		if (DepartementJSON !== undefined)
 			map.removeLayer(DepartementJSON)
-		}
 		DepartementJSON = L.geoJSON(Departements, {
 			style: feature => mapStyle.style(feature.properties.dose2 / feature.properties.EWZ * 100, 'coverage'),
 			onEachFeature: vacFx.FRA.handleClick
 		});
-		DepartementJSON.addEventListener('add', layerLoaded);
 		DepartementJSON.addTo(map);
 	}
 };

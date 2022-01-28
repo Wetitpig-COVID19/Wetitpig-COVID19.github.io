@@ -3,6 +3,8 @@ var casesFx = {};
 var vacFx = {};
 var pullFx = {};
 
+const numCountries = 6;
+
 const downloadMapJSON = async country => await Promise.all(
 	['maps','data'].map(dir =>
 		(async code => {
@@ -10,6 +12,7 @@ const downloadMapJSON = async country => await Promise.all(
 			response = await response.arrayBuffer();
 			response = fzstd.decompress(new Uint8Array(response));
 			response = new TextDecoder().decode(response);
+			dataLoaded();
 			return JSON.parse(response);
 		})(country)
 	)
@@ -86,11 +89,15 @@ const mapStyle = {
 	}
 };
 
-const layerLoaded = () => {
-	progressBar.progress = progressBar.foundation.getProgress() + 1/6;
+const dataLoaded = () => {
+	progressBar.progress = progressBar.foundation.getProgress() + 1 / (numCountries * 2);
 	if (progressBar.foundation.getProgress() > 0.999) {
 		setTimeout(() => progressBar.close(), 500);
-		document.querySelector('.mdc-linear-progress').dispatchEvent(new Event('COVID19:Loaded'));
+
+		google.charts.load('current', {
+			packages: ['table'],
+			callback: drawLeaderboard
+		});
 	}
 }
 
@@ -161,27 +168,27 @@ $(() => {
 	const navigationButtonRipple = new mdc.ripple.MDCRipple(document.querySelector('.mdc-top-app-bar__navigation-icon'));
 	navigationButtonRipple.unbounded = true;
 	navButtons[0].addEventListener('click', function() {
-		drawLeaderboard({
+		gChartOptions = [{
 			cases7: '7-day Incidence',
 			cases14: '14-day Incidence',
 			cases28: '28-day Incidence',
 			deaths7: '7-day Mortality',
 			deaths14: '14-day Mortality',
 			deaths28: '28-day Mortality'
-		}, 100000, 1);
+		}, 100000, 1];
 		setStyleonData('cases', 'per ' + (100000).toLocaleString());
 		Object.values(casesFx).forEach(x => x.showOnMap());
 	});
 	navButtons[1].addEventListener('click', function() {
 		setStyleonData('vaccine', '(%)');
-		drawLeaderboard({
+		gChartOptions = [{
 			dose2_90: '90-day Full',
 			dose2_180: '180-day Full',
 			dose2: 'Cumulative Full',
 			dose3_90: '90-day Boosted',
 			dose3_180: '180-day Boosted',
 			dose3: 'Cumulative Boosted'
-		}, 100, 3);
+		}, 100, 3];
 		Object.values(vacFx).forEach(x => x.showOnMap());
 	});
 
