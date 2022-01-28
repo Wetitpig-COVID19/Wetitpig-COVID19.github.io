@@ -18,6 +18,7 @@
   "scripts": {
     "prebuild": "mkdir -p assets/data",
     "build": "find data-pull -name \"pull*.js\" -maxdepth 1 | xargs -n1 -P2 node",
+    "postbuild": "node data-pull/compress.js",
     "minify-js": "find assets -name \"*.js\" | xargs -P$(nproc || printf '2') -I {} sh -c \"set -x; node_modules/uglify-js/bin/uglifyjs {} -cmo {}\"",
     "minify-css": "find assets -name \"*.css\" | xargs -P$(nproc || printf '2') -I {} sh -c \"set -x; node_modules/clean-css-cli/bin/cleancss -o {} {}\"",
     "minify-html": "node_modules/html-minifier/cli.js --collapse-whitespace --use-short-doctype -o index.html index.html",

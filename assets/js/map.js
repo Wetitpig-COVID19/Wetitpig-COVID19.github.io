@@ -3,16 +3,17 @@ var casesFx = {};
 var vacFx = {};
 var pullFx = {};
 
-const downloadMapJSON = async country => await Promise.all([
-	(async code => {
-		var response = await fetch(baseURL + '/assets/maps/' + code + '.json.br');
-		response = await response.arrayBuffer();
-		response = window.brotliDecompress(new Uint8Array(response));
-		response = new TextDecoder().decode(response);
-		return JSON.parse(response);
-	})(country),
-	await (await fetch(baseURL + '/assets/data/' + country + '.json')).json()
-]);
+const downloadMapJSON = async country => await Promise.all(
+	['maps','data'].map(dir =>
+		(async code => {
+			var response = await fetch(baseURL + `/assets/${dir}/${code}.json.br`);
+			response = await response.arrayBuffer();
+			response = window.brotliDecompress(new Uint8Array(response));
+			response = new TextDecoder().decode(response);
+			return JSON.parse(response);
+		})(country)
+	)
+);
 
 const LightenDarkenColor = (colorCode, amount) => {
 	colorCode = colorCode.slice(1);

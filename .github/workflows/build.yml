@@ -31,7 +31,6 @@ jobs:
       - name: Auto Minify 🛠️
         run: |
           npm run minify
-          node data-pull/compressMap.js
           echo
           git add . && git commit -m "Github Actions: Minify JS and CSS automatically"
 
