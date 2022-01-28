@@ -4,3 +4,4 @@ exclude:
   - package-lock.json
   - README.md
   - assets/maps/*.json
+  - assets/data/*.json

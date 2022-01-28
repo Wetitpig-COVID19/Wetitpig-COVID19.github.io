@@ -18,9 +18,11 @@ const util = require('util');
 		console.log(`Compressing assets/${directory}/...`);
 		const mapDir = await fsPromises.opendir(`assets/${directory}/`);
 		for await (const dirent of mapDir) {
-			var fileData = await fsPromises.readFile(`assets/${directory}/${dirent.name}`);
-			fileData = await brotliCompress(fileData, (await brotliCompressParams(`assets/${directory}/${dirent.name}`)));
-			await fsPromises.writeFile(`assets/${directory}/${dirent.name}.br`, fileData);
+			if (dirent.name.match(/\.json$/)) {
+				var fileData = await fsPromises.readFile(`assets/${directory}/${dirent.name}`);
+				fileData = await brotliCompress(fileData, (await brotliCompressParams(`assets/${directory}/${dirent.name}`)));
+				await fsPromises.writeFile(`assets/${directory}/${dirent.name}.br`, fileData);
+			}
 		}
 	}
 
