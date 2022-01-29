@@ -8,7 +8,7 @@ const numCountries = 7;
 const downloadMapJSON = async country => await Promise.all(
 	['maps','data'].map(dir =>
 		(async code => {
-			var response = await fetch(baseURL + `/assets/${dir}/${code}.json.zst`);
+			var response = await fetch(`${window.location.href.split('/').slice(0, -1).join('/')}/assets/${dir}/${code}.json.zst`);
 			response = await response.arrayBuffer();
 			response = fzstd.decompress(new Uint8Array(response));
 			response = new TextDecoder().decode(response);

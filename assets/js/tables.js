@@ -1,5 +1,3 @@
-const baseURL = window.location.href.split('/').slice(0, -1).join('/');
-
 const textColor = colorCode => {
 	colorR = parseInt(colorCode.substring(1,3), 16);
 	colorG = parseInt(colorCode.substring(3,5), 16);
