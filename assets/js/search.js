@@ -20,7 +20,15 @@ var hintMenu;
 
 $(() => document.querySelector('.mdc-linear-progress').addEventListener('COVID19:Loaded', () => {
 	const hintListL1 = new Fuse(
-		['Deutschland', 'Germany', 'Osterreich', 'Austria', 'Italia', 'Italy', 'France', 'Die Schweiz', 'La Suisse', 'La Svizzera', 'La Svizra', 'Switzerland', 'Letzebuerg', 'Luxembourg', 'Luxemburg'], {
+		[
+			'Deutschland', 'Germany',
+			'Osterreich', 'Austria',
+			'Italia', 'Italy',
+			'France',
+			'Die Schweiz', 'La Suisse', 'La Svizzera', 'La Svizra', 'Switzerland',
+			'Letzebuerg', 'Luxembourg', 'Luxemburg',
+			'Polska', 'Poland'
+		], {
 		includeScore: true
 	});
 
@@ -28,7 +36,8 @@ $(() => document.querySelector('.mdc-linear-progress').addEventListener('COVID19
 		DEU: FuseGeoJSON(LandkreisJSON, 'BL'),
 		FRA: FuseGeoJSON(DepartementJSON, 'reg'),
 		ITA: FuseGeoJSON(ProvinceJSON, 'reg_name'),
-		AUT: FuseGeoJSON(BezirkJSON, 'BL')
+		AUT: FuseGeoJSON(BezirkJSON, 'BL'),
+		POL: FuseGeoJSON(PowiatJSON, 'WOJEWODZTWO')
 	};
 
 	const hintListL3 = {
@@ -36,7 +45,8 @@ $(() => document.querySelector('.mdc-linear-progress').addEventListener('COVID19
 		FRA: FuseGeoJSON(DepartementJSON, 'nom'),
 		ITA: FuseGeoJSON(ProvinceJSON, 'prov_name'),
 		AUT: FuseGeoJSON(BezirkJSON, 'name'),
-		CHE: FuseGeoJSON(KantonJSON, 'KTNAME')
+		CHE: FuseGeoJSON(KantonJSON, 'KTNAME'),
+		POL: FuseGeoJSON(PowiatJSON, 'JPT_NAZWA_')
 	};
 	var hintListItems;
 	var pooledSearch;
@@ -107,6 +117,7 @@ $(() => document.querySelector('.mdc-linear-progress').addEventListener('COVID19
 						case 'FRA': label = ['France', 'reg', 'nom']; break;
 						case 'ITA': label = ['Italia', 'reg_name', 'prov_name']; break;
 						case 'AUT': label = ['Österreich', 'BL', 'name']; break;
+						case 'POL': label = ['Polska', 'WOJEWODZTWO', 'JPT_NAZWA_']; break;
 						default: label = ['Schweiz/Suisse/Svizzera/Svizra', 'GRNR', 'KTNAME']; break;
 					}
 					labelString = (pooledSearch[searchIndex].level == 3) ? pooledSearch[searchIndex].result.item.feature.properties[label[2]] + ', ' : '';
@@ -166,6 +177,7 @@ $(() => document.querySelector('.mdc-linear-progress').addEventListener('COVID19
 					case 'Italia': case 'Italy': toFire = ProvinceJSON; break;
 					case 'France': toFire = DepartementJSON; break;
 					case 'Letzebuerg': case 'Luxembourg': case 'Luxemburg': toFire = LuxembourgJSON; break;
+					case 'Polska': case 'Poland': toFire = PowiatJSON; break;
 					default: toFire = KantonJSON; break;
 				}
 				Object.values(toFire._layers)[0].fireEvent('click');
