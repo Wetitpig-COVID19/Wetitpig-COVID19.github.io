@@ -103,14 +103,8 @@ const dataLoaded = () => {
 
 const setStyleonData = (stylesheet, unit, onclick=true) => {
 	if (onclick) {
-		cssSheet = document.createElement('link');
-		cssSheet.setAttribute('rel', 'stylesheet');
-		cssSheet.setAttribute('href', `assets/css/${stylesheet}.css`);
-		elementBefore = document.getElementsByTagName('link')[6];
-		elementBefore.after(cssSheet);
-		elementBefore.remove();
+		document.getElementsByTagName('link')[6].setAttribute('href', `assets/css/${stylesheet}.css`);
 		document.getElementById('LKlabel').removeAttribute('style');
-
 		progressBar.open();
 		progressBar.foundation.setProgress(0);
 	}
