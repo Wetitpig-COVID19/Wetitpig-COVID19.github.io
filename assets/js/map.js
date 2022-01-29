@@ -3,7 +3,7 @@ var casesFx = {};
 var vacFx = {};
 var pullFx = {};
 
-const numCountries = 6;
+const numCountries = 7;
 
 const downloadMapJSON = async country => await Promise.all(
 	['maps','data'].map(dir =>
