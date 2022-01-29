@@ -73,8 +73,8 @@ const tools = require('./tools');
 				Landkreise[i]['deaths' + t.toString(10)] = response.features[i].attributes.AnzahlTodesfall_S == -1 ? 0 : response.features[i].attributes.AnzahlTodesfall_S;
 			}
 		}));
-		tools.validate.cases(Landkreise.slice(0,-1));
-		tools.validate.deaths(Landkreise.slice(0,-1));
+		tools.validate.cases(Landkreise.slice(0,-1), false);
+		tools.validate.deaths(Landkreise.slice(0,-1), false);
 
 		tools.msg.info('Pulling vaccine data...');
 		Landkreise.sort((item1, item2) => parseInt(item1.RS, 10) - parseInt(item2.RS, 10));

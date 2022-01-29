@@ -19,12 +19,12 @@ const parseCSV = data => new Promise((complete, error) =>
 	})
 );
 
-const validateCases = arrayToCheck => {
+const validateCases = (arrayToCheck, timeFrame=true) => {
 	if (arrayToCheck.length == 0)
 		throw new Error(msgFlag(process.argv[1].slice(-6,-3)) + ' : Array is empty');
 
 	if (arrayToCheck.some((value, index) => {
-		trapped = ['7','14','28'].some(t => value['cases' + t] === undefined) || value.cases7 > value.cases14 || value.cases14 > value.cases28;
+		trapped = ['7','14','28'].some(t => value['cases' + t] === undefined) || timeFrame ? (value.cases7 > value.cases14 || value.cases14 > value.cases28) : false;
 		if (trapped)
 			console.error({
 				trapped: value,
@@ -35,12 +35,12 @@ const validateCases = arrayToCheck => {
 		throw new Error(msgFlag(process.argv[1].slice(-6,-3)) + ' : Invalid cases data');
 };
 
-const validateDeaths = arrayToCheck => {
+const validateDeaths = (arrayToCheck, timeFrame=true) => {
 	if (arrayToCheck.length == 0)
 		throw new Error(msgFlag(process.argv[1].slice(-6,-3)) + ' : Array is empty');
 
 	if (arrayToCheck.some((value, index) => {
-		trapped = ['7','14','28'].some(t => value['deaths' + t] === undefined) || value.deaths7 > value.deaths14 || value.deaths14 > value.deaths28;
+		trapped = ['7','14','28'].some(t => value['deaths' + t] === undefined) || timeFrame ? (value.deaths7 > value.deaths14 || value.deaths14 > value.deaths28) : false;
 		if (trapped)
 		console.error({
 			trapped: value,
