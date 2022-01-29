@@ -94,6 +94,7 @@ const dataLoaded = () => {
 	if (progressBar.foundation.getProgress() > 0.999) {
 		setTimeout(() => progressBar.close(), 500);
 
+		setupSearch();
 		google.charts.load('current', {
 			packages: ['table'],
 			callback: drawLeaderboard

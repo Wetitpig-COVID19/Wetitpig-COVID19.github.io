@@ -18,7 +18,7 @@ var nonExactBar;
 var searchBox;
 var hintMenu;
 
-$(() => document.querySelector('.mdc-linear-progress').addEventListener('COVID19:Loaded', () => {
+const setupSearch = () => {
 	const hintListL1 = new Fuse(
 		[
 			'Deutschland', 'Germany',
@@ -214,4 +214,4 @@ $(() => document.querySelector('.mdc-linear-progress').addEventListener('COVID19
 		document.querySelector('#searchName input').value = hintListItems[event.detail.index].innerHTML.split(',')[0];
 		activate(event.detail.index);
 	});
-}));
+};
