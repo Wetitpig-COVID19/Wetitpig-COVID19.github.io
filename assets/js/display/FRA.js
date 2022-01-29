@@ -56,6 +56,7 @@ casesFx.FRA = {
 			onEachFeature: casesFx.FRA.handleClick
 		});
 		DepartementJSON.addTo(map);
+		dataLoaded();
 	}
 };
 
@@ -116,6 +117,7 @@ vacFx.FRA = {
 			onEachFeature: vacFx.FRA.handleClick
 		});
 		DepartementJSON.addTo(map);
+		dataLoaded();
 	}
 };
 

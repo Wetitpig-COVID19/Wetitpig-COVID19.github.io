@@ -65,6 +65,7 @@ casesFx.DEU = {
 			onEachFeature: casesFx.DEU.handleClick
 		});
 		LandkreisJSON.addTo(map);
+		dataLoaded();
 	}
 };
 
@@ -133,6 +134,7 @@ vacFx.DEU = {
 			onEachFeature: vacFx.DEU.handleClick
 		});
 		LandkreisJSON.addTo(map);
+		dataLoaded();
 	}
 };
 

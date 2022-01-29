@@ -56,6 +56,7 @@ casesFx.AUT = {
 			onEachFeature: casesFx.AUT.handleClick
 		});
 		BezirkJSON.addTo(map);
+		dataLoaded();
 	}
 };
 
@@ -122,6 +123,7 @@ vacFx.AUT = {
 			onEachFeature: vacFx.AUT.handleClick
 		});
 		BezirkJSON.addTo(map);
+		dataLoaded();
 	}
 };
 

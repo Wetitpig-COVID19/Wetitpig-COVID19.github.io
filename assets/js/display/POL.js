@@ -58,6 +58,7 @@ casesFx.POL = {
 			onEachFeature: casesFx.POL.handleClick
 		});
 		PowiatJSON.addTo(map);
+		dataLoaded();
 	}
 };
 
@@ -119,6 +120,7 @@ vacFx.POL = {
 			onEachFeature: vacFx.POL.handleClick
 		});
 		PowiatJSON.addTo(map);
+		dataLoaded();
 	}
 };
 

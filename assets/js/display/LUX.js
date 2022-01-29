@@ -27,6 +27,7 @@ casesFx.LUX = {
 			onEachFeature: casesFx.LUX.handleClick
 		});
 		LuxembourgJSON.addTo(map);
+		dataLoaded();
 	}
 };
 
@@ -57,6 +58,7 @@ vacFx.LUX = {
 			onEachFeature: vacFx.LUX.handleClick
 		});
 		LuxembourgJSON.addTo(map);
+		dataLoaded();
 	}
 };
 

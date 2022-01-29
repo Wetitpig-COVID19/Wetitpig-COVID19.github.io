@@ -12,7 +12,6 @@ const downloadMapJSON = async country => await Promise.all(
 			response = await response.arrayBuffer();
 			response = fzstd.decompress(new Uint8Array(response));
 			response = new TextDecoder().decode(response);
-			dataLoaded();
 			return JSON.parse(response);
 		})(country)
 	)
@@ -90,7 +89,7 @@ const mapStyle = {
 };
 
 const dataLoaded = () => {
-	progressBar.progress = progressBar.foundation.getProgress() + 1 / (numCountries * 2);
+	progressBar.progress = progressBar.foundation.getProgress() + 1 / numCountries;
 	if (progressBar.foundation.getProgress() > 0.999) {
 		setTimeout(() => progressBar.close(), 500);
 

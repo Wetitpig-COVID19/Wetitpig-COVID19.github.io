@@ -63,6 +63,7 @@ casesFx.CHE = {
 			onEachFeature: casesFx.CHE.handleClick
 		});
 		KantonJSON.addTo(map);
+		dataLoaded();
 	}
 };
 
@@ -131,6 +132,7 @@ vacFx.CHE = {
 			onEachFeature: vacFx.CHE.handleClick
 		});
 		KantonJSON.addTo(map);
+		dataLoaded();
 	}
 };
 

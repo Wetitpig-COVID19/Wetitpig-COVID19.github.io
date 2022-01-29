@@ -65,6 +65,7 @@ casesFx.ITA = {
 			onEachFeature: casesFx.ITA.handleClick
 		});
 		ProvinceJSON.addTo(map);
+		dataLoaded();
 	}
 };
 
@@ -132,6 +133,7 @@ vacFx.ITA = {
 			onEachFeature: vacFx.ITA.handleClick
 		});
 		ProvinceJSON.addTo(map);
+		dataLoaded();
 	}
 };
 
