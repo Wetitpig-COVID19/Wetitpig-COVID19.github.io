@@ -17,6 +17,7 @@ This repository may not be actively maintained as the owner is now busy.
 * Italy
 * Liechtenstein
 * Luxembourg
+* Poland
 
 Data is provided mostly on the [NUTS3](https://en.wikipedia.org/wiki/Nomenclature_of_Territorial_Units_for_Statistics) level, except for cases where official data is not available. All data is pulled from offficial repositories.
 
@@ -46,6 +47,7 @@ Data is updated every 30 minutes, at `:15` and `:45` at each hour, from the offi
 | Austria                       | [Katalog COVID-19: Zeitliche Darstellung von Daten zu Covid19-Fällen je Bezirk](https://www.data.gv.at/katalog/dataset/4b71eb3d-7d55-4967-b80d-91a3f220b60c)                                                                                                                                                                            | [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/deed.de)                                        |
 | Switzerland and Liechtenstein | [COVID-19 Schweiz](https://opendata.swiss/de/dataset/covid-19-schweiz)                                                                                                                                                                                                                                                                  | [CC-BY](https://opendata.swiss/de/terms-of-use#terms_by)                                                |
 | Luxembourg                    | [Données COVID19](https://data.public.lu/fr/datasets/donnees-covid19/)                                                                                                                                                                                                                                                                  | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/deed.fr)                                    |
+| Poland                        | [Raport zakażeń koronawirusem](https://www.gov.pl/web/koronawirus/wykaz-zarazen-koronawirusem-sars-cov-2)                                                                                                                                                                                                                               | [CC-BY-3.0](https://creativecommons.org/licenses/by/3.0/pl/)                                            |
 
 ### Vaccinations
 | Country                       | Data Source                                                                                                                                                                                                                                                                                       | License                                                                                                 |
@@ -56,6 +58,7 @@ Data is updated every 30 minutes, at `:15` and `:45` at each hour, from the offi
 | Austria                       | [Katalog COVID-19: Zeitreihe der verabreichten Impfdosen der Corona-Schutzimpfung](https://www.data.gv.at/katalog/dataset/276ffd1e-efdd-42e2-b6c9-04fb5fa2b7ea) <br> [Katalog COVID-19: Impfdaten auf Gemeindeebene](https://www.data.gv.at/katalog/dataset/d230c9e8-745a-4da3-a3b4-86842591d9f0) | [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/deed.de)                                        |
 | Switzerland and Liechtenstein | [COVID-19 Schweiz](https://opendata.swiss/de/dataset/covid-19-schweiz)                                                                                                                                                                                                                            | [CC-BY](https://opendata.swiss/de/terms-of-use#terms_by)                                                |
 | Luxembourg                    | [Données COVID19](https://data.public.lu/fr/datasets/donnees-covid19/)                                                                                                                                                                                                                            | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/deed.fr)                                    |
+| Poland                        | [Raport szczepień przeciwko COVID-19](https://www.gov.pl/web/szczepimysie/raport-szczepien-przeciwko-covid-19)                                                                                                                                                                                    | [CC-BY-3.0](https://creativecommons.org/licenses/by/3.0/pl/)                                            |
 
 ## Known Issues
 * Slow loading times due to bulk import of map

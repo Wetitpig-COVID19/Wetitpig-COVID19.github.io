@@ -21,31 +21,31 @@ const parseCSV = data => new Promise((complete, error) =>
 
 const validateCases = arrayToCheck => {
 	if (arrayToCheck.length == 0)
-		throw new Error("Array is empty");
+		throw new Error(msgFlag(process.argv[1].slice(-6,-3)) + ': Array is empty');
 
 	if (arrayToCheck.some(value =>
 		['7','14','28'].some(t =>
 			value['cases' + t] === undefined
 		) || value.cases7 > value.cases14 || value.cases14 > value.cases28
 	))
-		throw new Error('Invalid cases data!');
+		throw new Error(msgFlag(process.argv[1].slice(-6,-3)) + ': Invalid cases data');
 };
 
 const validateDeaths = arrayToCheck => {
 	if (arrayToCheck.length == 0)
-		throw new Error("Array is empty");
+		throw new Error(msgFlag(process.argv[1].slice(-6,-3)) + ': Array is empty');
 
 	if (arrayToCheck.some(value =>
 		['7','14','28'].some(t =>
 			value['deaths' + t] === undefined
 		) || value.deaths7 > value.deaths14 || value.deaths14 > value.deaths28
 	))
-		throw new Error('Invalid deaths data!');
+		throw new Error(msgFlag(process.argv[1].slice(-6,-3)) + ': Invalid deaths data');
 };
 
 const validateVaccines = (arrayToCheck, timeFrame=true) => {
 	if (arrayToCheck.length == 0)
-		throw new Error("Array is empty");
+		throw new Error(msgFlag(process.argv[1].slice(-6,-3)) + ': Array is empty');
 
 	if (timeFrame ?
 		arrayToCheck.some(value =>
@@ -57,7 +57,7 @@ const validateVaccines = (arrayToCheck, timeFrame=true) => {
 		) :
 		arrayToCheck.some(value => ['dose2','dose3'].some(s => value[s] === undefined))
 	)
-		throw new Error('Invalid vaccine data!');
+		throw new Error(msgFlag(process.argv[1].slice(-6,-3)) + ': Invalid vaccine data');
 };
 
 const msgFlag = country => {
