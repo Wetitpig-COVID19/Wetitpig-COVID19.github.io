@@ -69,8 +69,8 @@ const tools = require('./tools');
 				}
 			})).data;
 			for (var i = 0; i < response.features.length; i++) {
-				Landkreise[i]['cases' + t.toString(10)] = response.features[i].attributes.AnzahlFall_S;
-				Landkreise[i]['deaths' + t.toString(10)] = response.features[i].attributes.AnzahlTodesfall_S;
+				Landkreise[i]['cases' + t.toString(10)] = response.features[i].attributes.AnzahlFall_S == -1 ? 0 : response.features[i].attributes.AnzahlFall_S;
+				Landkreise[i]['deaths' + t.toString(10)] = response.features[i].attributes.AnzahlTodesfall_S == -1 ? 0 : response.features[i].attributes.AnzahlTodesfall_S;
 			}
 		}));
 		tools.validate.cases(Landkreise.slice(0,-1));
