@@ -29,7 +29,7 @@ const setupSearch = () => {
 			'Letzebuerg', 'Luxembourg', 'Luxemburg',
 			'Polska', 'Poland'
 		], {
-		includeScore: true
+			includeScore: true
 	});
 
 	const hintListL2 = {

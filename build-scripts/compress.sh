@@ -2,7 +2,7 @@
 
 set -x
 
-cpu_count=$(nproc || printf '2')
+cpu_count=$(nproc 2>/dev/null || printf '2')
 zstFiles=$(ls -1 assets/maps/*.zst 2>/dev/null | wc -l)
 
 if [ $zstFiles = 0 ]; then

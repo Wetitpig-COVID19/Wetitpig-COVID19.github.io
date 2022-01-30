@@ -53,7 +53,7 @@ casesFx.POL = {
 	showOnMap: () => {
 		if (PowiatJSON !== undefined)
 			map.removeLayer(PowiatJSON)
-			PowiatJSON = L.geoJSON(Powiaty, {
+		PowiatJSON = L.geoJSON(Powiaty, {
 			style: feature => mapStyle.style(feature.properties.cases7 / feature.properties.EWZ * 100000, 'incidence'),
 			onEachFeature: casesFx.POL.handleClick
 		});

@@ -2,7 +2,7 @@
 
 set -x
 
-cpu_count=$(nproc || printf '2')
+cpu_count=$(nproc 2>/dev/null || printf '2')
 
 node_modules/html-minifier/cli.js --collapse-whitespace --use-short-doctype -o index.html index.html
 
