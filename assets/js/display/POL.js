@@ -126,7 +126,6 @@ vacFx.POL = {
 
 pullFx.POL = async () => {
 	[Powiaty, result] = await downloadMapJSON('POL');
-	Powiaty.features.sort((item1, item2) => item1.properties.JPT_KJ_I_1 < item2.properties.JPT_KJ_I_1 ? -1 : 1);
 	wojewodztwoData = result.NUTS2;
 	Powiaty.features.forEach((Lk, index) => {
 		Object.assign(Lk.properties, result.NUTS3[index]);

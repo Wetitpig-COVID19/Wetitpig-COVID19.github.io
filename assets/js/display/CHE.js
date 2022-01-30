@@ -138,7 +138,6 @@ vacFx.CHE = {
 
 pullFx.CHE = async () => {
 	[Kantone, result] = await downloadMapJSON('CHE');
-	Kantone.features.sort((item1, item2) => item1.properties.KTCODE < item2.properties.KTCODE ? -1 : 1);
 	Kantone.features.forEach((Lk, index) => Object.assign(Lk.properties, result.NUTS3[index]));
 	grossRegionenData = result.NUTS2;
 	NUTS1Data.CH = result.NUTS1;

@@ -129,7 +129,6 @@ vacFx.AUT = {
 
 pullFx.AUT = async () => {
 	[Bezirke, result] = await downloadMapJSON('AUT');
-	Bezirke.features.sort((item1, item2) => item1.properties.GKZ < item2.properties.GKZ ? -1 : 1);
 	bundeslaenderDataAUT = result.NUTS2;
 	Bezirke.features.forEach((Lk, index) => {
 		Object.assign(Lk.properties, result.NUTS3[index]);

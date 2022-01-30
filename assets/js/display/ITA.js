@@ -139,7 +139,6 @@ vacFx.ITA = {
 
 pullFx.ITA = async () => {
 	[Province, result] = await downloadMapJSON('ITA');
-	Province.features.sort((item1, item2) => item1.properties.prov_istat_code_num - item2.properties.prov_istat_code_num);
 	regioniData = result.NUTS2;
 	Province.features.forEach((Lk, index) => {
 		Object.assign(Lk.properties, result.NUTS3[index]);
