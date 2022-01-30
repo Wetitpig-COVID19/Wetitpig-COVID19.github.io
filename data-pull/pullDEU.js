@@ -3,31 +3,28 @@ const fs = require('fs');
 const tools = require('./tools');
 
 (async () => {
-	var response = (await axios.get('https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/rki_data_status_v/FeatureServer/0/query', {
-		params: {
-			where: '1=1',
-			outFields: 'Datum',
-			f: 'json'
-		}
-	})).data;
-	var casesLastUpdate = new Date(response.features[0].attributes.Datum);
-	casesLastUpdate.setTime(casesLastUpdate.getTime() - 23 * 60 * 60 * 1000);
 
-	const ImpfURL = 'https://raw.githubusercontent.com/robert-koch-institut/COVID-19-Impfungen_in_Deutschland/master/Aktuell_Deutschland_Landkreise_COVID-19-Impfungen.csv';
-	var etag = (await axios.head(ImpfURL)).headers.etag;
+
+	const URL = [
+		'https://media.githubusercontent.com/media/robert-koch-institut/SARS-CoV-2_Infektionen_in_Deutschland/master/Aktuell_Deutschland_SarsCov2_Infektionen.csv',
+		'https://raw.githubusercontent.com/robert-koch-institut/COVID-19-Impfungen_in_Deutschland/master/Aktuell_Deutschland_Landkreise_COVID-19-Impfungen.csv'
+	];
+	var etag = await Promise.all(
+		URL.map(async url => (await axios.head(url)).headers.etag)
+	);
 
 	var currentData;
 	try {
 		currentData = JSON.parse(fs.readFileSync('assets/data/DEU.json'));
 	} catch (e) {
-		currentData = {lastUpdate:{cases: "1970-01-01"}, etag: null};
+		currentData = {etag: new Array(2).fill(null)};
 	}
 
-	if (tools.convertDate(currentData.lastUpdate.cases).getTime() - casesLastUpdate.getTime() || etag != currentData.etag) {
+	if (etag.some((tag, index) => tag != currentData.etag[index])) {
 		tools.msg.log('New data is available!');
 
 		tools.msg.info('Pulling population data...');
-		response = (await axios.get('https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_Landkreisdaten/FeatureServer/0/query', {
+		var response = (await axios.get('https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_Landkreisdaten/FeatureServer/0/query', {
 			params: {
 				where: '1=1',
 				orderByFields: 'RS ASC',
@@ -42,100 +39,108 @@ const tools = require('./tools');
 			EWZ: Landkreise.filter(value => value.RS.slice(0,2) == '11').reduce((a,b) => a + b.EWZ, 0)
 		});
 
-		tools.msg.info('Pulling cases data...');
-		await Promise.all([7, 14, 28].map(async t => {
-			daysFromNow = [
-				new Date(casesLastUpdate.getTime() - (t - 1) * 86400000),
-				new Date(casesLastUpdate.getTime())
-			];
-			response = (await axios.get('https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_COVID19/FeatureServer/0/query', {
-				params: {
-					where: `(Meldedatum BETWEEN DATE \'${daysFromNow[0].toISOString().slice(0,10)}\' AND DATE \'${daysFromNow[1].toISOString().slice(0,10)}\')`,
-					orderByFields: 'IdLandkreis ASC',
-					groupByFieldsForStatistics: 'IdLandkreis',
-					outStatistics: JSON.stringify([
-						{
-							statisticType: 'sum',
-							onStatisticField: 'AnzahlFall',
-							outStatisticFieldName: 'AnzahlFall_S'
-						},
-						{
-							statisticType: 'sum',
-							onStatisticField: 'AnzahlTodesfall',
-							outStatisticFieldName: 'AnzahlTodesfall_S'
-						}
-					]),
-					f: 'json'
-				}
-			})).data;
-			for (var i = 0; i < response.features.length; i++) {
-				Landkreise[i]['cases' + t.toString(10)] = response.features[i].attributes.AnzahlFall_S == -1 ? 0 : response.features[i].attributes.AnzahlFall_S;
-				Landkreise[i]['deaths' + t.toString(10)] = response.features[i].attributes.AnzahlTodesfall_S == -1 ? 0 : response.features[i].attributes.AnzahlTodesfall_S;
-			}
-		}));
-		tools.validate.cases(Landkreise.slice(0,-1), false);
-		tools.validate.deaths(Landkreise.slice(0,-1), false);
+		const casesPromise = async () => {
+			tools.msg.info('Pulling cases data...');
+			var landkreisFiltered = new Array(Landkreise.length - 1).fill(null).map(() => ({
+				cases7: 0, cases14: 0, cases28: 0,
+				deaths7: 0, deaths14: 0, deaths28: 0
+			}));
 
-		tools.msg.info('Pulling vaccine data...');
-		Landkreise.sort((item1, item2) => parseInt(item1.RS, 10) - parseInt(item2.RS, 10));
-		landkreisFiltered = Landkreise.filter(value => value.RS.slice(0,2) != '11' || value.RS == '11000');
+			response = await axios.get(URL[0], {
+				headers: {
+					'Accept-Encoding': 'gzip, compress, deflate'
+				}
+			});
+			var workbook = await tools.csvParse(response.data);
+			workbook.sort((item1, item2) => item1.IdLandkreis != item2.IdLandkreis ? item1.IdLandkreis - item2.IdLandkreis : item1.Meldedatum > item2.Meldedatum ? -1 : 1);
+			casesLastUpdate = tools.convertDate(workbook[0].Meldedatum);
+
+			var landkreisIndex = 0;
+			var Meldedatum;
+			workbook.forEach((row, index, self) => {
+				if (index && row.IdLandkreis != self[index - 1].IdLandkreis)
+					landkreisIndex++;
+				Meldedatum = tools.convertDate(row.Meldedatum);
+				[7,14,28].forEach(t => {
+					if ((casesLastUpdate.getTime() - Meldedatum.getTime()) < 86400000 * t) {
+						landkreisFiltered[landkreisIndex]['cases' + t.toString(10)] += row.AnzahlFall;
+						landkreisFiltered[landkreisIndex]['deaths' + t.toString(10)] += row.AnzahlTodesfall;
+					}
+				});
+			});
+
+			tools.validate.cases(landkreisFiltered.slice(0,-1), false);
+			tools.validate.deaths(landkreisFiltered.slice(0,-1), false);
+			return landkreisFiltered;
+		};
+
 		var bundVacData = {
 			dose2_90: 0, dose2_180: 0, dose2: 0,
 			dose3_90: 0, dose3_180: 0, dose3: 0
 		};
+		const vaccinePromise = async () => {
+			tools.msg.info('Pulling vaccine data...');
+			var landkreisFiltered = new Array(Landkreise.length - 12).fill(null).map(() => ({
+				dose2_90: 0, dose2_180: 0, dose2: 0,
+				dose3_90: 0, dose3_180: 0, dose3: 0
+			}));
 
-		Landkreise.forEach(x => Object.assign(x, {
-			dose2_90: 0, dose2_180: 0, dose2: 0,
-			dose3_90: 0, dose3_180: 0, dose3: 0
-		}));
-		response = (await axios.get(ImpfURL, {
-			headers: {
-				'Accept-Encoding': 'gzip, compress, deflate'
-			}
-		})).data;
-		var workbook = await tools.csvParse(response);
-		landkreisIndex = 0;
-		vaccineIndex = 1;
-		workbook.sort((item1, item2) => {
-			if (item1.LandkreisId_Impfort == 'u') return 1;
-			else if (item2.LandkreisId_Impfort == 'u') return -1;
-			else if (item1.LandkreisId_Impfort < item2.LandkreisId_Impfort) return -1;
-			else if (item1.LandkreisId_Impfort > item2.LandkreisId_Impfort) return 1;
-			else return item2.Impfdatum < item1.Impfdatum ? -1 : 1;
-		});
-		workbook = workbook.filter(value => value.Impfschutz != 1);
-		vacLastUpdate = tools.convertDate(workbook.slice(-1)[0].Impfdatum);
-		workbook.forEach(row => {
-			key = 'dose' + row.Impfschutz.toString(10);
-			switch (row.LandkreisId_Impfort)
-			{
-				case 16056:
-					[90, 180].forEach(t => {
-						if ((vacLastUpdate.getTime() - tools.convertDate(row.Impfdatum).getTime()) < 86400000 * t)
-							landkreisFiltered[385][key + '_' + t.toString(10)] += row.Anzahl;
-					});
-					landkreisFiltered[385][key] += row.Anzahl;
-					break;
-				case 17000:
-				case 'u':
-					[90, 180].forEach(t => {
-						if ((vacLastUpdate.getTime() - tools.convertDate(row.Impfdatum).getTime()) < 86400000 * t)
-							bundVacData[key + '_' + t.toString(10)] += row.Anzahl;
-					});
-					bundVacData[key] += row.Anzahl;
-					break;
-				default:
-					if (row.LandkreisId_Impfort != parseInt(landkreisFiltered[landkreisIndex].RS, 10))
-						landkreisIndex++;
-					[90, 180].forEach(t => {
-						if ((vacLastUpdate.getTime() - tools.convertDate(row.Impfdatum).getTime()) < 86400000 * t)
-							landkreisFiltered[landkreisIndex][key + '_' + t.toString(10)] += row.Anzahl;
-					});
-					landkreisFiltered[landkreisIndex][key] += row.Anzahl;
-					break;
-			}
-		});
-		tools.validate.vaccine(landkreisFiltered);
+			var response = (await axios.get(URL[1], {
+				headers: {
+					'Accept-Encoding': 'gzip, compress, deflate'
+				}
+			})).data;
+			var workbook = await tools.csvParse(response);
+			workbook.sort((item1, item2) => {
+				if (item1.LandkreisId_Impfort == 'u') return 1;
+				else if (item2.LandkreisId_Impfort == 'u') return -1;
+				else if (item1.LandkreisId_Impfort < item2.LandkreisId_Impfort) return -1;
+				else if (item1.LandkreisId_Impfort > item2.LandkreisId_Impfort) return 1;
+				else return item2.Impfdatum < item1.Impfdatum ? -1 : 1;
+			});
+			workbook = workbook.filter(value => value.Impfschutz != 1);
+			vacLastUpdate = tools.convertDate(workbook.slice(-1)[0].Impfdatum);
+
+			var landkreisIndex = 0;
+			workbook.forEach((row, index, self) => {
+				key = 'dose' + row.Impfschutz.toString(10);
+				switch (row.LandkreisId_Impfort)
+				{
+					case 16056:
+						[90, 180].forEach(t => {
+							if ((vacLastUpdate.getTime() - tools.convertDate(row.Impfdatum).getTime()) < 86400000 * t)
+								landkreisFiltered[385][key + '_' + t.toString(10)] += row.Anzahl;
+						});
+						landkreisFiltered[385][key] += row.Anzahl;
+						break;
+					case 17000:
+					case 'u':
+						[90, 180].forEach(t => {
+							if ((vacLastUpdate.getTime() - tools.convertDate(row.Impfdatum).getTime()) < 86400000 * t)
+								bundVacData[key + '_' + t.toString(10)] += row.Anzahl;
+						});
+						bundVacData[key] += row.Anzahl;
+						break;
+					default:
+						if (index && row.LandkreisId_Impfort != self[index - 1].LandkreisId_Impfort)
+							landkreisIndex++;
+						[90, 180].forEach(t => {
+							if ((vacLastUpdate.getTime() - tools.convertDate(row.Impfdatum).getTime()) < 86400000 * t)
+								landkreisFiltered[landkreisIndex][key + '_' + t.toString(10)] += row.Anzahl;
+						});
+						landkreisFiltered[landkreisIndex][key] += row.Anzahl;
+						break;
+				}
+			});
+
+			tools.validate.vaccine(landkreisFiltered);
+			return landkreisFiltered;
+		};
+
+		var landkreisFiltered = await Promise.all([casesPromise(),vaccinePromise()]);
+		landkreisFiltered[0].forEach((data, index) => Object.assign(Landkreise[index], data));
+		Landkreise.sort((item1, item2) => parseInt(item1.RS, 10) - parseInt(item2.RS, 10));
+		Landkreise.filter(value => value.RS.slice(0,2) != '11' || value.RS == '11000').forEach((Lv, index) => Object.assign(Lv, landkreisFiltered[1][index]));
 
 		tools.msg.info('Grouping...');
 		var Bundeslaender = new Array(16).fill(null).map(() => ({
