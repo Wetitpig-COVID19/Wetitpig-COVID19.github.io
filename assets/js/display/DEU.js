@@ -80,7 +80,7 @@ vacFx.DEU = {
 			click: () => {
 				const fxKreis = () => {
 					toPrint = feature.properties;
-					$('#LKlabel').html(toPrint.BEZ + ' ' + toPrint.GEN);
+					$('#LKlabel').html(toPrint.BEZ_GEN);
 					vacTableFill(toPrint);
 					$('.lastUpdated').html(vacFx.DEU.lastUpdate);
 
