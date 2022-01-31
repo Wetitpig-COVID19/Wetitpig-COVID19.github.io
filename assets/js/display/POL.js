@@ -12,7 +12,7 @@ casesFx.POL = {
 			click: () => {
 				const fxPowiat = () => {
 					toPrint = feature.properties;
-					$('#LKlabel').html((toPrint.JPT_NAZWA_.charAt(0).toUpperCase() == toPrint.JPT_NAZWA_.charAt(0) ? '' : 'powiat ') + toPrint.JPT_NAZWA_);
+					$('#LKlabel').html(toPrint.JPT_NAZWA_);
 					casesTableFill(toPrint);
 					$('.lastUpdated').html(casesFx.POL.lastUpdate);
 					bgColor = mapStyle.incidence(feature.properties.cases7 / toPrint.EWZ * 100000);
@@ -20,7 +20,7 @@ casesFx.POL = {
 
 				const fxWojewodztwo = () => {
 					toPrint = wojewodztwoData[Math.floor(parseInt(feature.properties.JPT_KJ_I_1, 10) / 200) - 1];
-					$('#LKlabel').html('województwo ' + feature.properties.WOJEWODZTWO);
+					$('#LKlabel').html(feature.properties.WOJEWODZTWO);
 					casesTableFill(toPrint);
 					$('.lastUpdated').html(casesFx.POL.lastUpdate);
 					bgColor = mapStyle.incidence(toPrint.cases7 / toPrint.EWZ * 100000);
@@ -74,7 +74,7 @@ vacFx.POL = {
 			click: () => {
 				const fxPowiat = () => {
 					toPrint = feature.properties;
-					$('#LKlabel').html((toPrint.JPT_NAZWA_.charAt(0).toUpperCase() == toPrint.JPT_NAZWA_.charAt(0) ? '' : 'powiat ') + toPrint.JPT_NAZWA_);
+					$('#LKlabel').html(toPrint.JPT_NAZWA_);
 					vacTableFill(toPrint);
 					$('.lastUpdated').html(vacFx.POL.powLastUpdate);
 					bgColor = mapStyle.coverage(toPrint.dose2 / toPrint.EWZ * 100);
@@ -82,7 +82,7 @@ vacFx.POL = {
 
 				const fxWojewodztwo = () => {
 					toPrint = wojewodztwoData[Math.floor(parseInt(feature.properties.JPT_KJ_I_1, 10) / 200) - 1];
-					$('#LKlabel').html('województwo ' + feature.properties.WOJEWODZTWO);
+					$('#LKlabel').html(feature.properties.WOJEWODZTWO);
 					vacTableFill(toPrint);
 					$('.lastUpdated').html(vacFx.POL.wojLastUpdate);
 					bgColor = mapStyle.coverage(toPrint.dose2 / toPrint.EWZ * 100);

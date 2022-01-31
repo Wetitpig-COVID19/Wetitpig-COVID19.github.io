@@ -76,7 +76,9 @@ const drawLeaderboard = () => {
 		[DepartementJSON, 'nom'],
 		[ProvinceJSON, 'prov_name'],
 		[BezirkJSON, 'name'],
-		[KantonJSON, 'KTNAME']
+		[KantonJSON, 'KTNAME'],
+		[LuxembourgJSON, 'name'],
+		[PowiatJSON, 'JPT_NAZWA_']
 	].forEach(pair => leaderboardData.addRows(Object.values(pair[0]._layers).reduce((total, L_v) => {
 		unit = [];
 		unit.push(L_v.feature.properties[pair[1]]),
