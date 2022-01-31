@@ -40,7 +40,7 @@ aside.mdc-drawer .mdc-list-item__graphic {
 }
 aside.mdc-drawer nav a:last-child {
 	position: absolute;
-	bottom: 0;
+	bottom: 8px;
 }
 
 .mdc-drawer-app-content {
