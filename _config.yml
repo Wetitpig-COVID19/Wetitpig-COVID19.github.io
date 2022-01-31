@@ -5,3 +5,7 @@ exclude:
   - README.md
   - assets/maps/*.json
   - assets/data/*.json
+  - assets/js/display/
+  - assets/js/map.js
+  - assets/js/tables.js
+  - assets/js/search.js

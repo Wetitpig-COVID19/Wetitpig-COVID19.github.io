@@ -1,14 +1,8 @@
-const textColor = colorCode => {
-	colorR = parseInt(colorCode.substring(1,3), 16);
-	colorG = parseInt(colorCode.substring(3,5), 16);
-	colorB = parseInt(colorCode.substring(5,7), 16);
-
-	luma = ((0.2126 * colorR) + (0.7152 * colorG) + (0.0722 * colorB));
-	return luma > 128 ? 'rgba(0,0,0,0.87)' : 'rgba(255,255,255,0.87)'
-};
-
 const resetTableColours = bgColor => {
-	var fgColor = textColor(bgColor);
+	var fgColor =
+		0.2126 * parseInt(bgColor.substring(1,3), 16)
+		+ 0.7152 * parseInt(bgColor.substring(3,5), 16)
+		+ 0.0722 * parseInt(bgColor.substring(5,7), 16) > 128 ? 'rgba(0,0,0,0.87)' : 'rgba(255,255,255,0.87)';
 	$('#details .mdc-data-table__header-cell, #details .mdc-data-table__cell').css({
 		'background-color': bgColor,
 		'color': fgColor
