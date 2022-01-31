@@ -1,22 +1,20 @@
 #!/usr/bin/env sh
 
-set -x
+set -v
 
 cpu_count=$(nproc 2>/dev/null || printf '2')
 
-npx html-minifier --collapse-whitespace --use-short-doctype -o index.html index.html
+minifiedHTML=$(npx html-minifier --collapse-whitespace --use-short-doctype index.html)
+printf '%s\n%s\n%s\n' \
+	'---' '---' \
+	"${minifiedHTML}" \
+	> index.html
 
-find assets -name "*.css" | \
-	xargs -P$cpu_count -I {} \
-	sh -c "
-		set -x;
-		npx postcss {} --use autoprefixer --replace;
-		npx cleancss -o {} {};
-	"
+npx postcss assets/css --use autoprefixer -r
+npx cleancss -O2 -b --batch-suffix '' $(find assets -name "*.css")
 
 find assets -name "*.js" | \
 	xargs -P$cpu_count -I {} \
-	sh -c "
-		set -x;
+	sh -vc '
 		npx uglifyjs {} -cmo {};
-	"
+	'

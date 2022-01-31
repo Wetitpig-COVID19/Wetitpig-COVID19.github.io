@@ -38,6 +38,10 @@ aside.mdc-drawer .mdc-drawer__title, aside.mdc-drawer .mdc-drawer__subtitle {
 aside.mdc-drawer .mdc-list-item__graphic {
 	padding-right: 1ch;
 }
+aside.mdc-drawer nav a:last-child {
+	position: absolute;
+	bottom: 0;
+}
 
 .mdc-drawer-app-content {
 	flex: auto;
