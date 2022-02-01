@@ -130,8 +130,7 @@ const JSZip = require('jszip');
 			var workbook = await zipFile.file(zipEntries[0].name).async('string');
 			workbook = await tools.csvParse(workbook);
 			workbook.sort((item1,item2) => parseInt(item1.teryt.slice(1), 10) - parseInt(item2.teryt.slice(1), 10));
-			workbook.shift();
-			var rep = workbook.shift();
+			var rep = workbook.splice(0,2)[1];
 			['_90','_180',''].forEach(t => {
 				Powiat.forEach((pow, index) => {
 					pow['dose2' + t] = workbook[index].dawka_2_ogolem;
@@ -145,11 +144,10 @@ const JSZip = require('jszip');
 				workbook = await zipFile.file(zipEntries[t].name).async('string');
 				workbook = await tools.csvParse(workbook);
 				workbook.sort((item1,item2) => parseInt(item1.teryt.slice(1), 10) - parseInt(item2.teryt.slice(1), 10));
-				workbook.shift();
-				var rep = workbook.shift();
+				var rep = workbook.splice(0,2)[1];
 				Powiat.forEach((pow,index) => {
 					pow['dose2_' + t.toString(10)] -= workbook[index].dawka_2_ogolem;
-					pow['dose3_' + t.toString(10)] -= workbook[index].dawka_przypominajaca_ogolem;
+					pow['dose3_' + t.toString(10)] -= isNaN(workbook[index].dawka_przypominajaca_ogolem) ? 0 : workbook[index].dawka_przypominajaca_ogolem;
 				});
 				Rzeczpospolita['dose2' + t] -= rep.dawka_2_ogolem;
 				Rzeczpospolita['dose3' + t] -= rep.dawka_przypominajaca_ogolem;
@@ -161,9 +159,8 @@ const JSZip = require('jszip');
 
 			workbook = await zipFile.file(zipEntries[0].name).async('string');
 			workbook = await tools.csvParse(workbook);
-			workbook = workbook.filter(value => value.wojewodztwo != 'inne_puste_woj');
-			workbook.sort((item1,item2) => item1.wojewodztwo < item2.wojewodztwo ? -1 : 1);
-			workbook.shift();
+			workbook.sort((item1,item2) => parseInt(item1.teryt.slice(1), 10) - parseInt(item2.teryt.slice(1), 10));
+			workbook.splice(0,2);
 			['_90','_180',''].forEach(t => Wojewodztwo.forEach((pow, index) => {
 				pow['dose2' + t] = workbook[index].dawka_2_ogolem;
 				pow['dose3' + t] = workbook[index].dawka_przypominajaca_ogolem;
@@ -172,12 +169,11 @@ const JSZip = require('jszip');
 			promises.push([90,180].forEach(async t => {
 				workbook = await zipFile.file(zipEntries[t].name).async('string');
 				workbook = await tools.csvParse(workbook);
-				workbook = workbook.filter(value => value.wojewodztwo != 'inne_puste_woj');
-				workbook.sort((item1,item2) => item1.wojewodztwo < item2.wojewodztwo ? -1 : 1);
-				workbook.shift();
+				workbook.sort((item1,item2) => parseInt(item1.teryt.slice(1), 10) - parseInt(item2.teryt.slice(1), 10));
+				workbook.splice(0,2);
 				Wojewodztwo.forEach((pow,index) => {
 					pow['dose2_' + t.toString(10)] -= workbook[index].dawka_2_ogolem;
-					pow['dose3_' + t.toString(10)] -= workbook[index].dawka_przypominajaca_ogolem;
+					pow['dose3_' + t.toString(10)] -= isNaN(workbook[index].dawka_przypominajaca_ogolem) ? 0 : workbook[index].dawka_przypominajaca_ogolem;
 				})
 			}));
 
