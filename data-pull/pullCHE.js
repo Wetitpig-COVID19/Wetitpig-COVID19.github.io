@@ -23,7 +23,8 @@ const tools = require('./tools');
 		var response = await axios.get(urlData.sources.individual.csv.daily.death, {
 			headers: {
 				'Accept-Encoding': 'gzip, compress, deflate'
-			}
+			},
+			responseType: 'text'
 		});
 		var workbook = await tools.csvParse(response.data);
 
@@ -58,7 +59,8 @@ const tools = require('./tools');
 			response = await axios.get(urlData.sources.individual.csv.daily.cases, {
 				headers: {
 					'Accept-Encoding': 'gzip, compress, deflate'
-				}
+				},
+				responseType: 'text'
 			});
 			workbook = await tools.csvParse(response.data);
 
@@ -88,7 +90,8 @@ const tools = require('./tools');
 			response = await axios.get(urlData.sources.individual.csv.vaccPersonsV2, {
 				headers: {
 					'Accept-Encoding': 'gzip, compress, deflate'
-				}
+				},
+				responseType: 'text'
 			});
 			workbook = await tools.csvParse(response.data);
 			workbook = workbook.filter(value => value.age_group == 'total_population' && value.geoRegion != 'CHFL');

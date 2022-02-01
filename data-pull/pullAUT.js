@@ -34,7 +34,8 @@ const tools = require('./tools');
 			var response = await axios.get(URL[0], {
 				headers: {
 					'Accept-Encoding': 'gzip, compress, deflate'
-				}
+				},
+				responseType: 'text'
 			});
 			var workbook = await tools.csvParse(response.data);
 			workbook.sort((a,b) => a.GKZ != b.GKZ ? a.GKZ - b.GKZ : tools.convertDate(b.Time, dateRegex, true).getTime() - tools.convertDate(a.Time, dateRegex, true).getTime());
@@ -67,7 +68,8 @@ const tools = require('./tools');
 			response = await axios.get(URL[1], {
 				headers: {
 					'Accept-Encoding': 'gzip, compress, deflate'
-				}
+				},
+				responseType: 'text'
 			});
 			workbook = await tools.csvParse(response.data);
 			workbook.sort((item1, item2) => item1.state_id != item2.state_id ? item1.state_id - item2.state_id : item2.date.getTime() - item1.date.getTime());
@@ -97,7 +99,8 @@ const tools = require('./tools');
 			response = await axios.get(URL[2], {
 				headers: {
 					'Accept-Encoding': 'gzip, compress, deflate'
-				}
+				},
+				responseType: 'text'
 			});
 			workbook = await tools.csvParse(response.data);
 			Bezirke.forEach(bez => {

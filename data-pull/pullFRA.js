@@ -35,7 +35,8 @@ const tools = require('./tools');
 			var response = await axios.get(URL[1], {
 				headers: {
 					'Accept-Encoding': 'gzip, compress, deflate'
-				}
+				},
+				responseType: 'text'
 			});
 			var workbook = await tools.csvParse(response.data);
 			workbook = workbook.filter(value => isNaN(value.dep) || value.dep < 100);
@@ -54,7 +55,8 @@ const tools = require('./tools');
 			var response = await axios.get(URL[0], {
 				headers: {
 					'Accept-Encoding': 'gzip, compress, deflate'
-				}
+				},
+				responseType: 'text'
 			});
 			var workbook = await tools.csvParse(response.data);
 			workbook = workbook.filter(value => (isNaN(value.dep) || value.dep < 100) && value.cl_age90 == 0);
@@ -73,7 +75,8 @@ const tools = require('./tools');
 			var response = await axios.get(URL[2], {
 				headers: {
 					'Accept-Encoding': 'gzip, compress, deflate'
-				}
+				},
+				responseType: 'text'
 			});
 			var workbook = await tools.csvParse(response.data);
 			workbook = workbook.filter(value => isNaN(value.dep) || value.dep < 100);

@@ -49,7 +49,8 @@ const tools = require('./tools');
 			response = await axios.get(URL[0], {
 				headers: {
 					'Accept-Encoding': 'gzip, compress, deflate'
-				}
+				},
+				responseType: 'text'
 			});
 			var workbook = await tools.csvParse(response.data);
 			workbook.sort((item1, item2) => item1.IdLandkreis != item2.IdLandkreis ? item1.IdLandkreis - item2.IdLandkreis : item1.Meldedatum > item2.Meldedatum ? -1 : 1);
@@ -88,7 +89,8 @@ const tools = require('./tools');
 			var response = (await axios.get(URL[1], {
 				headers: {
 					'Accept-Encoding': 'gzip, compress, deflate'
-				}
+				},
+				responseType: 'text'
 			})).data;
 			var workbook = await tools.csvParse(response);
 			workbook.sort((item1, item2) => {
