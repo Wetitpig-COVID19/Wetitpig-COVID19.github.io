@@ -7,7 +7,7 @@ casesFx.AUT = {
 		layer.on({
 			mouseover: e => e.target.setStyle(mapStyle.mouseover(feature.properties.cases7 / feature.properties.EWZ * 100000, 'incidence')),
 			mouseout: e => BezirkJSON.resetStyle(e.target),
-			click: e => {
+			click: () => {
 				const fxBezirk = () => {
 					toPrint = feature.properties;
 					$('#LKlabel').html(toPrint.name);

@@ -12,7 +12,7 @@
 	color: #B388FF;
 }
 
-#details tbody:not(#cases-details) {
+#details tbody:not(#cases-details), .legend:not(#cases-legend) {
 	display: none;
 }
 

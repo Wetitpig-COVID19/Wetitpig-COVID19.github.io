@@ -12,7 +12,7 @@
 	color: #A7FFEB;
 }
 
-#details tbody:not(#vaccine-details) {
+#details tbody:not(#vaccine-details), .legend:not(#vaccine-legend) {
 	display: none;
 }
 
