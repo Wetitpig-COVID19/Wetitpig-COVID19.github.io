@@ -31,11 +31,7 @@ const tools = require('./tools');
 
 		const casesPromise = async () => {
 			tools.msg.info('Pulling cases data...');
-			var response = await axios.get(URL[0], {
-				headers: tools.compressHeaders,
-				responseType: 'text'
-			});
-			var workbook = await tools.csvParse(response.data);
+			var workbook = await tools.csvPull(URL[0]);
 			workbook.sort((a,b) => a.GKZ != b.GKZ ? a.GKZ - b.GKZ : tools.convertDate(b.Time, dateRegex, true).getTime() - tools.convertDate(a.Time, dateRegex, true).getTime());
 			numberOfDays = workbook.length / 94;
 			Bezirke.forEach((bez, index) => {
@@ -63,11 +59,7 @@ const tools = require('./tools');
 		var Bund = {lastUpdate: {}};
 		const vaccineTimelinePromise = async () => {
 			tools.msg.info('Pulling vaccine data...');
-			response = await axios.get(URL[1], {
-				headers: tools.compressHeaders,
-				responseType: 'text'
-			});
-			workbook = await tools.csvParse(response.data);
+			var workbook = await tools.csvPull(URL[1]);
 			workbook.sort((item1, item2) => item1.state_id != item2.state_id ? item1.state_id - item2.state_id : item2.date.getTime() - item1.date.getTime());
 			var numberOfDays = workbook.length / 11;
 
@@ -92,11 +84,7 @@ const tools = require('./tools');
 			tools.validate.vaccine([...bundeslaender, Bund]);
 		};
 		const vaccineBezirkPromise = async () => {
-			response = await axios.get(URL[2], {
-				headers: tools.compressHeaders,
-				responseType: 'text'
-			});
-			workbook = await tools.csvParse(response.data);
+			var workbook = await tools.csvPull(URL[2]);
 			Bezirke.forEach(bez => {
 				toProcess = workbook.filter(value => value.municipality_id >= 900 ? Math.floor(value.municipality_id / 100) == bez.GKZ : Math.floor(bez.GKZ / 10000) == 9);
 				['2','3'].forEach(t => bez['dose' + t] = toProcess.reduce((aggregate, dose) => aggregate + dose['dose_' + t], 0));

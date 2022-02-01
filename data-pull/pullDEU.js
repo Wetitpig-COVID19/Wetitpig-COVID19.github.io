@@ -46,11 +46,7 @@ const tools = require('./tools');
 				deaths7: 0, deaths14: 0, deaths28: 0
 			}));
 
-			response = await axios.get(URL[0], {
-				headers: tools.compressHeaders,
-				responseType: 'text'
-			});
-			var workbook = await tools.csvParse(response.data);
+			var workbook = await tools.csvPull(URL[0]);
 			workbook.sort((item1, item2) => item1.IdLandkreis != item2.IdLandkreis ? item1.IdLandkreis - item2.IdLandkreis : item1.Meldedatum > item2.Meldedatum ? -1 : 1);
 			casesLastUpdate = tools.convertDate(workbook[0].Meldedatum);
 
@@ -78,11 +74,7 @@ const tools = require('./tools');
 			tools.msg.info('Pulling vaccine data...');
 			var landkreisFiltered = new Array(Landkreise.length - 12).fill(null).map(() => Object.assign({}, tools.baseJSON.vaccine));
 
-			var response = (await axios.get(URL[1], {
-				headers: tools.compressHeaders,
-				responseType: 'text'
-			})).data;
-			var workbook = await tools.csvParse(response);
+			var workbook = await tools.csvPull(URL[1]);
 			workbook.sort((item1, item2) => {
 				if (item1.LandkreisId_Impfort == 'u') return 1;
 				else if (item2.LandkreisId_Impfort == 'u') return -1;

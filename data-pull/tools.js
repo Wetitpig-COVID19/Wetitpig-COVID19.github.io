@@ -1,12 +1,16 @@
+const axios = require('axios');
 const Papa = require('papaparse');
 const isoCountry = require('iso-3166-1');
 const process = require('process');
 
 const dateRegex = new RegExp(/^(\d{4})-(\d{2})-(\d{2})/);
+const httpCompress = {
+	'Accept-Encoding': 'gzip, compress, deflate'
+};
 
 const convertDate = (dateString, regex=dateRegex, reverse=false) => {
 	dateArray = dateString.match(regex);
-	return reverse ? new Date(Date.UTC(dateArray[3], parseInt(dateArray[2], 10) - 1, dateArray[1])) : new Date(Date.UTC(dateArray[1], parseInt(dateArray[2], 10) - 1, dateArray[3]));
+	return reverse ? new Date(Date.UTC(dateArray[3], dateArray[2] - 1, dateArray[1])) : new Date(Date.UTC(dateArray[1], dateArray[2] - 1, dateArray[3]));
 };
 
 const parseCSV = data => new Promise((complete, error) =>
@@ -17,6 +21,13 @@ const parseCSV = data => new Promise((complete, error) =>
 		error: error,
 		skipEmptyLines: true
 	})
+);
+
+const pullCSV = async url => await parseCSV(
+	(await axios.get(url, {
+		headers: httpCompress,
+		responseType: 'text'
+	})).data
 );
 
 const validateCases = (arrayToCheck, timeFrame=true) => {
@@ -90,6 +101,7 @@ module.exports = {
 	dateRegex: dateRegex,
 	convertDate: convertDate,
 	csvParse: parseCSV,
+	csvPull: pullCSV,
 	msg: {
 		log: msgLog,
 		info: msgInfo
@@ -109,7 +121,5 @@ module.exports = {
 			dose3_90: 0, dose3_180: 0, dose3: 0
 		}
 	},
-	compressHeaders: {
-		'Accept-Encoding': 'gzip, compress, deflate'
-	}
+	compressHeaders: httpCompress
 };

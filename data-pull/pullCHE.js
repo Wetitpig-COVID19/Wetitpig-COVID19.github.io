@@ -20,11 +20,7 @@ const tools = require('./tools');
 		tools.msg.info('Pulling deaths data...');
 		var Bund = {};
 
-		var response = await axios.get(urlData.sources.individual.csv.daily.death, {
-			headers: tools.compressHeaders,
-			responseType: 'text'
-		});
-		var workbook = await tools.csvParse(response.data);
+		var workbook = await tools.csvPull(urlData.sources.individual.csv.daily.death);
 
 		var reducedWorkbook = [];
 		workbook.forEach((row, index, array) => {
@@ -56,11 +52,7 @@ const tools = require('./tools');
 
 		tools.msg.info('Pulling cases data...');
 		const casesPromise = async () => {
-			response = await axios.get(urlData.sources.individual.csv.daily.cases, {
-				headers: tools.compressHeaders,
-				responseType: 'text'
-			});
-			workbook = await tools.csvParse(response.data);
+			var workbook = await tools.csvPull(urlData.sources.individual.csv.daily.cases);
 
 			reducedWorkbook = [];
 			workbook.forEach((row, index, self) => {
@@ -85,11 +77,7 @@ const tools = require('./tools');
 
 		tools.msg.info('Pulling vaccine data...');
 		const vaccinePromise = async () => {
-			response = await axios.get(urlData.sources.individual.csv.vaccPersonsV2, {
-				headers: tools.compressHeaders,
-				responseType: 'text'
-			});
-			workbook = await tools.csvParse(response.data);
+			var workbook = await tools.csvPull(urlData.sources.individual.csv.vaccPersonsV2);
 			workbook = workbook.filter(value => value.age_group == 'total_population' && value.geoRegion != 'CHFL');
 
 			[

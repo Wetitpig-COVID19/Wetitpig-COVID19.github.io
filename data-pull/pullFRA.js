@@ -32,11 +32,7 @@ const tools = require('./tools');
 
 		tools.msg.info('Pulling deaths data...');
 		const deathsPromise = async () => {
-			var response = await axios.get(URL[1], {
-				headers: tools.compressHeaders,
-				responseType: 'text'
-			});
-			var workbook = await tools.csvParse(response.data);
+			var workbook = await tools.csvPull(URL[1]);
 			workbook = workbook.filter(value => isNaN(value.dep) || value.dep < 100);
 			workbook.sort((a,b) => a.dep != b.dep ? parseInt((isNaN(a.dep) ? a.dep : a.dep.toString(10)), 16) - parseInt((isNaN(b.dep) ? b.dep : b.dep.toString(10)), 16) : b.jour < a.jour ? -1 : 1);
 			numberOfDays = workbook.length / 96;
@@ -50,11 +46,7 @@ const tools = require('./tools');
 
 		const casesPromise = async () => {
 			tools.msg.info('Pulling cases data...');
-			var response = await axios.get(URL[0], {
-				headers: tools.compressHeaders,
-				responseType: 'text'
-			});
-			var workbook = await tools.csvParse(response.data);
+			var workbook = await tools.csvPull(URL[0]);
 			workbook = workbook.filter(value => (isNaN(value.dep) || value.dep < 100) && value.cl_age90 == 0);
 			workbook.sort((a,b) => a.dep != b.dep ? parseInt((isNaN(a.dep) ? a.dep : a.dep.toString(10)), 16) - parseInt((isNaN(b.dep) ? b.dep : b.dep.toString(10)), 16) : b.jour < a.jour ? -1 : 1);
 			numberOfDays = workbook.length / 96;
@@ -68,11 +60,7 @@ const tools = require('./tools');
 
 		const vaccinePromise = async () => {
 			tools.msg.info('Pulling vaccine data...');
-			var response = await axios.get(URL[2], {
-				headers: tools.compressHeaders,
-				responseType: 'text'
-			});
-			var workbook = await tools.csvParse(response.data);
+			var workbook = await tools.csvPull(URL[2]);
 			workbook = workbook.filter(value => isNaN(value.dep) || value.dep < 100);
 			workbook.sort((a,b) => a.dep != b.dep ? parseInt((isNaN(a.dep) ? a.dep : a.dep.toString(10)), 16) - parseInt((isNaN(b.dep) ? b.dep : b.dep.toString(10)), 16) : b.jour < a.jour ? -1 : 1);
 			numberOfDays = workbook.length / 96;
