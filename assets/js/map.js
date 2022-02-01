@@ -188,6 +188,6 @@ $(() => {
 
 	regionChooser = mdc.tabBar.MDCTabBar.attachTo(document.querySelector('#regionChooser'));
 	setStyleonData('cases', 'per ' + (100000).toLocaleString(), false);
-	Promise.all(Object.values(pullFx).map(fx => fx())).then(() => Object.values(casesFx).forEach(x => x.showOnMap()));
+	Object.keys(pullFx).forEach(k => pullFx[k]().then(() => casesFx[k].showOnMap()));
 	addOSM();
 });
