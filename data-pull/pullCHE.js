@@ -21,9 +21,7 @@ const tools = require('./tools');
 		var Bund = {};
 
 		var response = await axios.get(urlData.sources.individual.csv.daily.death, {
-			headers: {
-				'Accept-Encoding': 'gzip, compress, deflate'
-			},
+			headers: tools.compressHeaders,
 			responseType: 'text'
 		});
 		var workbook = await tools.csvParse(response.data);
@@ -59,9 +57,7 @@ const tools = require('./tools');
 		tools.msg.info('Pulling cases data...');
 		const casesPromise = async () => {
 			response = await axios.get(urlData.sources.individual.csv.daily.cases, {
-				headers: {
-					'Accept-Encoding': 'gzip, compress, deflate'
-				},
+				headers: tools.compressHeaders,
 				responseType: 'text'
 			});
 			workbook = await tools.csvParse(response.data);
@@ -90,9 +86,7 @@ const tools = require('./tools');
 		tools.msg.info('Pulling vaccine data...');
 		const vaccinePromise = async () => {
 			response = await axios.get(urlData.sources.individual.csv.vaccPersonsV2, {
-				headers: {
-					'Accept-Encoding': 'gzip, compress, deflate'
-				},
+				headers: tools.compressHeaders,
 				responseType: 'text'
 			});
 			workbook = await tools.csvParse(response.data);

@@ -33,9 +33,7 @@ const tools = require('./tools');
 		tools.msg.info('Pulling deaths data...');
 		const deathsPromise = async () => {
 			var response = await axios.get(URL[1], {
-				headers: {
-					'Accept-Encoding': 'gzip, compress, deflate'
-				},
+				headers: tools.compressHeaders,
 				responseType: 'text'
 			});
 			var workbook = await tools.csvParse(response.data);
@@ -53,9 +51,7 @@ const tools = require('./tools');
 		const casesPromise = async () => {
 			tools.msg.info('Pulling cases data...');
 			var response = await axios.get(URL[0], {
-				headers: {
-					'Accept-Encoding': 'gzip, compress, deflate'
-				},
+				headers: tools.compressHeaders,
 				responseType: 'text'
 			});
 			var workbook = await tools.csvParse(response.data);
@@ -73,9 +69,7 @@ const tools = require('./tools');
 		const vaccinePromise = async () => {
 			tools.msg.info('Pulling vaccine data...');
 			var response = await axios.get(URL[2], {
-				headers: {
-					'Accept-Encoding': 'gzip, compress, deflate'
-				},
+				headers: tools.compressHeaders,
 				responseType: 'text'
 			});
 			var workbook = await tools.csvParse(response.data);

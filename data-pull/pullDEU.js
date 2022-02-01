@@ -47,9 +47,7 @@ const tools = require('./tools');
 			}));
 
 			response = await axios.get(URL[0], {
-				headers: {
-					'Accept-Encoding': 'gzip, compress, deflate'
-				},
+				headers: tools.compressHeaders,
 				responseType: 'text'
 			});
 			var workbook = await tools.csvParse(response.data);
@@ -81,9 +79,7 @@ const tools = require('./tools');
 			var landkreisFiltered = new Array(Landkreise.length - 12).fill(null).map(() => Object.assign({}, tools.baseJSON.vaccine));
 
 			var response = (await axios.get(URL[1], {
-				headers: {
-					'Accept-Encoding': 'gzip, compress, deflate'
-				},
+				headers: tools.compressHeaders,
 				responseType: 'text'
 			})).data;
 			var workbook = await tools.csvParse(response);

@@ -33,6 +33,7 @@ const { default: axios } = require('axios');
 		const casesPromise = async () => {
 			tools.msg.info('Pulling cases data...');
 			var response = await axios.get(URL[0], {
+				headers: tools.compressHeaders,
 				responseType: 'arraybuffer'
 			});
 			var workbook = XLSX.read(response.data, {
@@ -54,6 +55,7 @@ const { default: axios } = require('axios');
 		const vaccinePromise = async () => {
 			tools.msg.info('Pulling vaccine data...');
 			var response = await axios.get(URL[1], {
+				headers: tools.compressHeaders,
 				responseType: 'arraybuffer'
 			});
 			var workbook = XLSX.read(response.data, {

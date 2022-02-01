@@ -108,5 +108,8 @@ module.exports = {
 			dose2_90: 0, dose2_180: 0, dose2: 0,
 			dose3_90: 0, dose3_180: 0, dose3: 0
 		}
+	},
+	compressHeaders: {
+		'Accept-Encoding': 'gzip, compress, deflate'
 	}
 };

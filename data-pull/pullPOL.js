@@ -40,6 +40,7 @@ const JSZip = require('jszip');
 		const casesPromise = async () => {
 			tools.msg.info('Pulling cases data...');
 			var responseBuffer = (await axios.get(URL[0] + '/data', {
+				headers: tools.compressHeaders,
 				responseType: 'arrayBuffer',
 				responseEncoding: 'binary'
 			})).data;
@@ -107,6 +108,7 @@ const JSZip = require('jszip');
 			var promises = [];
 			tools.msg.info('Pulling vaccine data...');
 			var responseBuffer = (await axios.get(URL[1] + '/data', {
+				headers: tools.compressHeaders,
 				responseType: 'arrayBuffer',
 				responseEncoding: 'binary'
 			})).data;

@@ -22,6 +22,7 @@ const tools = require('./tools');
 
 		tools.msg.info('Pulling cases data for regions...');
 		var response = await axios.get(URL[0], {
+			headers: tools.compressHeaders,
 			responseType: 'text'
 		});
 		var workbook = await tools.csvParse(response.data);
@@ -47,6 +48,7 @@ const tools = require('./tools');
 		const casesPromises = Promise.all([7, 14, 28].map(async t => {
 			dateToObtain = new Date(regLastUpdate.getTime() - 86400000 * t).toISOString().match(tools.dateRegex);
 			response = await axios.get(`https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni-${dateToObtain[1]}${dateToObtain[2]}${dateToObtain[3]}.csv`, {
+				headers: tools.compressHeaders,
 				responseType: 'text'
 			});
 			var workbook2 = await tools.csvParse(response.data);
@@ -68,6 +70,7 @@ const tools = require('./tools');
 		const provincePromise = async () => {
 			tools.msg.info('Pulling cases data for provinces...');
 			response = await axios.get(URL[1], {
+				headers: tools.compressHeaders,
 				responseType: 'text'
 			});
 			var workbook = (await tools.csvParse(response.data)).filter(value => value.codice_provincia < 800);
@@ -83,6 +86,7 @@ const tools = require('./tools');
 			await Promise.all([7, 14, 28].map(async t => {
 				dateToObtain = new Date(proLastUpdate.getTime() - 86400000 * t).toISOString().match(tools.dateRegex);
 				response = await axios.get(`https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-province/dpc-covid19-ita-province-${dateToObtain[1]}${dateToObtain[2]}${dateToObtain[3]}.csv`, {
+					headers: tools.compressHeaders,
 					responseType: 'text'
 				});
 				workbook2 = (await tools.csvParse(response.data)).filter(value => value.codice_provincia < 800);
@@ -101,6 +105,7 @@ const tools = require('./tools');
 			Province.slice(20, 22).forEach(x => Object.assign(x, tools.baseJSON.vaccine));
 
 			response = await axios.get(URL[2], {
+				headers: tools.compressHeaders,
 				responseType: 'text'
 			});
 			workbook = await tools.csvParse(response.data);
