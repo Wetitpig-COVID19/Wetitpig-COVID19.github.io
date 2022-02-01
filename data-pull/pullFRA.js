@@ -99,15 +99,11 @@ const tools = require('./tools');
 		tools.msg.info('Grouping...');
 		const regCode = ["84","32","84","93","93","93","84","44","76","44","76","76","93","28","84","75","75","24","75","27","53","75","75","27","84","28","24","53","94","94","76","76","76","75","76","53","24","24","84","27","75","24","84","84","52","24","76","75","76","52","28","44","44","52","44","44","53","44","27","32","32","28","32","84","75","76","76","44","44","84","27","27","52","84","84","11","28","11","11","75","32","76","76","93","93","52","75","75","44","27","27","11","11","11","11","11"];
 		var Regions = {};
-		regCode.forEach(c => Regions[c] = {
-			cases7: 0, cases14: 0, cases28: 0,
-			deaths7: 0, deaths14: 0, deaths28: 0,
-			dose2_90: 0, dose2_180: 0, dose2: 0,
-			dose3_90: 0, dose3_180: 0, dose3: 0,
+		regCode.forEach(c => Regions[c] = Object.assign({
 			EWZ: 0, lastUpdate: {
 				cases: null, deaths: null, vac: null
 			}
-		});
+		}, ...Object.values(tools.baseJSON)));
 		regCode.forEach((c,i) => {
 			Object.keys(Departements[i]).filter(value => value != 'dep' && value.indexOf('lastUpdate') === -1).forEach(k => Regions[c][k] += Departements[i][k]);
 			['cases','deaths','vac'].forEach(s => Regions[c].lastUpdate[s] = Regions[c].lastUpdate[s] > Departements[i].lastUpdate[s] ? Regions[c].lastUpdate[s] : Departements[i].lastUpdate[s]);
@@ -117,15 +113,11 @@ const tools = require('./tools');
 			Object.keys(R).filter(value => value.indexOf('lastUpdate') === -1).forEach(k => aggregate[k] += R[k]);
 			['cases','deaths','vac'].forEach(s => aggregate.lastUpdate[s] = aggregate.lastUpdate[s] > R.lastUpdate[s] ? aggregate.lastUpdate[s] : R.lastUpdate[s]);
 			return aggregate;
-		}, {
-			cases7: 0, cases14: 0, cases28: 0,
-			deaths7: 0, deaths14: 0, deaths28: 0,
-			dose2_90: 0, dose2_180: 0, dose2: 0,
-			dose3_90: 0, dose3_180: 0, dose3: 0,
+		}, Object.assign({
 			EWZ: 0, lastUpdate: {
 				cases: null, deaths: null, vac: null
 			}
-		});
+		}, ...Object.values(tools.baseJSON)));
 
 		fs.writeFileSync('assets/data/FRA.json', JSON.stringify({
 			NUTS3: Departements,

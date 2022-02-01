@@ -98,5 +98,15 @@ module.exports = {
 		cases: validateCases,
 		deaths: validateDeaths,
 		vaccine: validateVaccines
+	},
+	baseJSON: {
+		cases: {
+			cases7: 0, cases14: 0, cases28: 0,
+			deaths7: 0, deaths14: 0, deaths28: 0
+		},
+		vaccine: {
+			dose2_90: 0, dose2_180: 0, dose2: 0,
+			dose3_90: 0, dose3_180: 0, dose3: 0
+		}
 	}
 };

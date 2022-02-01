@@ -75,16 +75,10 @@ const tools = require('./tools');
 			return landkreisFiltered;
 		};
 
-		var bundVacData = {
-			dose2_90: 0, dose2_180: 0, dose2: 0,
-			dose3_90: 0, dose3_180: 0, dose3: 0
-		};
+		var bundVacData = Object.assign({}, tools.baseJSON.vaccine);
 		const vaccinePromise = async () => {
 			tools.msg.info('Pulling vaccine data...');
-			var landkreisFiltered = new Array(Landkreise.length - 12).fill(null).map(() => ({
-				dose2_90: 0, dose2_180: 0, dose2: 0,
-				dose3_90: 0, dose3_180: 0, dose3: 0
-			}));
+			var landkreisFiltered = new Array(Landkreise.length - 12).fill(null).map(() => Object.assign({}, tools.baseJSON.vaccine));
 
 			var response = (await axios.get(URL[1], {
 				headers: {
@@ -145,25 +139,13 @@ const tools = require('./tools');
 		Landkreise.filter(value => value.RS.slice(0,2) != '11' || value.RS == '11000').forEach((Lv, index) => Object.assign(Lv, landkreisFiltered[1][index]));
 
 		tools.msg.info('Grouping...');
-		var Bundeslaender = new Array(16).fill(null).map(() => ({
-			cases7: 0, cases14: 0, cases28: 0,
-			deaths7: 0, deaths14: 0, deaths28: 0,
-			dose2_90: 0, dose2_180: 0, dose2: 0,
-			dose3_90: 0, dose3_180: 0, dose3: 0,
-			EWZ: 0
-		}));
+		var Bundeslaender = new Array(16).fill(null).map(() => Object.assign({ EWZ: 0 }, ...Object.values(tools.baseJSON)));
 		Landkreise.forEach(Landkreis => Object.keys(Landkreis).filter(value => value != 'RS').forEach(k => Bundeslaender[parseInt(Landkreis.RS.substr(0,2), 10) - 1][k] += Landkreis[k]));
 
 		var Bund = Bundeslaender.reduce((aggregate, BL) => {
 			Object.keys(BL).forEach(k => aggregate[k] += BL[k]);
 			return aggregate;
-		}, {
-			cases7: 0, cases14: 0, cases28: 0,
-			deaths7: 0, deaths14: 0, deaths28: 0,
-			dose2_90: 0, dose2_180: 0, dose2: 0,
-			dose3_90: 0, dose3_180: 0, dose3: 0,
-			EWZ: 0
-		});
+		}, Object.assign({ EWZ: 0 }, ...Object.values(tools.baseJSON)));
 		Object.keys(bundVacData).forEach(k => Bund[k] += bundVacData[k]);
 
 		fs.writeFileSync('assets/data/DEU.json', JSON.stringify({

@@ -34,8 +34,9 @@ const tools = require('./tools');
 				if (row.geoRegion == "CH") {
 					['7','14','28'].forEach(s => Bund['deaths' + s] = row[`sumTotal_last${s}d`]);
 					Bund.EWZ = row.pop;
-					Bund.lastUpdate = {};
-					Bund.lastUpdate.deaths = tools.convertDate(row.datum).toISOString().slice(0,10);
+					Bund.lastUpdate = {
+						deaths: tools.convertDate(row.datum).toISOString().slice(0,10)
+					};
 				}
 				else
 					reducedWorkbook.push(row);
@@ -48,8 +49,9 @@ const tools = require('./tools');
 			f.KTCODE = feature.geoRegion;
 			['7', '14', '28'].forEach(s => f['deaths' + s] = feature[`sumTotal_last${s}d`]);
 			f.EWZ = feature.pop;
-			f.lastUpdate = {};
-			f.lastUpdate.deaths = tools.convertDate(feature.datum).toISOString().slice(0,10);
+			f.lastUpdate = {
+				deaths: tools.convertDate(feature.datum).toISOString().slice(0,10)
+			};
 			return f;
 		});
 		tools.validate.deaths([...Kantone, Bund]);
@@ -117,15 +119,11 @@ const tools = require('./tools');
 		await Promise.all([casesPromise(),vaccinePromise()]);
 
 		tools.msg.info('Grouping...');
-		var GrossRegionen = ['Région lémanique','Espace Mittelland','Nordwestschweiz','Zürich','Ostschweiz/Svizzera orientale','Zentralschweiz','Ticino'].map(name => ({
-			cases7: 0, cases14: 0, cases28: 0,
-			deaths7: 0, deaths14: 0, deaths28: 0,
-			dose2_90: 0, dose2_180: 0, dose2: 0,
-			dose3_90: 0, dose3_180: 0, dose3: 0,
+		var GrossRegionen = ['Région lémanique','Espace Mittelland','Nordwestschweiz','Zürich','Ostschweiz/Svizzera orientale','Zentralschweiz','Ticino'].map(name => Object.assign({
 			EWZ: 0, name: name, lastUpdate: {
 				cases: null, deaths: null, vac: null
 			}
-		}));
+		}, ...Object.values(tools.baseJSON)));
 		[2,4,4,1,2,2,null,1,0,4,4,1,5,1,5,5,4,4,1,5,4,6,5,0,0,5,3].forEach((GRNR, index) => {
 			if (GRNR != null) {
 				Object.keys(Kantone[index]).filter(value => value != 'KTCODE' && value.indexOf('lastUpdate') === -1).forEach(k => GrossRegionen[GRNR][k] += Kantone[index][k]);

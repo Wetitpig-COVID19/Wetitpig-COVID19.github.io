@@ -29,19 +29,9 @@ const JSZip = require('jszip');
 	if (lastModified.some((lmTime, index) => lmTime.getTime() - currentData.lastModified[index])) {
 		tools.msg.log('New data is available!');
 
-		var Powiat = new Array(380).fill(null).map(() => ({
-			cases7: 0, cases14: 0, cases28: 0,
-			deaths7: 0, deaths14: 0, deaths28: 0
-		}));
-		var Wojewodztwo = new Array(16).fill(null).map(() => ({
-			cases7: 0, cases14: 0, cases28: 0,
-			deaths7: 0, deaths14: 0, deaths28: 0,
-			EWZ: 0
-		}));
-		var Rzeczpospolita = {
-			cases7: 0, cases14: 0, cases28: 0,
-			deaths7: 0, deaths14: 0, deaths28: 0
-		};
+		var Powiat = new Array(380).fill(null).map(() => Object.assign({}, tools.baseJSON.cases));
+		var Wojewodztwo = new Array(16).fill(null).map(() => Object.assign({ EWZ: 0 }, tools.baseJSON.cases));
+		var Rzeczpospolita = Object.assign({}, tools.baseJSON.cases);
 		var casesLastUpdate;
 		var powLastUpdate;
 		var wojLastUpdate;

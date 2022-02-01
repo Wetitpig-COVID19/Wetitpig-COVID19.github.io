@@ -36,11 +36,7 @@ const tools = require('./tools');
 		});
 
 		var Regioni = workbook.map(row => {
-			var r = {
-				dose2_90: 0, dose2_180: 0, dose2: 0,
-				dose3_90: 0, dose3_180: 0, dose3: 0,
-				EWZ: 0
-			};
+			var r = Object.assign({ EWZ: 0 }, tools.baseJSON.vaccine);
 			['7','14','28'].forEach(t => {
 				r['cases' + t] = row.totale_casi;
 				r['deaths' + t] = row.deceduti;
@@ -102,10 +98,7 @@ const tools = require('./tools');
 
 		tools.msg.info('Pulling vaccine data...');
 		const vaccinePromise = async () => {
-			Province.slice(20, 22).forEach(x => Object.assign(x, {
-				dose2_90: 0, dose2_180: 0, dose2: 0,
-				dose3_90: 0, dose3_180: 0, dose3: 0
-			}));
+			Province.slice(20, 22).forEach(x => Object.assign(x, tools.baseJSON.vaccine));
 
 			response = await axios.get(URL[2], {
 				responseType: 'text'
@@ -151,13 +144,7 @@ const tools = require('./tools');
 		var Repubblica = Object.values(Regioni).reduce((aggregate, R) => {
 			Object.keys(R).forEach(k => aggregate[k] += R[k]);
 			return aggregate;
-		}, {
-			cases7: 0, cases14: 0, cases28: 0,
-			deaths7: 0, deaths14: 0, deaths28: 0,
-			dose2_90: 0, dose2_180: 0, dose2: 0,
-			dose3_90: 0, dose3_180: 0, dose3: 0,
-			EWZ: 0
-		});
+		}, Object.assign({ EWZ: 0 }, ...Object.values(tools.baseJSON)));
 
 		fs.writeFileSync('assets/data/ITA.json', JSON.stringify({
 			NUTS3: Province,
