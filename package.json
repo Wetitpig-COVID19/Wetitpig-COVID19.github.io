@@ -24,7 +24,7 @@
     "prebuild": "mkdir -p assets/data && (sha256sum assets/data/*.json 2>/dev/null || echo) > assets/data/checksum.txt",
     "build": "find data-pull -name 'pull*.js' -maxdepth 1 | xargs -n1 -P$(nproc 2>/dev/null || printf '2') node",
     "postbuild": "build-scripts/compress.sh",
-    "clean": "rm -rf assets/data && find . -name '*.zst' -exec rm {} \\;",
+    "clean": "rm -rf assets/data assets/maps/*.zst",
     "minify": "build-scripts/minify.sh"
   }
 }
