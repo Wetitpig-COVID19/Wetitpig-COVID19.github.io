@@ -8,17 +8,17 @@
     "url": "https://github.com/Wetitpig-COVID19/Wetitpig-COVID19.github.io"
   },
   "dependencies": {
-    "postcss": "^8.4.5",
-    "postcss-cli": "^9.1.0",
     "autoprefixer": "^10.4.2",
+    "axios": "^0.25.0",
     "clean-css-cli": "^5.5.1",
     "html-minifier": "^4.0.0",
-    "axios": "^0.25.0",
     "iso-3166-1": "^2.1.1",
+    "jszip": "^3.7.1",
     "papaparse": "^5.3.1",
+    "postcss": "^8.4.5",
+    "postcss-cli": "^9.1.0",
     "xlsx": "^0.17.5",
-    "xml2js": "^0.4.23",
-    "jszip": "^3.7.1"
+    "xml2js": "^0.4.23"
   },
   "scripts": {
     "prebuild": "mkdir -p assets/data && (sha256sum assets/data/*.json 2>/dev/null || echo) > assets/data/checksum.txt",

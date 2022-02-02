@@ -2,6 +2,7 @@ const axios = require('axios');
 const Papa = require('papaparse');
 const isoCountry = require('iso-3166-1');
 const process = require('process');
+const { Duplex } = require('stream');
 
 const dateRegex = new RegExp(/^(\d{4})-(\d{2})-(\d{2})/);
 const httpCompress = {
@@ -22,22 +23,37 @@ const parseCSV = (data, date={ regex: dateRegex, reverse: false }) => {
 			Object.keys(row.data).forEach(k => {
 				if (row.data[k] === 'true' || row.data[k] === 'TRUE') row.data[k] = true;
 				else if (row.data[k] === 'false' || row.data[k] === 'FALSE') row.data[k] = false;
-				else if (!isNaN(row.data[k])) row.data[k] = +row.data[k];
+				else if (!isNaN(row.data[k])) row.data[k] = Number(row.data[k]);
 				else if (date.regex.test(row.data[k])) row.data[k] = convertDate(row.data[k], date.regex, date.reverse);
 			});
 			workbook.push(row.data);
 		},
+		beforeFirstChunk: chunk => chunk.charCodeAt(0) == 0xfeff ? chunk.slice(1) : chunk,
 		skipEmptyLines: true
 	});
 	return workbook;
 };
 
-const pullCSV = async (url, date={ regex: dateRegex, reverse: false }) => await parseCSV(
-	(await axios.get(url, {
+const pullCSV = async (url, date={ regex: dateRegex, reverse: false }) => {
+	const dataDup = new Duplex({
+		read: () => {},
+		write: function (chunk, encoding, callback) {
+			this.push(chunk, encoding);
+			callback();
+		}
+	});
+	dataDup.once('finish', () => {
+		dataDup.push(null)
+	});
+	const response = await axios.get(url, {
 		headers: httpCompress,
-		responseType: 'text'
-	})).data, date
-);
+		responseType: 'stream'
+	});
+	response.data.pipe(dataDup);
+	const workbook = parseCSV(dataDup, date);
+	await new Promise(resolve => response.data.on('end', () => resolve()));
+	return workbook;
+};
 
 const validateCases = (arrayToCheck, timeFrame=true) => {
 	if (arrayToCheck.length == 0)
