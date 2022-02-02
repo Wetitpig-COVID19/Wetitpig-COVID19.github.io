@@ -24,7 +24,7 @@ const tools = require('./tools');
 		var workbook = await tools.csvPull(URL[0]);
 
 		workbook.sort((item1, item2) => item1.codice_regione - item2.codice_regione);
-		const regLastUpdate = tools.convertDate(workbook[0].data);
+		const regLastUpdate = workbook[0].data;
 
 		workbook.splice(3,0,{
 			codice_regione: 4,
@@ -64,7 +64,7 @@ const tools = require('./tools');
 			var workbook = (await tools.csvPull(URL[1])).filter(value => value.codice_provincia < 800);
 			workbook.sort((item1, item2) => item1.codice_provincia - item2.codice_provincia);
 
-			proLastUpdate = tools.convertDate(workbook[1].data);
+			proLastUpdate = workbook[1].data;
 			Province = workbook.map(row => {
 				var r = {};
 				['7','14','28'].forEach(t => r['cases' + t] = row['totale_casi']);
@@ -89,9 +89,9 @@ const tools = require('./tools');
 			Province.slice(20, 22).forEach(x => Object.assign(x, tools.baseJSON.vaccine));
 
 			var workbook = await tools.csvPull(URL[2]);
-			vacLastUpdate = tools.convertDate(workbook.slice(-1)[0].data_somministrazione);
+			vacLastUpdate = workbook.slice(-1)[0].data_somministrazione;
 			workbook.forEach(row => {
-				dateOfAdmin = tools.convertDate(row.data_somministrazione);
+				dateOfAdmin = row.data_somministrazione;
 				[90, 180].forEach(t => {
 					if ((vacLastUpdate.getTime() - dateOfAdmin.getTime()) < 86400000 * t) {
 						Regioni[row.codice_regione_ISTAT - 1]['dose2_' + t.toString(10)] += row.seconda_dose + row.pregressa_infezione;

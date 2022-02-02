@@ -13,21 +13,30 @@ const convertDate = (dateString, regex=dateRegex, reverse=false) => {
 	return reverse ? new Date(Date.UTC(dateArray[3], dateArray[2] - 1, dateArray[1])) : new Date(Date.UTC(dateArray[1], dateArray[2] - 1, dateArray[3]));
 };
 
-const parseCSV = data => new Promise((complete, error) =>
+const parseCSV = (data, date={ regex: dateRegex, reverse: false }) => {
+	var workbook = [];
 	Papa.parse(data, {
 		header: true,
-		dynamicTyping: true,
-		complete: results => complete(results.data),
-		error: error,
+		dynamicTyping: false,
+		step: row => {
+			Object.keys(row.data).forEach(k => {
+				if (row.data[k] === 'true' || row.data[k] === 'TRUE') row.data[k] = true;
+				else if (row.data[k] === 'false' || row.data[k] === 'FALSE') row.data[k] = false;
+				else if (!isNaN(row.data[k])) row.data[k] = +row.data[k];
+				else if (date.regex.test(row.data[k])) row.data[k] = convertDate(row.data[k], date.regex, date.reverse);
+			});
+			workbook.push(row.data);
+		},
 		skipEmptyLines: true
-	})
-);
+	});
+	return workbook;
+};
 
-const pullCSV = async url => await parseCSV(
+const pullCSV = async (url, date={ regex: dateRegex, reverse: false }) => await parseCSV(
 	(await axios.get(url, {
 		headers: httpCompress,
 		responseType: 'text'
-	})).data
+	})).data, date
 );
 
 const validateCases = (arrayToCheck, timeFrame=true) => {

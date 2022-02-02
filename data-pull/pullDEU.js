@@ -48,14 +48,14 @@ const tools = require('./tools');
 
 			var workbook = await tools.csvPull(URL[0]);
 			workbook.sort((item1, item2) => item1.IdLandkreis != item2.IdLandkreis ? item1.IdLandkreis - item2.IdLandkreis : item1.Meldedatum > item2.Meldedatum ? -1 : 1);
-			casesLastUpdate = tools.convertDate(workbook[0].Meldedatum);
+			casesLastUpdate = workbook[0].Meldedatum;
 
 			var landkreisIndex = 0;
 			var Meldedatum;
 			workbook.forEach((row, index, self) => {
 				if (index && row.IdLandkreis != self[index - 1].IdLandkreis)
 					landkreisIndex++;
-				Meldedatum = tools.convertDate(row.Meldedatum);
+				Meldedatum = row.Meldedatum;
 				[7,14,28].forEach(t => {
 					if ((casesLastUpdate.getTime() - Meldedatum.getTime()) < 86400000 * t) {
 						landkreisFiltered[landkreisIndex]['cases' + t.toString(10)] += row.AnzahlFall;
@@ -83,7 +83,7 @@ const tools = require('./tools');
 				else return item2.Impfdatum < item1.Impfdatum ? -1 : 1;
 			});
 			workbook = workbook.filter(value => value.Impfschutz != 1);
-			vacLastUpdate = tools.convertDate(workbook.slice(-1)[0].Impfdatum);
+			vacLastUpdate = workbook.slice(-1)[0].Impfdatum;
 
 			var landkreisIndex = 0;
 			workbook.forEach((row, index, self) => {
@@ -92,7 +92,7 @@ const tools = require('./tools');
 				{
 					case 16056:
 						[90, 180].forEach(t => {
-							if ((vacLastUpdate.getTime() - tools.convertDate(row.Impfdatum).getTime()) < 86400000 * t)
+							if ((vacLastUpdate.getTime() - row.Impfdatum.getTime()) < 86400000 * t)
 								landkreisFiltered[385][key + '_' + t.toString(10)] += row.Anzahl;
 						});
 						landkreisFiltered[385][key] += row.Anzahl;
@@ -100,7 +100,7 @@ const tools = require('./tools');
 					case 17000:
 					case 'u':
 						[90, 180].forEach(t => {
-							if ((vacLastUpdate.getTime() - tools.convertDate(row.Impfdatum).getTime()) < 86400000 * t)
+							if ((vacLastUpdate.getTime() - row.Impfdatum.getTime()) < 86400000 * t)
 								bundVacData[key + '_' + t.toString(10)] += row.Anzahl;
 						});
 						bundVacData[key] += row.Anzahl;
@@ -109,7 +109,7 @@ const tools = require('./tools');
 						if (index && row.LandkreisId_Impfort != self[index - 1].LandkreisId_Impfort)
 							landkreisIndex++;
 						[90, 180].forEach(t => {
-							if ((vacLastUpdate.getTime() - tools.convertDate(row.Impfdatum).getTime()) < 86400000 * t)
+							if ((vacLastUpdate.getTime() - row.Impfdatum.getTime()) < 86400000 * t)
 								landkreisFiltered[landkreisIndex][key + '_' + t.toString(10)] += row.Anzahl;
 						});
 						landkreisFiltered[landkreisIndex][key] += row.Anzahl;

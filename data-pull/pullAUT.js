@@ -31,13 +31,13 @@ const tools = require('./tools');
 
 		const casesPromise = async () => {
 			tools.msg.info('Pulling cases data...');
-			var workbook = await tools.csvPull(URL[0]);
-			workbook.sort((a,b) => a.GKZ != b.GKZ ? a.GKZ - b.GKZ : tools.convertDate(b.Time, dateRegex, true).getTime() - tools.convertDate(a.Time, dateRegex, true).getTime());
+			var workbook = await tools.csvPull(URL[0], { regex: dateRegex, reverse: true });
+			workbook.sort((a,b) => a.GKZ != b.GKZ ? a.GKZ - b.GKZ : b.Time.getTime() - a.Time.getTime());
 			numberOfDays = workbook.length / 94;
 			Bezirke.forEach((bez, index) => {
 				Object.assign(bez, {
 					lastUpdate: {
-						cases: tools.convertDate(workbook[index * numberOfDays].Time, dateRegex, true).toISOString().slice(0,10)
+						cases: workbook[index * numberOfDays].Time.toISOString().slice(0,10)
 					},
 					GKZ: workbook[index * numberOfDays].GKZ,
 					EWZ: workbook[index * numberOfDays].AnzEinwohner

@@ -29,7 +29,7 @@ const tools = require('./tools');
 					['7','14','28'].forEach(s => Bund['deaths' + s] = row[`sumTotal_last${s}d`]);
 					Bund.EWZ = row.pop;
 					Bund.lastUpdate = {
-						deaths: tools.convertDate(row.datum).toISOString().slice(0,10)
+						deaths: row.datum.toISOString().slice(0,10)
 					};
 				}
 				else
@@ -44,7 +44,7 @@ const tools = require('./tools');
 			['7', '14', '28'].forEach(s => f['deaths' + s] = feature[`sumTotal_last${s}d`]);
 			f.EWZ = feature.pop;
 			f.lastUpdate = {
-				deaths: tools.convertDate(feature.datum).toISOString().slice(0,10)
+				deaths: feature.datum.toISOString().slice(0,10)
 			};
 			return f;
 		});
@@ -60,7 +60,7 @@ const tools = require('./tools');
 					if (row.geoRegion == "CH") {
 						['7','14','28'].forEach(s => Bund['cases' + s] = row[`sumTotal_last${s}d`]);
 						Bund.EWZ = row.pop;
-						Bund.lastUpdate.cases = tools.convertDate(row.datum).toISOString().slice(0,10);
+						Bund.lastUpdate.cases = row.datum.toISOString().slice(0,10);
 					}
 					else
 						reducedWorkbook.push(row);
@@ -70,7 +70,7 @@ const tools = require('./tools');
 			reducedWorkbook.sort((item1, item2) => item1.geoRegion < item2.geoRegion ? -1 : 1);
 			reducedWorkbook.forEach((row, index) => {
 				['7','14','28'].forEach(s => Kantone[index]['cases' + s] = row[`sumTotal_last${s}d`]);
-				Kantone[index].lastUpdate.cases = tools.convertDate(row.datum).toISOString().slice(0,10);
+				Kantone[index].lastUpdate.cases = row.datum.toISOString().slice(0,10);
 			});
 			tools.validate.cases([...Kantone, Bund]);
 		};
@@ -86,14 +86,14 @@ const tools = require('./tools');
 			].forEach((wb, i) => {
 				Kantone.forEach(kt => {
 					toProcess = wb.filter(value => value.geoRegion == kt.KTCODE).sort((item1, item2) => item1.date > item2.date ? -1 : 1);
-					kt.lastUpdate.vac = tools.convertDate(toProcess[0].date).toISOString().slice(0,10);
+					kt.lastUpdate.vac = toProcess[0].date.toISOString().slice(0,10);
 					['','_90','_180'].forEach(t => kt['dose' + (2 + i).toString(10) + t] = toProcess[0].sumTotal);
 					[90,180].forEach(t => kt[`dose${(2 + i).toString(10)}_${t.toString(10)}`] -= toProcess[t].sumTotal);
 				});
 				toProcess = wb.filter(value => value.geoRegion == 'CH').sort((item1, item2) => item1.date > item2.date ? -1 : 1);
 				['','_90','_180'].forEach(t => Bund['dose' + (2 + i).toString(10) + t] = toProcess[0].sumTotal);
 				[90,180].forEach(t => Bund[`dose${(2 + i).toString(10)}_${t.toString(10)}`] -= toProcess[t].sumTotal);
-				Bund.lastUpdate.vac = tools.convertDate(toProcess[0].date).toISOString().slice(0,10);
+				Bund.lastUpdate.vac = toProcess[0].date.toISOString().slice(0,10);
 			});
 			tools.validate.vaccine([...Kantone, Bund]);
 		};

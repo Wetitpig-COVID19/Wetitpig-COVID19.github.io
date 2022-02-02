@@ -37,7 +37,7 @@ const tools = require('./tools');
 			workbook.sort((a,b) => a.dep != b.dep ? parseInt((isNaN(a.dep) ? a.dep : a.dep.toString(10)), 16) - parseInt((isNaN(b.dep) ? b.dep : b.dep.toString(10)), 16) : b.jour < a.jour ? -1 : 1);
 			numberOfDays = workbook.length / 96;
 			Departements.forEach((dept, index) => {
-				dept.lastUpdate.deaths = tools.convertDate(workbook[index * numberOfDays].jour).toISOString().slice(0,10);
+				dept.lastUpdate.deaths = workbook[index * numberOfDays].jour.toISOString().slice(0,10);
 				[7,14,28].forEach(j => dept['deaths' + j.toString(10)] = workbook.slice(index * numberOfDays, index * numberOfDays + j).reduce((a,b) => a + b.incid_dc, 0));
 				dept.dep = typeof(workbook[index * numberOfDays].dep) === 'number' ? workbook[index * numberOfDays].dep.toString(10).padStart(2,'0') : workbook[index * numberOfDays].dep;
 			});
@@ -51,7 +51,7 @@ const tools = require('./tools');
 			workbook.sort((a,b) => a.dep != b.dep ? parseInt((isNaN(a.dep) ? a.dep : a.dep.toString(10)), 16) - parseInt((isNaN(b.dep) ? b.dep : b.dep.toString(10)), 16) : b.jour < a.jour ? -1 : 1);
 			numberOfDays = workbook.length / 96;
 			Departements.forEach((dept, index) => {
-				dept.lastUpdate.cases = tools.convertDate(workbook[index * numberOfDays].jour).toISOString().slice(0,10);
+				dept.lastUpdate.cases = workbook[index * numberOfDays].jour.toISOString().slice(0,10);
 				[7,14,28].forEach(j => dept['cases' + j.toString(10)] = workbook.slice(index * numberOfDays, index * numberOfDays + j).reduce((a,b) => a + b.P, 0));
 				dept.EWZ = workbook[index * numberOfDays].pop;
 			});
@@ -65,7 +65,7 @@ const tools = require('./tools');
 			workbook.sort((a,b) => a.dep != b.dep ? parseInt((isNaN(a.dep) ? a.dep : a.dep.toString(10)), 16) - parseInt((isNaN(b.dep) ? b.dep : b.dep.toString(10)), 16) : b.jour < a.jour ? -1 : 1);
 			numberOfDays = workbook.length / 96;
 			Departements.forEach((dept, index) => {
-				dept.lastUpdate.vac = tools.convertDate(workbook[index * numberOfDays].jour).toISOString().slice(0,10);
+				dept.lastUpdate.vac = workbook[index * numberOfDays].jour.toISOString().slice(0,10);
 				dept.dose2 = workbook[index * numberOfDays].n_cum_complet;
 				dept.dose3 = workbook[index * numberOfDays].n_cum_rappel;
 				[90, 180].forEach(t => {
