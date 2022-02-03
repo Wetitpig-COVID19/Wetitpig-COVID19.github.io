@@ -27,7 +27,8 @@ const setupSearch = () => {
 			'France',
 			'Die Schweiz', 'La Suisse', 'La Svizzera', 'La Svizra', 'Switzerland',
 			'Letzebuerg', 'Luxembourg', 'Luxemburg',
-			'Polska', 'Poland'
+			'Polska', 'Poland',
+			'Cesko', 'Czechia'
 		], {
 			includeScore: true
 	});
@@ -37,7 +38,9 @@ const setupSearch = () => {
 		FRA: FuseGeoJSON(DepartementJSON, 'reg'),
 		ITA: FuseGeoJSON(ProvinceJSON, 'reg_name'),
 		AUT: FuseGeoJSON(BezirkJSON, 'BL'),
-		POL: FuseGeoJSON(PowiatJSON, 'WOJEWODZTWO')
+		CHE: FuseGeoJSON(KantonJSON, 'reg_name'),
+		POL: FuseGeoJSON(PowiatJSON, 'WOJEWODZTWO'),
+		CZE: FuseGeoJSON(KrajJSON, 'reg')
 	};
 
 	const hintListL3 = {
@@ -46,7 +49,8 @@ const setupSearch = () => {
 		ITA: FuseGeoJSON(ProvinceJSON, 'prov_name'),
 		AUT: FuseGeoJSON(BezirkJSON, 'name'),
 		CHE: FuseGeoJSON(KantonJSON, 'KTNAME'),
-		POL: FuseGeoJSON(PowiatJSON, 'JPT_NAZWA_')
+		POL: FuseGeoJSON(PowiatJSON, 'JPT_NAZWA_'),
+		CZE: FuseGeoJSON(KrajJSON, 'name')
 	};
 	var hintListItems;
 	var pooledSearch;
@@ -109,6 +113,8 @@ const setupSearch = () => {
 						labelString = 'Österreich';
 					else if (labelString == 'Letzebuerg')
 						labelString = 'Lëtzebuerg';
+					else if (labelString == 'Cesko')
+						labelString = 'Česko';
 				}
 				else {
 					switch(pooledSearch[searchIndex].country)
@@ -118,12 +124,11 @@ const setupSearch = () => {
 						case 'ITA': label = ['Italia', 'reg_name', 'prov_name']; break;
 						case 'AUT': label = ['Österreich', 'BL', 'name']; break;
 						case 'POL': label = ['Polska', 'WOJEWODZTWO', 'JPT_NAZWA_']; break;
-						default: label = ['Schweiz/Suisse/Svizzera/Svizra', 'GRNR', 'KTNAME']; break;
+						case 'CZE': label = ['Česko', 'reg', 'name']; break;
+						default: label = ['Schweiz/Suisse/Svizzera/Svizra', 'reg_name', 'KTNAME']; break;
 					}
 					labelString = (pooledSearch[searchIndex].level == 3) ? pooledSearch[searchIndex].result.item.feature.properties[label[2]] + ', ' : '';
-					if (labelString != 'Liechtenstein, ') {
-						if (pooledSearch[searchIndex].country == 'CHE')
-							labelString += 'Grossregion '
+					if (['Liechtenstein, ', 'Lëtzebuerg, ', 'Luxembourg, ', 'Luxemburg, '].every(n => n != labelString)) {
 						labelString += pooledSearch[searchIndex].result.item.feature.properties[label[1]];
 						labelString += ', ' + label[0];
 					}
@@ -178,6 +183,7 @@ const setupSearch = () => {
 					case 'France': toFire = DepartementJSON; break;
 					case 'Letzebuerg': case 'Luxembourg': case 'Luxemburg': toFire = LuxembourgJSON; break;
 					case 'Polska': case 'Poland': toFire = PowiatJSON; break;
+					case 'Cesko': case 'Czechia': toFire = KrajJSON; break;
 					default: toFire = KantonJSON; break;
 				}
 				Object.values(toFire._layers)[0].fireEvent('click');

@@ -88,7 +88,7 @@ const tools = require('./tools');
 			workbook.sort((item1, item2) => {
 				if (item1.LandkreisId_Impfort == 'u') return 1;
 				else if (item2.LandkreisId_Impfort == 'u') return -1;
-				else if (item1.LandkreisId_Impfort == item2.LandkreisId_Impfort) return item2.Impfdatum < item1.Impfdatum ? -1 : 1;
+				else if (item1.LandkreisId_Impfort == item2.LandkreisId_Impfort) return item2.Impfdatum.getTime() < item1.Impfdatum.getTime() ? -1 : 1;
 				else return item1.LandkreisId_Impfort - item2.LandkreisId_Impfort;
 			});
 			workbook = workbook.filter(value => value.Impfschutz != 1);

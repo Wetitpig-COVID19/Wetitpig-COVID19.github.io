@@ -18,6 +18,7 @@ This repository may not be actively maintained as the owner is now busy.
 * Liechtenstein
 * Luxembourg
 * Poland
+* Czech Republic
 
 Data is provided mostly on the [NUTS3](https://en.wikipedia.org/wiki/Nomenclature_of_Territorial_Units_for_Statistics) level, except for cases where official data is not available. All data is pulled from offficial repositories.
 
@@ -48,6 +49,7 @@ Data is updated every 30 minutes, at `:15` and `:45` at each hour, from the offi
 | Switzerland and Liechtenstein | [COVID-19 Schweiz](https://opendata.swiss/de/dataset/covid-19-schweiz)                                                                                                                                                                                                                                                                  | [CC-BY](https://opendata.swiss/de/terms-of-use#terms_by)                                                |
 | Luxembourg                    | [Données COVID19](https://data.public.lu/fr/datasets/donnees-covid19/)                                                                                                                                                                                                                                                                  | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/deed.fr)                                    |
 | Poland                        | [Raport zakażeń koronawirusem](https://www.gov.pl/web/koronawirus/wykaz-zarazen-koronawirusem-sars-cov-2)                                                                                                                                                                                                                               | [CC-BY-3.0](https://creativecommons.org/licenses/by/3.0/pl/)                                            |
+| Czech Republic                | [COVID-19 v ČR: Otevřené datové sady a sady ke stažení](https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19)                                                                                                                                                                                                                            | [Otevřená licence](https://opendefinition.org/od/2.0/cz/)                                               |
 
 ### Vaccinations
 | Country                       | Data Source                                                                                                                                                                                                                                                                                       | License                                                                                                 |
@@ -59,6 +61,7 @@ Data is updated every 30 minutes, at `:15` and `:45` at each hour, from the offi
 | Switzerland and Liechtenstein | [COVID-19 Schweiz](https://opendata.swiss/de/dataset/covid-19-schweiz)                                                                                                                                                                                                                            | [CC-BY](https://opendata.swiss/de/terms-of-use#terms_by)                                                |
 | Luxembourg                    | [Données COVID19](https://data.public.lu/fr/datasets/donnees-covid19/)                                                                                                                                                                                                                            | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/deed.fr)                                    |
 | Poland                        | [Raport szczepień przeciwko COVID-19](https://www.gov.pl/web/szczepimysie/raport-szczepien-przeciwko-covid-19)                                                                                                                                                                                    | [CC-BY-3.0](https://creativecommons.org/licenses/by/3.0/pl/)                                            |
+| Czech Republic                | [COVID-19 v ČR: Otevřené datové sady a sady ke stažení](https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19)                                                                                                                                                                                      | [Otevřená licence](https://opendefinition.org/od/2.0/cz/)                                               |
 
 ## Known Issues
 * Slow loading times due to bulk import of map

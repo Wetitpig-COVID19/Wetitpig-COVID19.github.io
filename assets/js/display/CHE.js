@@ -17,8 +17,8 @@ casesFx.CHE = {
 				};
 
 				const fxRegion = () => {
-					toPrint = grossRegionenData[feature.properties['GRNR'] - 1];
-					$('#LKlabel').html(grossRegionenData[feature.properties['GRNR'] - 1].name);
+					toPrint = grossRegionenData[feature.properties.GRNR - 1];
+					$('#LKlabel').html(toPrint.reg_name);
 					casesTableFill(toPrint);
 					$('.lastUpdated').html(`Cases: ${toPrint.lastUpdate.cases}<br>Deaths: ${toPrint.lastUpdate.deaths}`);
 					bgColor = mapStyle.incidence(toPrint.cases7 / toPrint.EWZ * 100000);
@@ -83,8 +83,8 @@ vacFx.CHE = {
 				};
 
 				const fxRegion = () => {
-					toPrint = grossRegionenData[feature.properties['GRNR'] - 1];
-					$('#LKlabel').html(grossRegionenData[feature.properties['GRNR'] - 1].name);
+					toPrint = grossRegionenData[feature.properties.GRNR - 1];
+					$('#LKlabel').html(toPrint.name);
 					vacTableFill(toPrint);
 					$('.lastUpdated').html(toPrint.lastUpdate.vac);
 
@@ -138,7 +138,10 @@ vacFx.CHE = {
 
 pullFx.CHE = async () => {
 	[Kantone, result] = await downloadMapJSON('CHE');
-	Kantone.features.forEach((Lk, index) => Object.assign(Lk.properties, result.NUTS3[index]));
 	grossRegionenData = result.NUTS2;
+	Kantone.features.forEach((Lk, index) => {
+		Object.assign(Lk.properties, result.NUTS3[index]);
+		Lk.properties.reg_name = Lk.properties.GRNR !== undefined ? grossRegionenData[Lk.properties.GRNR - 1].name : '';
+	});
 	NUTS1Data.CH = result.NUTS1;
 };

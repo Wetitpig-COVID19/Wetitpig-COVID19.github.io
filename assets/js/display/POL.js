@@ -107,7 +107,7 @@ vacFx.POL = {
 
 				fxPowiat();
 				resetTableColours(bgColor);
-				displayTable('County', 'State', 0);
+				displayTable('County', 'Voivodeship', 0);
 			}
 		});
 	},
