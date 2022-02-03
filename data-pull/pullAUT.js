@@ -31,7 +31,16 @@ const tools = require('./tools');
 
 		const casesPromise = async () => {
 			tools.msg.info('Pulling cases data...');
-			var workbook = await tools.csvPull(URL[0], { regex: dateRegex, reverse: true });
+			var workbook = await tools.csvPull(URL[0], {
+				GKZ: 'number',
+				Time: 'date',
+				AnzEinwohner: 'number',
+				AnzahlFaelleSum: 'number',
+				AnzahlTotSum: 'number'
+			}, {
+				regex: dateRegex,
+				reverse: true
+			});
 			workbook.sort((a,b) => a.GKZ != b.GKZ ? a.GKZ - b.GKZ : b.Time.getTime() - a.Time.getTime());
 			numberOfDays = workbook.length / 94;
 			Bezirke.forEach((bez, index) => {
@@ -59,7 +68,12 @@ const tools = require('./tools');
 		var Bund = {lastUpdate: {}};
 		const vaccineTimelinePromise = async () => {
 			tools.msg.info('Pulling vaccine data...');
-			var workbook = await tools.csvPull(URL[1]);
+			var workbook = await tools.csvPull(URL[1], {
+				state_id: 'number',
+				date: 'date',
+				dose_number: 'number',
+				doses_administered_cumulative: 'number'
+			});
 			workbook.sort((item1, item2) => item1.state_id != item2.state_id ? item1.state_id - item2.state_id : item2.date.getTime() - item1.date.getTime());
 			var numberOfDays = workbook.length / 11;
 
@@ -84,7 +98,12 @@ const tools = require('./tools');
 			tools.validate.vaccine([...bundeslaender, Bund]);
 		};
 		const vaccineBezirkPromise = async () => {
-			var workbook = await tools.csvPull(URL[2]);
+			var workbook = await tools.csvPull(URL[2], {
+				municipality_id: 'number',
+				dose_2: 'number',
+				dose_3: 'number',
+				date: 'date'
+			});
 			Bezirke.forEach(bez => {
 				toProcess = workbook.filter(value => value.municipality_id >= 900 ? Math.floor(value.municipality_id / 100) == bez.GKZ : Math.floor(bez.GKZ / 10000) == 9);
 				['2','3'].forEach(t => bez['dose' + t] = toProcess.reduce((aggregate, dose) => aggregate + dose['dose_' + t], 0));

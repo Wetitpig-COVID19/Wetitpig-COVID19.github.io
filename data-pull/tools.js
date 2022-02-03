@@ -14,19 +14,33 @@ const convertDate = (dateString, regex=dateRegex, reverse=false) => {
 	return reverse ? new Date(Date.UTC(dateArray[3], dateArray[2] - 1, dateArray[1])) : new Date(Date.UTC(dateArray[1], dateArray[2] - 1, dateArray[3]));
 };
 
-const parseCSV = (data, date={ regex: dateRegex, reverse: false }) => {
+const parseCSV = (data, col, date={ regex: dateRegex, reverse: false }) => {
 	var workbook = [];
 	Papa.parse(data, {
 		header: true,
 		dynamicTyping: false,
 		step: row => {
-			Object.keys(row.data).forEach(k => {
-				if (row.data[k] === 'true' || row.data[k] === 'TRUE') row.data[k] = true;
-				else if (row.data[k] === 'false' || row.data[k] === 'FALSE') row.data[k] = false;
-				else if (!isNaN(row.data[k])) row.data[k] = Number(row.data[k]);
-				else if (date.regex.test(row.data[k])) row.data[k] = convertDate(row.data[k], date.regex, date.reverse);
+			const toPush = {};
+			Object.keys(col).forEach(k => {
+				switch (col[k])
+				{
+					case 'boolean':
+						if (row.data[k] === 'true' || row.data[k] === 'TRUE') toPush[k] = true;
+						else if (row.data[k] === 'false' || row.data[k] === 'FALSE') toPush[k] = false;
+						else toPush[k] = row.data[k];
+						break;
+					case 'number':
+						toPush[k] = isNaN(row.data[k]) ? row.data[k] : Number(row.data[k]);
+						break;
+					case 'date':
+						toPush[k] = date.regex.test(row.data[k]) ? convertDate(row.data[k], date.regex, date.reverse) : row.data[k];
+						break;
+					default:
+						toPush[k] = row.data[k];
+						break;
+				}
 			});
-			workbook.push(row.data);
+			workbook.push(toPush);
 		},
 		beforeFirstChunk: chunk => chunk.charCodeAt(0) == 0xfeff ? chunk.slice(1) : chunk,
 		skipEmptyLines: true
@@ -34,7 +48,7 @@ const parseCSV = (data, date={ regex: dateRegex, reverse: false }) => {
 	return workbook;
 };
 
-const pullCSV = async (url, date={ regex: dateRegex, reverse: false }) => {
+const pullCSV = async (url, col, date={ regex: dateRegex, reverse: false }) => {
 	const dataDup = new Duplex({
 		read: () => {},
 		write: function (chunk, encoding, callback) {
@@ -50,7 +64,7 @@ const pullCSV = async (url, date={ regex: dateRegex, reverse: false }) => {
 		responseType: 'stream'
 	});
 	response.data.pipe(dataDup);
-	const workbook = parseCSV(dataDup, date);
+	const workbook = parseCSV(dataDup, col, date);
 	await new Promise(resolve => response.data.on('end', () => resolve()));
 	return workbook;
 };

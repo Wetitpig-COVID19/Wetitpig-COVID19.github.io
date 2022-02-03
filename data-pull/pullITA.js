@@ -21,7 +21,12 @@ const tools = require('./tools');
 		tools.msg.log('New data is available!');
 
 		tools.msg.info('Pulling cases data for regions...');
-		var workbook = await tools.csvPull(URL[0]);
+		var workbook = await tools.csvPull(URL[0], {
+			codice_regione: 'number',
+			totale_casi: 'number',
+			deceduti: 'number',
+			data: 'date'
+		});
 
 		workbook.sort((item1, item2) => item1.codice_regione - item2.codice_regione);
 		const regLastUpdate = workbook[0].data;
@@ -43,7 +48,11 @@ const tools = require('./tools');
 
 		const casesPromises = Promise.all([7, 14, 28].map(async t => {
 			dateToObtain = new Date(regLastUpdate.getTime() - 86400000 * t).toISOString().match(tools.dateRegex);
-			var workbook2 = await tools.csvPull(`https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni-${dateToObtain[1]}${dateToObtain[2]}${dateToObtain[3]}.csv`);
+			var workbook2 = await tools.csvPull(`https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni-${dateToObtain[1]}${dateToObtain[2]}${dateToObtain[3]}.csv`, {
+				codice_regione: 'number',
+				totale_casi: 'number',
+				deceduti: 'number'
+			});
 			workbook2.sort((item1, item2) => item1.codice_regione - item2.codice_regione);
 
 			workbook2.splice(3,0,{
@@ -61,7 +70,11 @@ const tools = require('./tools');
 		var Province;
 		const provincePromise = async () => {
 			tools.msg.info('Pulling cases data for provinces...');
-			var workbook = (await tools.csvPull(URL[1])).filter(value => value.codice_provincia < 800);
+			var workbook = (await tools.csvPull(URL[1], {
+				codice_provincia: 'number',
+				totale_casi: 'number',
+				data: 'date'
+			})).filter(value => value.codice_provincia < 800);
 			workbook.sort((item1, item2) => item1.codice_provincia - item2.codice_provincia);
 
 			proLastUpdate = workbook[1].data;
@@ -73,7 +86,10 @@ const tools = require('./tools');
 
 			await Promise.all([7, 14, 28].map(async t => {
 				dateToObtain = new Date(proLastUpdate.getTime() - 86400000 * t).toISOString().match(tools.dateRegex);
-				var workbook2 = (await tools.csvPull(`https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-province/dpc-covid19-ita-province-${dateToObtain[1]}${dateToObtain[2]}${dateToObtain[3]}.csv`)).filter(value => value.codice_provincia < 800);
+				var workbook2 = (await tools.csvPull(`https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-province/dpc-covid19-ita-province-${dateToObtain[1]}${dateToObtain[2]}${dateToObtain[3]}.csv`, {
+					codice_provincia: 'number',
+					totale_casi: 'number'
+				})).filter(value => value.codice_provincia < 800);
 				workbook2.sort((item1, item2) => item1.codice_provincia - item2.codice_provincia);
 				Province.forEach((pro, i) => pro['cases' + t.toString(10)] -= workbook2[i]['totale_casi']);
 			}));
@@ -88,7 +104,16 @@ const tools = require('./tools');
 		const vaccinePromise = async () => {
 			Province.slice(20, 22).forEach(x => Object.assign(x, tools.baseJSON.vaccine));
 
-			var workbook = await tools.csvPull(URL[2]);
+			var workbook = await tools.csvPull(URL[2], {
+				codice_regione_ISTAT: 'number',
+				seconda_dose: 'number',
+				pregressa_infezione: 'number',
+				prima_dose: 'number',
+				dose_addizionale_booster: 'number',
+				data_somministrazione: 'date',
+				codice_NUTS2: 'string',
+				fornitore: 'string'
+			});
 			vacLastUpdate = workbook.slice(-1)[0].data_somministrazione;
 			workbook.forEach(row => {
 				dateOfAdmin = row.data_somministrazione;

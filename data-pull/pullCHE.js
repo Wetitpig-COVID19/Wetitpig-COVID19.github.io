@@ -16,11 +16,20 @@ const tools = require('./tools');
 
 	if (tools.convertDate(currentData.lastModified).getTime() - lastModified.getTime()) {
 		tools.msg.log('New data is available!');
+		const caseColumns = {
+			geoRegion: 'string',
+			pop: 'number',
+			datum: 'date',
+			sumTotal_last7d: 'number',
+			sumTotal_last14d: 'number',
+			sumTotal_last28d: 'number',
+			timeframe_7d: 'boolean'
+		};
 
 		tools.msg.info('Pulling deaths data...');
 		var Bund = {};
 
-		var workbook = await tools.csvPull(urlData.sources.individual.csv.daily.death);
+		var workbook = await tools.csvPull(urlData.sources.individual.csv.daily.death, caseColumns);
 
 		var reducedWorkbook = [];
 		workbook.forEach((row, index, array) => {
@@ -52,7 +61,7 @@ const tools = require('./tools');
 
 		tools.msg.info('Pulling cases data...');
 		const casesPromise = async () => {
-			var workbook = await tools.csvPull(urlData.sources.individual.csv.daily.cases);
+			var workbook = await tools.csvPull(urlData.sources.individual.csv.daily.cases, caseColumns);
 
 			reducedWorkbook = [];
 			workbook.forEach((row, index, self) => {
@@ -77,7 +86,13 @@ const tools = require('./tools');
 
 		tools.msg.info('Pulling vaccine data...');
 		const vaccinePromise = async () => {
-			var workbook = await tools.csvPull(urlData.sources.individual.csv.vaccPersonsV2);
+			var workbook = await tools.csvPull(urlData.sources.individual.csv.vaccPersonsV2, {
+				age_group: 'string',
+				geoRegion: 'string',
+				type: 'string',
+				date: 'date',
+				sumTotal: 'number'
+			});
 			workbook = workbook.filter(value => value.age_group == 'total_population' && value.geoRegion != 'CHFL');
 
 			[

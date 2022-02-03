@@ -55,7 +55,11 @@ const JSZip = require('jszip');
 			var i;
 			for (i = 0; i < 7; i++) {
 				workbook = await zipFile.file(zipEntries[i].name).async('string');
-				workbook = await tools.csvParse(workbook);
+				workbook = await tools.csvParse(workbook, {
+					teryt: 'string',
+					liczba_przypadkow: 'number',
+					zgony: 'number'
+				});
 				workbook.sort((item1,item2) => parseInt(item1.teryt.slice(1), 10) - parseInt(item2.teryt.slice(1), 10));
 				var rep = workbook.shift();
 				['7','14','28'].forEach(t => {
@@ -71,7 +75,11 @@ const JSZip = require('jszip');
 			}
 			for (; i < 14; i++) {
 				workbook = await zipFile.file(zipEntries[i].name).async('string');
-				workbook = await tools.csvParse(workbook);
+				workbook = await tools.csvParse(workbook, {
+					teryt: 'string',
+					liczba_przypadkow: 'number',
+					zgony: 'number'
+				});
 				workbook.sort((item1,item2) => parseInt(item1.teryt.slice(1), 10) - parseInt(item2.teryt.slice(1), 10));
 				var rep = workbook.shift();
 				['14','28'].forEach(t => {
@@ -87,7 +95,11 @@ const JSZip = require('jszip');
 			}
 			for (; i < 28; i++) {
 				workbook = await zipFile.file(zipEntries[i].name).async('string');
-				workbook = await tools.csvParse(workbook);
+				workbook = await tools.csvParse(workbook, {
+					teryt: 'string',
+					liczba_przypadkow: 'number',
+					zgony: 'number'
+				});
 				workbook.sort((item1,item2) => parseInt(item1.teryt.slice(1), 10) - parseInt(item2.teryt.slice(1), 10));
 				var rep = workbook.shift();
 				Powiat.forEach((pow, index) => {
@@ -120,7 +132,11 @@ const JSZip = require('jszip');
 			powLastUpdate = [zipEntries[0].name.slice(0,4),zipEntries[0].name.slice(4,6),zipEntries[0].name.slice(6,8)].join('-');
 
 			var workbook = await zipFile.file(zipEntries[0].name).async('string');
-			workbook = await tools.csvParse(workbook);
+			workbook = await tools.csvParse(workbook, {
+				teryt: 'string',
+				dawka_2_ogolem: 'number',
+				dawka_przypominajaca_ogolem: 'number'
+			});
 			workbook.sort((item1,item2) => parseInt(item1.teryt.slice(1), 10) - parseInt(item2.teryt.slice(1), 10));
 			var rep = workbook.splice(0,2)[1];
 			['_90','_180',''].forEach(t => {
@@ -134,7 +150,11 @@ const JSZip = require('jszip');
 
 			promises.push([90,180].forEach(async t => {
 				workbook = await zipFile.file(zipEntries[t].name).async('string');
-				workbook = await tools.csvParse(workbook);
+				workbook = await tools.csvParse(workbook, {
+					teryt: 'string',
+					dawka_2_ogolem: 'number',
+					dawka_przypominajaca_ogolem: 'number'
+				});
 				workbook.sort((item1,item2) => parseInt(item1.teryt.slice(1), 10) - parseInt(item2.teryt.slice(1), 10));
 				var rep = workbook.splice(0,2)[1];
 				Powiat.forEach((pow,index) => {
@@ -150,7 +170,11 @@ const JSZip = require('jszip');
 			wojLastUpdate = [zipEntries[0].name.slice(0,4),zipEntries[0].name.slice(4,6),zipEntries[0].name.slice(6,8)].join('-');
 
 			workbook = await zipFile.file(zipEntries[0].name).async('string');
-			workbook = await tools.csvParse(workbook);
+			workbook = await tools.csvParse(workbook, {
+				teryt: 'string',
+				dawka_2_ogolem: 'number',
+				dawka_przypominajaca_ogolem: 'number'
+			});
 			workbook.sort((item1,item2) => parseInt(item1.teryt.slice(1), 10) - parseInt(item2.teryt.slice(1), 10));
 			workbook.splice(0,2);
 			['_90','_180',''].forEach(t => Wojewodztwo.forEach((pow, index) => {
@@ -160,7 +184,11 @@ const JSZip = require('jszip');
 
 			promises.push([90,180].forEach(async t => {
 				workbook = await zipFile.file(zipEntries[t].name).async('string');
-				workbook = await tools.csvParse(workbook);
+				workbook = await tools.csvParse(workbook, {
+					teryt: 'string',
+					dawka_2_ogolem: 'number',
+					dawka_przypominajaca_ogolem: 'number'
+				});
 				workbook.sort((item1,item2) => parseInt(item1.teryt.slice(1), 10) - parseInt(item2.teryt.slice(1), 10));
 				workbook.splice(0,2);
 				Wojewodztwo.forEach((pow,index) => {

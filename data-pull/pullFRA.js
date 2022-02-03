@@ -32,23 +32,33 @@ const tools = require('./tools');
 
 		tools.msg.info('Pulling deaths data...');
 		const deathsPromise = async () => {
-			var workbook = await tools.csvPull(URL[1]);
-			workbook = workbook.filter(value => isNaN(value.dep) || value.dep < 100);
-			workbook.sort((a,b) => a.dep != b.dep ? parseInt((isNaN(a.dep) ? a.dep : a.dep.toString(10)), 16) - parseInt((isNaN(b.dep) ? b.dep : b.dep.toString(10)), 16) : b.jour < a.jour ? -1 : 1);
+			var workbook = await tools.csvPull(URL[1], {
+				dep: 'string',
+				jour: 'date',
+				incid_dc: 'number'
+			});
+			workbook = workbook.filter(value => value.dep.length == 2);
+			workbook.sort((a,b) => a.dep != b.dep ? parseInt(a.dep, 16) - parseInt(b.dep, 16) : b.jour < a.jour ? -1 : 1);
 			numberOfDays = workbook.length / 96;
 			Departements.forEach((dept, index) => {
 				dept.lastUpdate.deaths = workbook[index * numberOfDays].jour.toISOString().slice(0,10);
 				[7,14,28].forEach(j => dept['deaths' + j.toString(10)] = workbook.slice(index * numberOfDays, index * numberOfDays + j).reduce((a,b) => a + b.incid_dc, 0));
-				dept.dep = typeof(workbook[index * numberOfDays].dep) === 'number' ? workbook[index * numberOfDays].dep.toString(10).padStart(2,'0') : workbook[index * numberOfDays].dep;
+				dept.dep = workbook[index * numberOfDays].dep;
 			});
 			tools.validate.deaths(Departements);
 		};
 
 		const casesPromise = async () => {
 			tools.msg.info('Pulling cases data...');
-			var workbook = await tools.csvPull(URL[0]);
-			workbook = workbook.filter(value => (isNaN(value.dep) || value.dep < 100) && value.cl_age90 == 0);
-			workbook.sort((a,b) => a.dep != b.dep ? parseInt((isNaN(a.dep) ? a.dep : a.dep.toString(10)), 16) - parseInt((isNaN(b.dep) ? b.dep : b.dep.toString(10)), 16) : b.jour < a.jour ? -1 : 1);
+			var workbook = await tools.csvPull(URL[0], {
+				dep: 'string',
+				jour: 'date',
+				P: 'number',
+				cl_age90: 'number',
+				pop: 'number'
+			});
+			workbook = workbook.filter(value => value.dep.length == 2 && value.cl_age90 == 0);
+			workbook.sort((a,b) => a.dep != b.dep ? parseInt(a.dep, 16) - parseInt(b.dep, 16) : b.jour < a.jour ? -1 : 1);
 			numberOfDays = workbook.length / 96;
 			Departements.forEach((dept, index) => {
 				dept.lastUpdate.cases = workbook[index * numberOfDays].jour.toISOString().slice(0,10);
@@ -60,9 +70,14 @@ const tools = require('./tools');
 
 		const vaccinePromise = async () => {
 			tools.msg.info('Pulling vaccine data...');
-			var workbook = await tools.csvPull(URL[2]);
-			workbook = workbook.filter(value => isNaN(value.dep) || value.dep < 100);
-			workbook.sort((a,b) => a.dep != b.dep ? parseInt((isNaN(a.dep) ? a.dep : a.dep.toString(10)), 16) - parseInt((isNaN(b.dep) ? b.dep : b.dep.toString(10)), 16) : b.jour < a.jour ? -1 : 1);
+			var workbook = await tools.csvPull(URL[2], {
+				dep: 'string',
+				jour: 'date',
+				n_cum_complet: 'number',
+				n_cum_rappel: 'number'
+			});
+			workbook = workbook.filter(value => value.dep.length == 2);
+			workbook.sort((a,b) => a.dep != b.dep ? parseInt(a.dep, 16) - parseInt(b.dep, 16) : b.jour < a.jour ? -1 : 1);
 			numberOfDays = workbook.length / 96;
 			Departements.forEach((dept, index) => {
 				dept.lastUpdate.vac = workbook[index * numberOfDays].jour.toISOString().slice(0,10);

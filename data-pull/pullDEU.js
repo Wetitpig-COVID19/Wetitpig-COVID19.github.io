@@ -46,7 +46,12 @@ const tools = require('./tools');
 				deaths7: 0, deaths14: 0, deaths28: 0
 			}));
 
-			var workbook = await tools.csvPull(URL[0]);
+			var workbook = await tools.csvPull(URL[0], {
+				IdLandkreis: 'number',
+				Meldedatum: 'date',
+				AnzahlFall: 'number',
+				AnzahlTodesfall: 'number'
+			});
 			workbook.sort((item1, item2) => item1.IdLandkreis != item2.IdLandkreis ? item1.IdLandkreis - item2.IdLandkreis : item1.Meldedatum > item2.Meldedatum ? -1 : 1);
 			casesLastUpdate = workbook[0].Meldedatum;
 
@@ -74,13 +79,17 @@ const tools = require('./tools');
 			tools.msg.info('Pulling vaccine data...');
 			var landkreisFiltered = new Array(Landkreise.length - 12).fill(null).map(() => Object.assign({}, tools.baseJSON.vaccine));
 
-			var workbook = await tools.csvPull(URL[1]);
+			var workbook = await tools.csvPull(URL[1], {
+				LandkreisId_Impfort: 'number',
+				Impfdatum: 'date',
+				Impfschutz: 'number',
+				Anzahl: 'number'
+			});
 			workbook.sort((item1, item2) => {
 				if (item1.LandkreisId_Impfort == 'u') return 1;
 				else if (item2.LandkreisId_Impfort == 'u') return -1;
-				else if (item1.LandkreisId_Impfort < item2.LandkreisId_Impfort) return -1;
-				else if (item1.LandkreisId_Impfort > item2.LandkreisId_Impfort) return 1;
-				else return item2.Impfdatum < item1.Impfdatum ? -1 : 1;
+				else if (item1.LandkreisId_Impfort == item2.LandkreisId_Impfort) return item2.Impfdatum < item1.Impfdatum ? -1 : 1;
+				else return item1.LandkreisId_Impfort - item2.LandkreisId_Impfort;
 			});
 			workbook = workbook.filter(value => value.Impfschutz != 1);
 			vacLastUpdate = workbook.slice(-1)[0].Impfdatum;
